@@ -1,4 +1,4 @@
-package com.github.fge.lambdas.function;
+package com.github.fge.lambdas.functions;
 
 public interface ThrowingIntToDoubleFunction
 {
