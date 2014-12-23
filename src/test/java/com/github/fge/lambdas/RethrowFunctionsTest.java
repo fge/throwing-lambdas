@@ -2,6 +2,7 @@ package com.github.fge.lambdas;
 
 import com.github.fge.lambdas.functions.ThrowingDoubleFunction;
 import com.github.fge.lambdas.functions.ThrowingDoubleToIntFunction;
+import com.github.fge.lambdas.functions.ThrowingDoubleToLongFunction;
 import com.github.fge.lambdas.functions.ThrowingFunction;
 import com.github.fge.lambdas.functions.ThrowingIntFunction;
 import com.github.fge.lambdas.functions.ThrowingIntToDoubleFunction;
@@ -544,6 +545,63 @@ public final class RethrowFunctionsTest
 
         try {
             DoubleStream.of(0.0d).mapToInt(rethrow(f)).count();
+            shouldHaveThrown(Error.class);
+        } catch (Throwable e) {
+            assertThat(e).isSameAs(ex);
+        }
+    }
+
+    @Test
+    public void regularExceptionFromDoubleToLongFunctionIsWrapped()
+        throws Throwable
+    {
+        final ThrowingDoubleToLongFunction f
+            = mock(ThrowingDoubleToLongFunction.class);
+
+        final Exception ex = new IOException("meh");
+
+        when(f.apply(anyDouble())).thenThrow(ex);
+
+        try {
+            DoubleStream.of(0.0d).mapToLong(rethrow(f)).count();
+            shouldHaveThrown(ThrownFromLambdaException.class);
+        } catch (ThrownFromLambdaException e) {
+            assertThat(e.getCause()).isSameAs(ex);
+        }
+    }
+
+    @Test
+    public void runtimeExceptionFromDoubleToLongFunctionIsThrownAsIs()
+        throws Throwable
+    {
+        final ThrowingDoubleToLongFunction f
+            = mock(ThrowingDoubleToLongFunction.class);
+
+        final Exception ex = new RuntimeException("meh");
+
+        when(f.apply(anyDouble())).thenThrow(ex);
+
+        try {
+            DoubleStream.of(0.0d).mapToLong(rethrow(f)).count();
+            shouldHaveThrown(RuntimeException.class);
+        } catch (RuntimeException e) {
+            assertThat(e).isSameAs(ex);
+        }
+    }
+
+    @Test
+    public void errorFromDoubleToLongFunctionIsThrownAsIs()
+        throws Throwable
+    {
+        final ThrowingDoubleToLongFunction f
+            = mock(ThrowingDoubleToLongFunction.class);
+
+        final Error ex = new Error("meh");
+
+        when(f.apply(anyDouble())).thenThrow(ex);
+
+        try {
+            DoubleStream.of(0.0d).mapToLong(rethrow(f)).count();
             shouldHaveThrown(Error.class);
         } catch (Throwable e) {
             assertThat(e).isSameAs(ex);
