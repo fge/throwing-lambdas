@@ -3,9 +3,11 @@ package com.github.fge.lambdas;
 
 import com.github.fge.lambdas.functions.ThrowingFunction;
 import com.github.fge.lambdas.functions.ThrowingIntFunction;
+import com.github.fge.lambdas.functions.ThrowingLongFunction;
 
 import java.util.function.Function;
 import java.util.function.IntFunction;
+import java.util.function.LongFunction;
 
 public class Rethrow
 {
@@ -23,6 +25,19 @@ public class Rethrow
     }
 
     public static <R> IntFunction<R> rethrow(final ThrowingIntFunction<R> f)
+    {
+        return t -> {
+            try {
+                return f.apply(t);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable tooBad) {
+                throw new ThrownFromLambdaException(tooBad);
+            }
+        };
+    }
+
+    public static <R> LongFunction<R> rethrow(final ThrowingLongFunction<R> f)
     {
         return t -> {
             try {
