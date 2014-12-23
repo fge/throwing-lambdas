@@ -414,7 +414,7 @@ public final class RethrowFunctionsTest
         when(f.apply(anyDouble())).thenThrow(REGULAR_EXCEPTION);
 
         try {
-            DoubleStream.of(0.0d).mapToObj(rethrow(f)).count();
+            DoubleStream.of(0.0).mapToObj(rethrow(f)).count();
             shouldHaveThrown(ThrownFromLambdaException.class);
         } catch (ThrownFromLambdaException e) {
             assertThat(e.getCause()).isSameAs(REGULAR_EXCEPTION);
@@ -431,7 +431,7 @@ public final class RethrowFunctionsTest
         when(f.apply(anyDouble())).thenThrow(RUNTIME_EXCEPTION);
 
         try {
-            DoubleStream.of(0.0d).mapToObj(rethrow(f)).count();
+            DoubleStream.of(0.0).mapToObj(rethrow(f)).count();
             shouldHaveThrown(RuntimeException.class);
         } catch (RuntimeException e) {
             assertThat(e).isSameAs(RUNTIME_EXCEPTION);
@@ -448,7 +448,7 @@ public final class RethrowFunctionsTest
         when(f.apply(anyDouble())).thenThrow(ERROR);
 
         try {
-            DoubleStream.of(0.0d).mapToObj(rethrow(f)).count();
+            DoubleStream.of(0.0).mapToObj(rethrow(f)).count();
             shouldHaveThrown(Error.class);
         } catch (Error e) {
             assertThat(e).isSameAs(ERROR);
@@ -465,7 +465,7 @@ public final class RethrowFunctionsTest
         when(f.apply(anyDouble())).thenThrow(REGULAR_EXCEPTION);
 
         try {
-            DoubleStream.of(0.0d).mapToInt(rethrow(f)).count();
+            DoubleStream.of(0.0).mapToInt(rethrow(f)).count();
             shouldHaveThrown(ThrownFromLambdaException.class);
         } catch (ThrownFromLambdaException e) {
             assertThat(e.getCause()).isSameAs(REGULAR_EXCEPTION);
@@ -482,7 +482,7 @@ public final class RethrowFunctionsTest
         when(f.apply(anyDouble())).thenThrow(RUNTIME_EXCEPTION);
 
         try {
-            DoubleStream.of(0.0d).mapToInt(rethrow(f)).count();
+            DoubleStream.of(0.0).mapToInt(rethrow(f)).count();
             shouldHaveThrown(RuntimeException.class);
         } catch (RuntimeException e) {
             assertThat(e).isSameAs(RUNTIME_EXCEPTION);
@@ -499,7 +499,7 @@ public final class RethrowFunctionsTest
         when(f.apply(anyDouble())).thenThrow(ERROR);
 
         try {
-            DoubleStream.of(0.0d).mapToInt(rethrow(f)).count();
+            DoubleStream.of(0.0).mapToInt(rethrow(f)).count();
             shouldHaveThrown(Error.class);
         } catch (Error e) {
             assertThat(e).isSameAs(ERROR);
@@ -516,7 +516,7 @@ public final class RethrowFunctionsTest
         when(f.apply(anyDouble())).thenThrow(REGULAR_EXCEPTION);
 
         try {
-            DoubleStream.of(0.0d).mapToLong(rethrow(f)).count();
+            DoubleStream.of(0.0).mapToLong(rethrow(f)).count();
             shouldHaveThrown(ThrownFromLambdaException.class);
         } catch (ThrownFromLambdaException e) {
             assertThat(e.getCause()).isSameAs(REGULAR_EXCEPTION);
@@ -533,7 +533,7 @@ public final class RethrowFunctionsTest
         when(f.apply(anyDouble())).thenThrow(RUNTIME_EXCEPTION);
 
         try {
-            DoubleStream.of(0.0d).mapToLong(rethrow(f)).count();
+            DoubleStream.of(0.0).mapToLong(rethrow(f)).count();
             shouldHaveThrown(RuntimeException.class);
         } catch (RuntimeException e) {
             assertThat(e).isSameAs(RUNTIME_EXCEPTION);
@@ -550,7 +550,7 @@ public final class RethrowFunctionsTest
         when(f.apply(anyDouble())).thenThrow(ERROR);
 
         try {
-            DoubleStream.of(0.0d).mapToLong(rethrow(f)).count();
+            DoubleStream.of(0.0).mapToLong(rethrow(f)).count();
             shouldHaveThrown(Error.class);
         } catch (Error e) {
             assertThat(e).isSameAs(ERROR);
