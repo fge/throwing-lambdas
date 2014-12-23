@@ -11,6 +11,7 @@ import com.github.fge.lambdas.functions.ThrowingIntToLongFunction;
 import com.github.fge.lambdas.functions.ThrowingLongFunction;
 import com.github.fge.lambdas.functions.ThrowingLongToDoubleFunction;
 import com.github.fge.lambdas.functions.ThrowingLongToIntFunction;
+import com.github.fge.lambdas.predicates.ThrowingIntPredicate;
 import com.github.fge.lambdas.predicates.ThrowingPredicate;
 
 import java.util.function.DoubleFunction;
@@ -18,6 +19,7 @@ import java.util.function.DoubleToIntFunction;
 import java.util.function.DoubleToLongFunction;
 import java.util.function.Function;
 import java.util.function.IntFunction;
+import java.util.function.IntPredicate;
 import java.util.function.IntToDoubleFunction;
 import java.util.function.IntToLongFunction;
 import java.util.function.LongFunction;
@@ -163,6 +165,19 @@ public class Rethrow
     }
 
     public static <T> Predicate<T> rethrow(final ThrowingPredicate<T> p)
+    {
+        return t -> {
+            try {
+                return p.test(t);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable tooBad) {
+                throw new ThrownFromLambdaException(tooBad);
+            }
+        };
+    }
+
+    public static IntPredicate rethrow(final ThrowingIntPredicate p)
     {
         return t -> {
             try {
