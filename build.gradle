@@ -1,0 +1,214 @@
+/*
+ * Copyright (c) 2014, Francis Galiegue (fgaliegue@gmail.com)
+ *
+ * This software is dual-licensed under:
+ *
+ * - the Lesser General Public License (LGPL) version 3.0 or, at your option, any
+ *   later version;
+ * - the Apache Software License (ASL) version 2.0.
+ *
+ * The text of this file and of both licenses is available at the root of this
+ * project or, if you have the jar distribution, in directory META-INF/, under
+ * the names LGPL-3.0.txt and ASL-2.0.txt respectively.
+ *
+ * Direct link to the sources:
+ *
+ * - LGPL 3.0: https://www.gnu.org/licenses/lgpl-3.0.txt
+ * - ASL 2.0: http://www.apache.org/licenses/LICENSE-2.0.txt
+ */
+
+buildscript {
+    repositories {
+        maven {
+            url "http://repo.springsource.org/plugins-release";
+            mavenCentral();
+        }
+    }
+    dependencies {
+        classpath(group: "org.springframework.build.gradle",
+            name: "propdeps-plugin", version: "0.0.7");
+        classpath(group: "info.solidsoft.gradle.pitest",
+            name: "gradle-pitest-plugin", version: "1.1.1");
+    }
+};
+
+apply(plugin: "java");
+apply(plugin: "maven");
+apply(plugin: "signing");
+apply(plugin: "osgi");
+apply(plugin: "idea");
+apply(plugin: "eclipse");
+apply(plugin: "propdeps");
+apply(plugin: "propdeps-maven");
+apply(plugin: "propdeps-idea");
+apply(plugin: "propdeps-eclipse");
+apply(plugin: "info.solidsoft.pitest");
+
+group = "com.github.fge";
+version = "1.0.0-SNAPSHOT";
+description = "Convenient wrapper methods for \"throwing lambdas\"";
+sourceCompatibility = "1.8";
+targetCompatibility = "1.8"; // defaults to sourceCompatibility
+
+/*
+ * List of dependencies
+ */
+dependencies {
+    testCompile(group: "org.testng", name: "testng", version: "6.8.8") {
+        exclude(group: "junit", module: "junit");
+        exclude(group: "org.beanshell", module: "bsh");
+        exclude(group: "org.yaml", module: "snakeyaml");
+    };
+    testCompile(group: "org.mockito", name: "mockito-core", version: "1.10.8");
+    testCompile(group: "org.assertj", name: "assertj-core", version: "1.7.0");
+}
+
+javadoc.options.links("http://docs.oracle.com/javase/8/docs/api/");
+
+/*
+ * Repositories to use
+ */
+repositories {
+    mavenCentral();
+}
+
+/*
+ * Necessary! Otherwise TestNG will not be used...
+ */
+test {
+    useTestNG() {
+        useDefaultListeners = true;
+    };
+}
+
+pitest {
+    pitestVersion = "1.1.2"; // see https://github.com/hcoles/pitest/issues/150
+}
+
+/*
+ * Necessary to generate the source and javadoc jars
+ */
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = "sources";
+    from sourceSets.main.allSource;
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = "javadoc";
+    from javadoc.destinationDir;
+}
+
+artifacts {
+    archives jar;
+    archives sourcesJar;
+    archives javadocJar;
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = "2.2.1";
+    distributionUrl = "http://services.gradle.org/distributions/gradle-${gradleVersion}-all.zip";
+}
+
+task pom << {
+    pom {}.writeTo("${projectDir}/pom.xml");
+}
+
+/*
+ * SIGNING
+ */
+
+project.ext {
+    gitrwscm = sprintf("git@github.com:fge/%s", name);
+    gitroscm = sprintf("https://github.com/fge/%s.git", name);
+    projectURL = sprintf("https://github.com/fge/%s", name);
+    sonatypeStaging = "https://oss.sonatype.org/service/local/staging/deploy/maven2/";
+    sonatypeSnapshots = "https://oss.sonatype.org/content/repositories/snapshots/";
+};
+
+task checkSigningRequirements << {
+    def requiredProperties = [ "sonatypeUsername", "sonatypePassword" ];
+    def noDice = false;
+    requiredProperties.each {
+        if (project.properties[it] == null) {
+            noDice = true;
+            System.err.printf("property \"%s\" is not defined!")
+        }
+    }
+    if (noDice)
+        throw new IllegalStateException("missing required properties for " +
+            "upload");
+}
+
+uploadArchives {
+    dependsOn(checkSigningRequirements);
+    repositories {
+        mavenDeployer {
+            beforeDeployment {
+                MavenDeployment deployment -> signing.signPom(deployment);
+            }
+
+            repository(url: "${sonatypeStaging}") {
+                authentication(
+                    userName: project.properties["sonatypeUsername"],
+                    password: project.properties["sonatypePassword"]
+                );
+            }
+
+            snapshotRepository(url: "${sonatypeSnapshots}") {
+                authentication(
+                    userName: project.properties["sonatypeUsername"],
+                    password: project.properties["sonatypePassword"]
+                );
+            }
+        }
+    }
+}
+
+/*
+ * Configure pom.xml on install, uploadArchives
+ */
+[
+    install.repositories.mavenInstaller,
+    uploadArchives.repositories.mavenDeployer
+]*.pom*.whenConfigured { pom ->
+    pom.project {
+        name "${project.name}";
+        packaging "jar";
+        description "${project.description}";
+        url "${projectURL}";
+
+        scm {
+            url "${gitrwscm}";
+            connection "${gitrwscm}";
+            developerConnection "${gitroscm}";
+        }
+
+        licenses {
+            license {
+                name "Lesser General Public License, version 3 or greater";
+                url "http://www.gnu.org/licenses/lgpl.html";
+                distribution "repo";
+            };
+            license {
+                name "Apache Software License, version 2.0";
+                url "http://www.apache.org/licenses/LICENSE-2.0";
+                distribution "repo";
+            }
+        }
+
+        developers {
+            developer {
+                id "fge";
+                name "Francis Galiegue";
+                email "fgaliegue@gmail.com";
+            }
+        }
+    }
+}
+
+ext.forRelease = !version.endsWith("-SNAPSHOT");
+signing {
+    required { forRelease && gradle.taskGraph.hasTask("uploadArchives") };
+    sign configurations.archives;
+}
+
