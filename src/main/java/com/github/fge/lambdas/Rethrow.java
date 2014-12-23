@@ -1,16 +1,16 @@
 package com.github.fge.lambdas;
 
 
-import com.github.fge.lambdas.functions.ThrowingDoubleFunction;
-import com.github.fge.lambdas.functions.ThrowingDoubleToIntFunction;
-import com.github.fge.lambdas.functions.ThrowingDoubleToLongFunction;
-import com.github.fge.lambdas.functions.ThrowingFunction;
-import com.github.fge.lambdas.functions.ThrowingIntFunction;
-import com.github.fge.lambdas.functions.ThrowingIntToDoubleFunction;
-import com.github.fge.lambdas.functions.ThrowingIntToLongFunction;
-import com.github.fge.lambdas.functions.ThrowingLongFunction;
-import com.github.fge.lambdas.functions.ThrowingLongToDoubleFunction;
-import com.github.fge.lambdas.functions.ThrowingLongToIntFunction;
+import com.github.fge.lambdas.function.ThrowingDoubleFunction;
+import com.github.fge.lambdas.function.ThrowingDoubleToIntFunction;
+import com.github.fge.lambdas.function.ThrowingDoubleToLongFunction;
+import com.github.fge.lambdas.function.ThrowingFunction;
+import com.github.fge.lambdas.function.ThrowingIntFunction;
+import com.github.fge.lambdas.function.ThrowingIntToDoubleFunction;
+import com.github.fge.lambdas.function.ThrowingIntToLongFunction;
+import com.github.fge.lambdas.function.ThrowingLongFunction;
+import com.github.fge.lambdas.function.ThrowingLongToDoubleFunction;
+import com.github.fge.lambdas.function.ThrowingLongToIntFunction;
 
 import java.util.function.DoubleFunction;
 import java.util.function.DoubleToIntFunction;
