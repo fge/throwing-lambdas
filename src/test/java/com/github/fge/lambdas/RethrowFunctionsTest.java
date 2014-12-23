@@ -10,9 +10,10 @@ import com.github.fge.lambdas.functions.ThrowingIntToLongFunction;
 import com.github.fge.lambdas.functions.ThrowingLongFunction;
 import com.github.fge.lambdas.functions.ThrowingLongToDoubleFunction;
 import com.github.fge.lambdas.functions.ThrowingLongToIntFunction;
+import com.github.fge.lambdas.helpers.Type1;
+import com.github.fge.lambdas.helpers.Type2;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
@@ -20,6 +21,9 @@ import java.util.stream.Stream;
 
 import static com.github.fge.lambdas.CustomAssertions.shouldHaveThrown;
 import static com.github.fge.lambdas.Rethrow.rethrow;
+import static com.github.fge.lambdas.helpers.Throwables.ERROR;
+import static com.github.fge.lambdas.helpers.Throwables.REGULAR_EXCEPTION;
+import static com.github.fge.lambdas.helpers.Throwables.RUNTIME_EXCEPTION;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyDouble;
@@ -28,7 +32,12 @@ import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@SuppressWarnings({ "ProhibitedExceptionDeclared", "unchecked", "AutoBoxing" })
+@SuppressWarnings({
+    "ProhibitedExceptionDeclared",
+    "unchecked",
+    "AutoBoxing",
+    "ErrorNotRethrown"
+})
 public final class RethrowFunctionsTest
 {
     /*
@@ -40,9 +49,7 @@ public final class RethrowFunctionsTest
     {
         final ThrowingFunction<Type1, Type2> f = mock(ThrowingFunction.class);
 
-        final Exception ex = new IOException("meh");
-
-        when(f.apply(any(Type1.class))).thenThrow(ex);
+        when(f.apply(any(Type1.class))).thenThrow(REGULAR_EXCEPTION);
 
         try {
             /*
@@ -52,7 +59,7 @@ public final class RethrowFunctionsTest
             Stream.of(mock(Type1.class)).map(rethrow(f)).count();
             shouldHaveThrown(ThrownFromLambdaException.class);
         } catch (ThrownFromLambdaException e) {
-            assertThat(e.getCause()).isSameAs(ex);
+            assertThat(e.getCause()).isSameAs(REGULAR_EXCEPTION);
         }
     }
 
@@ -62,15 +69,13 @@ public final class RethrowFunctionsTest
     {
         final ThrowingFunction<Type1, Type2> f = mock(ThrowingFunction.class);
 
-        final Exception ex = new RuntimeException("meh");
-
-        when(f.apply(any(Type1.class))).thenThrow(ex);
+        when(f.apply(any(Type1.class))).thenThrow(RUNTIME_EXCEPTION);
 
         try {
             Stream.of(mock(Type1.class)).map(rethrow(f)).count();
             shouldHaveThrown(RuntimeException.class);
         } catch (RuntimeException e) {
-            assertThat(e).isSameAs(ex);
+            assertThat(e).isSameAs(RUNTIME_EXCEPTION);
         }
     }
 
@@ -80,15 +85,13 @@ public final class RethrowFunctionsTest
     {
         final ThrowingFunction<Type1, Type2> f = mock(ThrowingFunction.class);
 
-        final Error ex = new Error("meh");
-
-        when(f.apply(any(Type1.class))).thenThrow(ex);
+        when(f.apply(any(Type1.class))).thenThrow(ERROR);
 
         try {
             Stream.of(mock(Type1.class)).map(rethrow(f)).count();
             shouldHaveThrown(Error.class);
-        } catch (Throwable e) {
-            assertThat(e).isSameAs(ex);
+        } catch (Error e) {
+            assertThat(e).isSameAs(ERROR);
         }
     }
 
@@ -101,15 +104,13 @@ public final class RethrowFunctionsTest
     {
         final ThrowingIntFunction<Type1> f = mock(ThrowingIntFunction.class);
 
-        final Exception ex = new IOException("meh");
-
-        when(f.apply(anyInt())).thenThrow(ex);
+        when(f.apply(anyInt())).thenThrow(REGULAR_EXCEPTION);
 
         try {
             IntStream.of(0).mapToObj(rethrow(f)).count();
             shouldHaveThrown(ThrownFromLambdaException.class);
         } catch (ThrownFromLambdaException e) {
-            assertThat(e.getCause()).isSameAs(ex);
+            assertThat(e.getCause()).isSameAs(REGULAR_EXCEPTION);
         }
     }
 
@@ -119,15 +120,13 @@ public final class RethrowFunctionsTest
     {
         final ThrowingIntFunction<Type1> f = mock(ThrowingIntFunction.class);
 
-        final Exception ex = new RuntimeException("meh");
-
-        when(f.apply(anyInt())).thenThrow(ex);
+        when(f.apply(anyInt())).thenThrow(RUNTIME_EXCEPTION);
 
         try {
             IntStream.of(0).mapToObj(rethrow(f)).count();
             shouldHaveThrown(RuntimeException.class);
         } catch (RuntimeException e) {
-            assertThat(e).isSameAs(ex);
+            assertThat(e).isSameAs(RUNTIME_EXCEPTION);
         }
     }
 
@@ -137,15 +136,13 @@ public final class RethrowFunctionsTest
     {
         final ThrowingIntFunction<Type1> f = mock(ThrowingIntFunction.class);
 
-        final Error ex = new Error("meh");
-
-        when(f.apply(anyInt())).thenThrow(ex);
+        when(f.apply(anyInt())).thenThrow(ERROR);
 
         try {
             IntStream.of(0).mapToObj(rethrow(f)).count();
             shouldHaveThrown(Error.class);
-        } catch (Throwable e) {
-            assertThat(e).isSameAs(ex);
+        } catch (Error e) {
+            assertThat(e).isSameAs(ERROR);
         }
     }
 
@@ -156,15 +153,13 @@ public final class RethrowFunctionsTest
         final ThrowingIntToLongFunction f
             = mock(ThrowingIntToLongFunction.class);
 
-        final Exception ex = new IOException("meh");
-
-        when(f.apply(anyInt())).thenThrow(ex);
+        when(f.apply(anyInt())).thenThrow(REGULAR_EXCEPTION);
 
         try {
             IntStream.of(0).mapToLong(rethrow(f)).count();
             shouldHaveThrown(ThrownFromLambdaException.class);
         } catch (ThrownFromLambdaException e) {
-            assertThat(e.getCause()).isSameAs(ex);
+            assertThat(e.getCause()).isSameAs(REGULAR_EXCEPTION);
         }
     }
 
@@ -175,15 +170,13 @@ public final class RethrowFunctionsTest
         final ThrowingIntToLongFunction f
             = mock(ThrowingIntToLongFunction.class);
 
-        final Exception ex = new RuntimeException("meh");
-
-        when(f.apply(anyInt())).thenThrow(ex);
+        when(f.apply(anyInt())).thenThrow(RUNTIME_EXCEPTION);
 
         try {
             IntStream.of(0).mapToLong(rethrow(f)).count();
             shouldHaveThrown(RuntimeException.class);
         } catch (RuntimeException e) {
-            assertThat(e).isSameAs(ex);
+            assertThat(e).isSameAs(RUNTIME_EXCEPTION);
         }
     }
 
@@ -194,15 +187,13 @@ public final class RethrowFunctionsTest
         final ThrowingIntToLongFunction f
             = mock(ThrowingIntToLongFunction.class);
 
-        final Error ex = new Error("meh");
-
-        when(f.apply(anyInt())).thenThrow(ex);
+        when(f.apply(anyInt())).thenThrow(ERROR);
 
         try {
             IntStream.of(0).mapToLong(rethrow(f)).count();
             shouldHaveThrown(Error.class);
-        } catch (Throwable e) {
-            assertThat(e).isSameAs(ex);
+        } catch (Error e) {
+            assertThat(e).isSameAs(ERROR);
         }
     }
 
@@ -213,15 +204,13 @@ public final class RethrowFunctionsTest
         final ThrowingIntToDoubleFunction f
             = mock(ThrowingIntToDoubleFunction.class);
 
-        final Exception ex = new IOException("meh");
-
-        when(f.apply(anyInt())).thenThrow(ex);
+        when(f.apply(anyInt())).thenThrow(REGULAR_EXCEPTION);
 
         try {
             IntStream.of(0).mapToDouble(rethrow(f)).count();
             shouldHaveThrown(ThrownFromLambdaException.class);
         } catch (ThrownFromLambdaException e) {
-            assertThat(e.getCause()).isSameAs(ex);
+            assertThat(e.getCause()).isSameAs(REGULAR_EXCEPTION);
         }
     }
 
@@ -232,15 +221,13 @@ public final class RethrowFunctionsTest
         final ThrowingIntToDoubleFunction f
             = mock(ThrowingIntToDoubleFunction.class);
 
-        final Exception ex = new RuntimeException("meh");
-
-        when(f.apply(anyInt())).thenThrow(ex);
+        when(f.apply(anyInt())).thenThrow(RUNTIME_EXCEPTION);
 
         try {
             IntStream.of(0).mapToDouble(rethrow(f)).count();
             shouldHaveThrown(RuntimeException.class);
         } catch (RuntimeException e) {
-            assertThat(e).isSameAs(ex);
+            assertThat(e).isSameAs(RUNTIME_EXCEPTION);
         }
     }
 
@@ -251,15 +238,13 @@ public final class RethrowFunctionsTest
         final ThrowingIntToDoubleFunction f
             = mock(ThrowingIntToDoubleFunction.class);
 
-        final Error ex = new Error("meh");
-
-        when(f.apply(anyInt())).thenThrow(ex);
+        when(f.apply(anyInt())).thenThrow(ERROR);
 
         try {
             IntStream.of(0).mapToDouble(rethrow(f)).count();
             shouldHaveThrown(Error.class);
-        } catch (Throwable e) {
-            assertThat(e).isSameAs(ex);
+        } catch (Error e) {
+            assertThat(e).isSameAs(ERROR);
         }
     }
 
@@ -272,15 +257,13 @@ public final class RethrowFunctionsTest
     {
         final ThrowingLongFunction<Type1> f = mock(ThrowingLongFunction.class);
 
-        final Exception ex = new IOException("meh");
-
-        when(f.apply(anyLong())).thenThrow(ex);
+        when(f.apply(anyLong())).thenThrow(REGULAR_EXCEPTION);
 
         try {
             LongStream.of(0L).mapToObj(rethrow(f)).count();
             shouldHaveThrown(ThrownFromLambdaException.class);
         } catch (ThrownFromLambdaException e) {
-            assertThat(e.getCause()).isSameAs(ex);
+            assertThat(e.getCause()).isSameAs(REGULAR_EXCEPTION);
         }
     }
 
@@ -290,15 +273,13 @@ public final class RethrowFunctionsTest
     {
         final ThrowingLongFunction<Type1> f = mock(ThrowingLongFunction.class);
 
-        final Exception ex = new RuntimeException("meh");
-
-        when(f.apply(anyLong())).thenThrow(ex);
+        when(f.apply(anyLong())).thenThrow(RUNTIME_EXCEPTION);
 
         try {
             LongStream.of(0L).mapToObj(rethrow(f)).count();
             shouldHaveThrown(RuntimeException.class);
         } catch (RuntimeException e) {
-            assertThat(e).isSameAs(ex);
+            assertThat(e).isSameAs(RUNTIME_EXCEPTION);
         }
     }
 
@@ -308,15 +289,13 @@ public final class RethrowFunctionsTest
     {
         final ThrowingLongFunction<Type1> f = mock(ThrowingLongFunction.class);
 
-        final Error ex = new Error("meh");
-
-        when(f.apply(anyLong())).thenThrow(ex);
+        when(f.apply(anyLong())).thenThrow(ERROR);
 
         try {
             LongStream.of(0L).mapToObj(rethrow(f)).count();
             shouldHaveThrown(Error.class);
-        } catch (Throwable e) {
-            assertThat(e).isSameAs(ex);
+        } catch (Error e) {
+            assertThat(e).isSameAs(ERROR);
         }
     }
 
@@ -327,15 +306,13 @@ public final class RethrowFunctionsTest
         final ThrowingLongToIntFunction f
             = mock(ThrowingLongToIntFunction.class);
 
-        final Exception ex = new IOException("meh");
-
-        when(f.apply(anyLong())).thenThrow(ex);
+        when(f.apply(anyLong())).thenThrow(REGULAR_EXCEPTION);
 
         try {
             LongStream.of(0L).mapToInt(rethrow(f)).count();
             shouldHaveThrown(ThrownFromLambdaException.class);
         } catch (ThrownFromLambdaException e) {
-            assertThat(e.getCause()).isSameAs(ex);
+            assertThat(e.getCause()).isSameAs(REGULAR_EXCEPTION);
         }
     }
 
@@ -346,15 +323,13 @@ public final class RethrowFunctionsTest
         final ThrowingLongToIntFunction f
             = mock(ThrowingLongToIntFunction.class);
 
-        final Exception ex = new RuntimeException("meh");
-
-        when(f.apply(anyLong())).thenThrow(ex);
+        when(f.apply(anyLong())).thenThrow(RUNTIME_EXCEPTION);
 
         try {
             LongStream.of(0L).mapToInt(rethrow(f)).count();
             shouldHaveThrown(RuntimeException.class);
         } catch (RuntimeException e) {
-            assertThat(e).isSameAs(ex);
+            assertThat(e).isSameAs(RUNTIME_EXCEPTION);
         }
     }
 
@@ -365,15 +340,13 @@ public final class RethrowFunctionsTest
         final ThrowingLongToIntFunction f
             = mock(ThrowingLongToIntFunction.class);
 
-        final Error ex = new Error("meh");
-
-        when(f.apply(anyLong())).thenThrow(ex);
+        when(f.apply(anyLong())).thenThrow(ERROR);
 
         try {
             LongStream.of(0L).mapToInt(rethrow(f)).count();
             shouldHaveThrown(Error.class);
-        } catch (Throwable e) {
-            assertThat(e).isSameAs(ex);
+        } catch (Error e) {
+            assertThat(e).isSameAs(ERROR);
         }
     }
 
@@ -384,15 +357,13 @@ public final class RethrowFunctionsTest
         final ThrowingLongToDoubleFunction f
             = mock(ThrowingLongToDoubleFunction.class);
 
-        final Exception ex = new IOException("meh");
-
-        when(f.apply(anyLong())).thenThrow(ex);
+        when(f.apply(anyLong())).thenThrow(REGULAR_EXCEPTION);
 
         try {
             LongStream.of(0L).mapToDouble(rethrow(f)).count();
             shouldHaveThrown(ThrownFromLambdaException.class);
         } catch (ThrownFromLambdaException e) {
-            assertThat(e.getCause()).isSameAs(ex);
+            assertThat(e.getCause()).isSameAs(REGULAR_EXCEPTION);
         }
     }
 
@@ -403,15 +374,13 @@ public final class RethrowFunctionsTest
         final ThrowingLongToDoubleFunction f
             = mock(ThrowingLongToDoubleFunction.class);
 
-        final Exception ex = new RuntimeException("meh");
-
-        when(f.apply(anyLong())).thenThrow(ex);
+        when(f.apply(anyLong())).thenThrow(RUNTIME_EXCEPTION);
 
         try {
             LongStream.of(0L).mapToDouble(rethrow(f)).count();
             shouldHaveThrown(RuntimeException.class);
         } catch (RuntimeException e) {
-            assertThat(e).isSameAs(ex);
+            assertThat(e).isSameAs(RUNTIME_EXCEPTION);
         }
     }
 
@@ -422,15 +391,13 @@ public final class RethrowFunctionsTest
         final ThrowingLongToDoubleFunction f
             = mock(ThrowingLongToDoubleFunction.class);
 
-        final Error ex = new Error("meh");
-
-        when(f.apply(anyLong())).thenThrow(ex);
+        when(f.apply(anyLong())).thenThrow(ERROR);
 
         try {
             LongStream.of(0L).mapToDouble(rethrow(f)).count();
             shouldHaveThrown(Error.class);
-        } catch (Throwable e) {
-            assertThat(e).isSameAs(ex);
+        } catch (Error e) {
+            assertThat(e).isSameAs(ERROR);
         }
     }
 
@@ -444,15 +411,13 @@ public final class RethrowFunctionsTest
         final ThrowingDoubleFunction<Type1> f
             = mock(ThrowingDoubleFunction.class);
 
-        final Exception ex = new IOException("meh");
-
-        when(f.apply(anyDouble())).thenThrow(ex);
+        when(f.apply(anyDouble())).thenThrow(REGULAR_EXCEPTION);
 
         try {
             DoubleStream.of(0.0d).mapToObj(rethrow(f)).count();
             shouldHaveThrown(ThrownFromLambdaException.class);
         } catch (ThrownFromLambdaException e) {
-            assertThat(e.getCause()).isSameAs(ex);
+            assertThat(e.getCause()).isSameAs(REGULAR_EXCEPTION);
         }
     }
 
@@ -463,15 +428,13 @@ public final class RethrowFunctionsTest
         final ThrowingDoubleFunction<Type1> f
             = mock(ThrowingDoubleFunction.class);
 
-        final Exception ex = new RuntimeException("meh");
-
-        when(f.apply(anyDouble())).thenThrow(ex);
+        when(f.apply(anyDouble())).thenThrow(RUNTIME_EXCEPTION);
 
         try {
             DoubleStream.of(0.0d).mapToObj(rethrow(f)).count();
             shouldHaveThrown(RuntimeException.class);
         } catch (RuntimeException e) {
-            assertThat(e).isSameAs(ex);
+            assertThat(e).isSameAs(RUNTIME_EXCEPTION);
         }
     }
 
@@ -482,15 +445,13 @@ public final class RethrowFunctionsTest
         final ThrowingDoubleFunction<Type1> f
             = mock(ThrowingDoubleFunction.class);
 
-        final Error ex = new Error("meh");
-
-        when(f.apply(anyDouble())).thenThrow(ex);
+        when(f.apply(anyDouble())).thenThrow(ERROR);
 
         try {
             DoubleStream.of(0.0d).mapToObj(rethrow(f)).count();
             shouldHaveThrown(Error.class);
-        } catch (Throwable e) {
-            assertThat(e).isSameAs(ex);
+        } catch (Error e) {
+            assertThat(e).isSameAs(ERROR);
         }
     }
 
@@ -501,15 +462,13 @@ public final class RethrowFunctionsTest
         final ThrowingDoubleToIntFunction f
             = mock(ThrowingDoubleToIntFunction.class);
 
-        final Exception ex = new IOException("meh");
-
-        when(f.apply(anyDouble())).thenThrow(ex);
+        when(f.apply(anyDouble())).thenThrow(REGULAR_EXCEPTION);
 
         try {
             DoubleStream.of(0.0d).mapToInt(rethrow(f)).count();
             shouldHaveThrown(ThrownFromLambdaException.class);
         } catch (ThrownFromLambdaException e) {
-            assertThat(e.getCause()).isSameAs(ex);
+            assertThat(e.getCause()).isSameAs(REGULAR_EXCEPTION);
         }
     }
 
@@ -520,15 +479,13 @@ public final class RethrowFunctionsTest
         final ThrowingDoubleToIntFunction f
             = mock(ThrowingDoubleToIntFunction.class);
 
-        final Exception ex = new RuntimeException("meh");
-
-        when(f.apply(anyDouble())).thenThrow(ex);
+        when(f.apply(anyDouble())).thenThrow(RUNTIME_EXCEPTION);
 
         try {
             DoubleStream.of(0.0d).mapToInt(rethrow(f)).count();
             shouldHaveThrown(RuntimeException.class);
         } catch (RuntimeException e) {
-            assertThat(e).isSameAs(ex);
+            assertThat(e).isSameAs(RUNTIME_EXCEPTION);
         }
     }
 
@@ -539,15 +496,13 @@ public final class RethrowFunctionsTest
         final ThrowingDoubleToIntFunction f
             = mock(ThrowingDoubleToIntFunction.class);
 
-        final Error ex = new Error("meh");
-
-        when(f.apply(anyDouble())).thenThrow(ex);
+        when(f.apply(anyDouble())).thenThrow(ERROR);
 
         try {
             DoubleStream.of(0.0d).mapToInt(rethrow(f)).count();
             shouldHaveThrown(Error.class);
-        } catch (Throwable e) {
-            assertThat(e).isSameAs(ex);
+        } catch (Error e) {
+            assertThat(e).isSameAs(ERROR);
         }
     }
 
@@ -558,15 +513,13 @@ public final class RethrowFunctionsTest
         final ThrowingDoubleToLongFunction f
             = mock(ThrowingDoubleToLongFunction.class);
 
-        final Exception ex = new IOException("meh");
-
-        when(f.apply(anyDouble())).thenThrow(ex);
+        when(f.apply(anyDouble())).thenThrow(REGULAR_EXCEPTION);
 
         try {
             DoubleStream.of(0.0d).mapToLong(rethrow(f)).count();
             shouldHaveThrown(ThrownFromLambdaException.class);
         } catch (ThrownFromLambdaException e) {
-            assertThat(e.getCause()).isSameAs(ex);
+            assertThat(e.getCause()).isSameAs(REGULAR_EXCEPTION);
         }
     }
 
@@ -577,15 +530,13 @@ public final class RethrowFunctionsTest
         final ThrowingDoubleToLongFunction f
             = mock(ThrowingDoubleToLongFunction.class);
 
-        final Exception ex = new RuntimeException("meh");
-
-        when(f.apply(anyDouble())).thenThrow(ex);
+        when(f.apply(anyDouble())).thenThrow(RUNTIME_EXCEPTION);
 
         try {
             DoubleStream.of(0.0d).mapToLong(rethrow(f)).count();
             shouldHaveThrown(RuntimeException.class);
         } catch (RuntimeException e) {
-            assertThat(e).isSameAs(ex);
+            assertThat(e).isSameAs(RUNTIME_EXCEPTION);
         }
     }
 
@@ -596,15 +547,13 @@ public final class RethrowFunctionsTest
         final ThrowingDoubleToLongFunction f
             = mock(ThrowingDoubleToLongFunction.class);
 
-        final Error ex = new Error("meh");
-
-        when(f.apply(anyDouble())).thenThrow(ex);
+        when(f.apply(anyDouble())).thenThrow(ERROR);
 
         try {
             DoubleStream.of(0.0d).mapToLong(rethrow(f)).count();
             shouldHaveThrown(Error.class);
-        } catch (Throwable e) {
-            assertThat(e).isSameAs(ex);
+        } catch (Error e) {
+            assertThat(e).isSameAs(ERROR);
         }
     }
 }
