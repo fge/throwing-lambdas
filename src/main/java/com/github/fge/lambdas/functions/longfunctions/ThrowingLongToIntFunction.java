@@ -1,4 +1,4 @@
-package com.github.fge.lambdas.functions;
+package com.github.fge.lambdas.functions.longfunctions;
 
 public interface ThrowingLongToIntFunction
 {

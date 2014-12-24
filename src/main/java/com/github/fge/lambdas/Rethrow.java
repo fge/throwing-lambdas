@@ -1,21 +1,26 @@
 package com.github.fge.lambdas;
 
 
-import com.github.fge.lambdas.collectors.ThrowingBiConsumer;
 import com.github.fge.lambdas.consumers.ThrowingConsumer;
 import com.github.fge.lambdas.consumers.ThrowingDoubleConsumer;
 import com.github.fge.lambdas.consumers.ThrowingIntConsumer;
 import com.github.fge.lambdas.consumers.ThrowingLongConsumer;
-import com.github.fge.lambdas.functions.ThrowingDoubleFunction;
-import com.github.fge.lambdas.functions.ThrowingDoubleToIntFunction;
-import com.github.fge.lambdas.functions.ThrowingDoubleToLongFunction;
+import com.github.fge.lambdas.consumers.twoarity.ThrowingBiConsumer;
 import com.github.fge.lambdas.functions.ThrowingFunction;
-import com.github.fge.lambdas.functions.ThrowingIntFunction;
-import com.github.fge.lambdas.functions.ThrowingIntToDoubleFunction;
-import com.github.fge.lambdas.functions.ThrowingIntToLongFunction;
-import com.github.fge.lambdas.functions.ThrowingLongFunction;
-import com.github.fge.lambdas.functions.ThrowingLongToDoubleFunction;
-import com.github.fge.lambdas.functions.ThrowingLongToIntFunction;
+import com.github.fge.lambdas.functions.ThrowingUnaryOperator;
+import com.github.fge.lambdas.functions.doublefunctions.ThrowingDoubleFunction;
+import com.github.fge.lambdas.functions.doublefunctions
+    .ThrowingDoubleToIntFunction;
+import com.github.fge.lambdas.functions.doublefunctions
+    .ThrowingDoubleToLongFunction;
+import com.github.fge.lambdas.functions.intfunctions.ThrowingIntFunction;
+import com.github.fge.lambdas.functions.intfunctions
+    .ThrowingIntToDoubleFunction;
+import com.github.fge.lambdas.functions.intfunctions.ThrowingIntToLongFunction;
+import com.github.fge.lambdas.functions.longfunctions.ThrowingLongFunction;
+import com.github.fge.lambdas.functions.longfunctions
+    .ThrowingLongToDoubleFunction;
+import com.github.fge.lambdas.functions.longfunctions.ThrowingLongToIntFunction;
 import com.github.fge.lambdas.functions.twoarity.ThrowingBiFunction;
 import com.github.fge.lambdas.functions.twoarity.ThrowingBinaryOperator;
 import com.github.fge.lambdas.predicates.ThrowingDoublePredicate;
@@ -52,6 +57,7 @@ import java.util.function.LongToDoubleFunction;
 import java.util.function.LongToIntFunction;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 @SuppressWarnings("NonFinalUtilityClass")
 public class Rethrow
@@ -65,6 +71,19 @@ public class Rethrow
         return t -> {
             try {
                 return f.apply(t);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable tooBad) {
+                throw new ThrownByLambdaException(tooBad);
+            }
+        };
+    }
+
+    public static <T> UnaryOperator<T> rethrow(final ThrowingUnaryOperator<T> o)
+    {
+        return t -> {
+            try {
+                return o.apply(t);
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable tooBad) {

@@ -1,12 +1,12 @@
-package com.github.fge.lambdas;
+package com.github.fge.lambdas.consumers.twoarity;
 
-import com.github.fge.lambdas.collectors.ThrowingBiConsumer;
+import com.github.fge.lambdas.ThrownByLambdaException;
 import com.github.fge.lambdas.helpers.Type1;
 import com.github.fge.lambdas.helpers.Type2;
 import org.testng.annotations.Test;
 
-import static com.github.fge.lambdas.CustomAssertions.shouldHaveThrown;
 import static com.github.fge.lambdas.Rethrow.rethrow;
+import static com.github.fge.lambdas.helpers.CustomAssertions.shouldHaveThrown;
 import static com.github.fge.lambdas.helpers.Throwables.CHECKED;
 import static com.github.fge.lambdas.helpers.Throwables.ERROR;
 import static com.github.fge.lambdas.helpers.Throwables.UNCHECKED;

@@ -1,4 +1,4 @@
-package com.github.fge.lambdas;
+package com.github.fge.lambdas.helpers;
 
 import org.assertj.core.api.Assertions;
 

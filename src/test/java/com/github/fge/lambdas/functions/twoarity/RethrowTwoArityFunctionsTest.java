@@ -1,7 +1,6 @@
-package com.github.fge.lambdas;
+package com.github.fge.lambdas.functions.twoarity;
 
-import com.github.fge.lambdas.functions.twoarity.ThrowingBiFunction;
-import com.github.fge.lambdas.functions.twoarity.ThrowingBinaryOperator;
+import com.github.fge.lambdas.ThrownByLambdaException;
 import com.github.fge.lambdas.helpers.Type1;
 import com.github.fge.lambdas.helpers.Type2;
 import com.github.fge.lambdas.helpers.Type3;
@@ -9,8 +8,8 @@ import org.testng.annotations.Test;
 
 import java.util.stream.Stream;
 
-import static com.github.fge.lambdas.CustomAssertions.shouldHaveThrown;
 import static com.github.fge.lambdas.Rethrow.rethrow;
+import static com.github.fge.lambdas.helpers.CustomAssertions.shouldHaveThrown;
 import static com.github.fge.lambdas.helpers.Throwables.CHECKED;
 import static com.github.fge.lambdas.helpers.Throwables.ERROR;
 import static com.github.fge.lambdas.helpers.Throwables.UNCHECKED;

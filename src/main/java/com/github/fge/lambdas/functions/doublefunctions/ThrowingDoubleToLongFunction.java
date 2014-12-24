@@ -1,4 +1,4 @@
-package com.github.fge.lambdas.functions;
+package com.github.fge.lambdas.functions.doublefunctions;
 
 public interface ThrowingDoubleToLongFunction
 {

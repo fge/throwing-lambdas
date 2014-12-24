@@ -1,4 +1,4 @@
-package com.github.fge.lambdas.collectors;
+package com.github.fge.lambdas.consumers.twoarity;
 
 public interface ThrowingBiConsumer<T, U>
 {
