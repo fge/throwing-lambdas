@@ -1,11 +1,13 @@
 package com.github.fge.lambdas;
 
 import com.github.fge.lambdas.helpers.Type1;
+import com.github.fge.lambdas.suppliers.ThrowingDoubleSupplier;
 import com.github.fge.lambdas.suppliers.ThrowingIntSupplier;
 import com.github.fge.lambdas.suppliers.ThrowingLongSupplier;
 import com.github.fge.lambdas.suppliers.ThrowingSupplier;
 import org.testng.annotations.Test;
 
+import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
@@ -110,6 +112,37 @@ public final class RethrowSuppliersTest
 
         try {
             LongStream.generate(rethrow(s)).count();
+            shouldHaveThrown(Error.class);
+        } catch (Error e) {
+            assertThat(e).isSameAs(ERROR);
+        }
+    }
+
+    @Test
+    public void wrappedDoubleSupplierThrowsAppropriateException()
+        throws Throwable
+    {
+        final ThrowingDoubleSupplier s = mock(ThrowingDoubleSupplier.class);
+
+        when(s.getAsDouble())
+            .thenThrow(CHECKED).thenThrow(UNCHECKED).thenThrow(ERROR);
+
+        try {
+            DoubleStream.generate(rethrow(s)).count();
+            shouldHaveThrown(ThrownByLambdaException.class);
+        } catch (ThrownByLambdaException e) {
+            assertThat(e.getCause()).isSameAs(CHECKED);
+        }
+
+        try {
+            DoubleStream.generate(rethrow(s)).count();
+            shouldHaveThrown(RuntimeException.class);
+        } catch (RuntimeException e) {
+            assertThat(e).isSameAs(UNCHECKED);
+        }
+
+        try {
+            DoubleStream.generate(rethrow(s)).count();
             shouldHaveThrown(Error.class);
         } catch (Error e) {
             assertThat(e).isSameAs(ERROR);

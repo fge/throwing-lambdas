@@ -13,5 +13,5 @@ public final class Throwables
 
     public static final RuntimeException UNCHECKED = new RuntimeException();
 
-    public static final Error ERROR = new Error("meh");
+    public static final Error ERROR = new Error();
 }

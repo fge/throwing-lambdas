@@ -39,25 +39,25 @@ public final class RethrowPredicatesTest
     {
         final ThrowingPredicate<Type1> p = mock(ThrowingPredicate.class);
 
-        when(p.test(any(Type1.class)))
+        when(p.test(Type1.any()))
             .thenThrow(CHECKED).thenThrow(UNCHECKED).thenThrow(ERROR);
 
         try {
-            Stream.of(mock(Type1.class)).anyMatch(rethrow(p));
+            Stream.of(Type1.mock()).anyMatch(rethrow(p));
             shouldHaveThrown(ThrownByLambdaException.class);
         } catch (ThrownByLambdaException e) {
             assertThat(e.getCause()).isSameAs(CHECKED);
         }
 
         try {
-            Stream.of(mock(Type1.class)).anyMatch(rethrow(p));
+            Stream.of(Type1.mock()).anyMatch(rethrow(p));
             shouldHaveThrown(RuntimeException.class);
         } catch (RuntimeException e) {
             assertThat(e).isSameAs(UNCHECKED);
         }
 
         try {
-            Stream.of(mock(Type1.class)).anyMatch(rethrow(p));
+            Stream.of(Type1.mock()).anyMatch(rethrow(p));
             shouldHaveThrown(Error.class);
         } catch (Error e) {
             assertThat(e).isSameAs(ERROR);

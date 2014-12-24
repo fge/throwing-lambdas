@@ -50,25 +50,25 @@ public final class RethrowFunctionsTest
     {
         final ThrowingFunction<Type1, Type2> f = mock(ThrowingFunction.class);
 
-        when(f.apply(any(Type1.class)))
+        when(f.apply(Type1.any()))
             .thenThrow(CHECKED).thenThrow(UNCHECKED).thenThrow(ERROR);
 
         try {
-            Stream.of(mock(Type1.class)).map(rethrow(f)).count();
+            Stream.of(Type1.mock()).map(rethrow(f)).count();
             shouldHaveThrown(ThrownByLambdaException.class);
         } catch (ThrownByLambdaException e) {
             assertThat(e.getCause()).isSameAs(CHECKED);
         }
 
         try {
-            Stream.of(mock(Type1.class)).map(rethrow(f)).count();
+            Stream.of(Type1.mock()).map(rethrow(f)).count();
             shouldHaveThrown(RuntimeException.class);
         } catch (RuntimeException e) {
             assertThat(e).isSameAs(UNCHECKED);
         }
 
         try {
-            Stream.of(mock(Type1.class)).map(rethrow(f)).count();
+            Stream.of(Type1.mock()).map(rethrow(f)).count();
             shouldHaveThrown(Error.class);
         } catch (Error e) {
             assertThat(e).isSameAs(ERROR);

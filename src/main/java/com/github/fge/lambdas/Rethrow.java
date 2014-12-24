@@ -1,6 +1,7 @@
 package com.github.fge.lambdas;
 
 
+import com.github.fge.lambdas.collectors.ThrowingBiConsumer;
 import com.github.fge.lambdas.consumers.ThrowingConsumer;
 import com.github.fge.lambdas.consumers.ThrowingDoubleConsumer;
 import com.github.fge.lambdas.consumers.ThrowingIntConsumer;
@@ -15,6 +16,8 @@ import com.github.fge.lambdas.functions.ThrowingIntToLongFunction;
 import com.github.fge.lambdas.functions.ThrowingLongFunction;
 import com.github.fge.lambdas.functions.ThrowingLongToDoubleFunction;
 import com.github.fge.lambdas.functions.ThrowingLongToIntFunction;
+import com.github.fge.lambdas.functions.twoarity.ThrowingBiFunction;
+import com.github.fge.lambdas.functions.twoarity.ThrowingBinaryOperator;
 import com.github.fge.lambdas.predicates.ThrowingDoublePredicate;
 import com.github.fge.lambdas.predicates.ThrowingIntPredicate;
 import com.github.fge.lambdas.predicates.ThrowingLongPredicate;
@@ -24,6 +27,9 @@ import com.github.fge.lambdas.suppliers.ThrowingIntSupplier;
 import com.github.fge.lambdas.suppliers.ThrowingLongSupplier;
 import com.github.fge.lambdas.suppliers.ThrowingSupplier;
 
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.function.DoubleConsumer;
 import java.util.function.DoubleFunction;
@@ -341,6 +347,56 @@ public class Rethrow
         return () -> {
             try {
                 return s.getAsDouble();
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable tooBad) {
+                throw new ThrownByLambdaException(tooBad);
+            }
+        };
+    }
+
+    /*
+     * TWO-ARITY CONSUMERS
+     */
+
+    public static <T, U> BiConsumer<T, U> rethrow(
+        final ThrowingBiConsumer<T, U> c)
+    {
+        return (t, u) -> {
+            try {
+                c.accept(t, u);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable tooBad) {
+                throw new ThrownByLambdaException(tooBad);
+            }
+        };
+    }
+
+    /*
+     * TWO-ARITY FUNCTIONS
+     */
+
+    public static <T, U, R> BiFunction<T, U, R> rethrow(
+        final ThrowingBiFunction<T, U, R> f)
+    {
+        return (t, u) -> {
+            try {
+                return f.apply(t, u);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable tooBad) {
+                throw new ThrownByLambdaException(tooBad);
+            }
+        };
+    }
+
+    public static <T> BinaryOperator<T> rethrow(
+        final ThrowingBinaryOperator<T> o)
+    {
+        return (t1, t2) -> {
+            try {
+                return o.apply(t1, t2);
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable tooBad) {
