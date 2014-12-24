@@ -1,6 +1,7 @@
 package com.github.fge.lambdas;
 
 
+import com.github.fge.lambdas.consumers.ThrowingConsumer;
 import com.github.fge.lambdas.functions.ThrowingDoubleFunction;
 import com.github.fge.lambdas.functions.ThrowingDoubleToIntFunction;
 import com.github.fge.lambdas.functions.ThrowingDoubleToLongFunction;
@@ -16,6 +17,7 @@ import com.github.fge.lambdas.predicates.ThrowingIntPredicate;
 import com.github.fge.lambdas.predicates.ThrowingLongPredicate;
 import com.github.fge.lambdas.predicates.ThrowingPredicate;
 
+import java.util.function.Consumer;
 import java.util.function.DoubleFunction;
 import java.util.function.DoublePredicate;
 import java.util.function.DoubleToIntFunction;
@@ -34,6 +36,10 @@ import java.util.function.Predicate;
 @SuppressWarnings("NonFinalUtilityClass")
 public class Rethrow
 {
+    /*
+     * FUNCTIONS
+     */
+
     public static <T, R> Function<T, R> rethrow(final ThrowingFunction<T, R> f)
     {
         return t -> {
@@ -213,6 +219,23 @@ public class Rethrow
         return t -> {
             try {
                 return p.test(t);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable tooBad) {
+                throw new ThrownFromLambdaException(tooBad);
+            }
+        };
+    }
+
+    /*
+     * CONSUMERS
+     */
+
+    public static <T> Consumer<T> rethrow(final ThrowingConsumer<T> c)
+    {
+        return t -> {
+            try {
+                c.accept(t);
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable tooBad) {

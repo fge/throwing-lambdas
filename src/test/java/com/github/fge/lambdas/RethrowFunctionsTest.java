@@ -22,8 +22,8 @@ import java.util.stream.Stream;
 import static com.github.fge.lambdas.CustomAssertions.shouldHaveThrown;
 import static com.github.fge.lambdas.Rethrow.rethrow;
 import static com.github.fge.lambdas.helpers.Throwables.ERROR;
-import static com.github.fge.lambdas.helpers.Throwables.REGULAR_EXCEPTION;
-import static com.github.fge.lambdas.helpers.Throwables.RUNTIME_EXCEPTION;
+import static com.github.fge.lambdas.helpers.Throwables.CHECKED;
+import static com.github.fge.lambdas.helpers.Throwables.UNCHECKED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyDouble;
@@ -44,12 +44,12 @@ public final class RethrowFunctionsTest
      * Function
      */
     @Test
-    public void regularExceptionFromFunctionIsWrapped()
+    public void checkedExceptionFromFunctionIsWrapped()
         throws Throwable
     {
         final ThrowingFunction<Type1, Type2> f = mock(ThrowingFunction.class);
 
-        when(f.apply(any(Type1.class))).thenThrow(REGULAR_EXCEPTION);
+        when(f.apply(any(Type1.class))).thenThrow(CHECKED);
 
         try {
             /*
@@ -59,23 +59,23 @@ public final class RethrowFunctionsTest
             Stream.of(mock(Type1.class)).map(rethrow(f)).count();
             shouldHaveThrown(ThrownFromLambdaException.class);
         } catch (ThrownFromLambdaException e) {
-            assertThat(e.getCause()).isSameAs(REGULAR_EXCEPTION);
+            assertThat(e.getCause()).isSameAs(CHECKED);
         }
     }
 
     @Test
-    public void runtimeExceptionFromFunctionIsThrownAsIs()
+    public void uncheckedExceptionFromFunctionIsThrownAsIs()
         throws Throwable
     {
         final ThrowingFunction<Type1, Type2> f = mock(ThrowingFunction.class);
 
-        when(f.apply(any(Type1.class))).thenThrow(RUNTIME_EXCEPTION);
+        when(f.apply(any(Type1.class))).thenThrow(UNCHECKED);
 
         try {
             Stream.of(mock(Type1.class)).map(rethrow(f)).count();
             shouldHaveThrown(RuntimeException.class);
         } catch (RuntimeException e) {
-            assertThat(e).isSameAs(RUNTIME_EXCEPTION);
+            assertThat(e).isSameAs(UNCHECKED);
         }
     }
 
@@ -99,34 +99,34 @@ public final class RethrowFunctionsTest
      * Int*Function
      */
     @Test
-    public void regularExceptionFromIntFunctionIsWrapped()
+    public void checkedExceptionFromIntFunctionIsWrapped()
         throws Throwable
     {
         final ThrowingIntFunction<Type1> f = mock(ThrowingIntFunction.class);
 
-        when(f.apply(anyInt())).thenThrow(REGULAR_EXCEPTION);
+        when(f.apply(anyInt())).thenThrow(CHECKED);
 
         try {
             IntStream.of(0).mapToObj(rethrow(f)).count();
             shouldHaveThrown(ThrownFromLambdaException.class);
         } catch (ThrownFromLambdaException e) {
-            assertThat(e.getCause()).isSameAs(REGULAR_EXCEPTION);
+            assertThat(e.getCause()).isSameAs(CHECKED);
         }
     }
 
     @Test
-    public void runtimeExceptionFromIntFunctionIsThrownAsIs()
+    public void uncheckedExceptionFromIntFunctionIsThrownAsIs()
         throws Throwable
     {
         final ThrowingIntFunction<Type1> f = mock(ThrowingIntFunction.class);
 
-        when(f.apply(anyInt())).thenThrow(RUNTIME_EXCEPTION);
+        when(f.apply(anyInt())).thenThrow(UNCHECKED);
 
         try {
             IntStream.of(0).mapToObj(rethrow(f)).count();
             shouldHaveThrown(RuntimeException.class);
         } catch (RuntimeException e) {
-            assertThat(e).isSameAs(RUNTIME_EXCEPTION);
+            assertThat(e).isSameAs(UNCHECKED);
         }
     }
 
@@ -147,36 +147,36 @@ public final class RethrowFunctionsTest
     }
 
     @Test
-    public void regularExceptionFromIntToLongFunctionIsWrapped()
+    public void checkedExceptionFromIntToLongFunctionIsWrapped()
         throws Throwable
     {
         final ThrowingIntToLongFunction f
             = mock(ThrowingIntToLongFunction.class);
 
-        when(f.apply(anyInt())).thenThrow(REGULAR_EXCEPTION);
+        when(f.apply(anyInt())).thenThrow(CHECKED);
 
         try {
             IntStream.of(0).mapToLong(rethrow(f)).count();
             shouldHaveThrown(ThrownFromLambdaException.class);
         } catch (ThrownFromLambdaException e) {
-            assertThat(e.getCause()).isSameAs(REGULAR_EXCEPTION);
+            assertThat(e.getCause()).isSameAs(CHECKED);
         }
     }
 
     @Test
-    public void runtimeExceptionFromIntToLongFunctionIsThrownAsIs()
+    public void uncheckedExceptionFromIntToLongFunctionIsThrownAsIs()
         throws Throwable
     {
         final ThrowingIntToLongFunction f
             = mock(ThrowingIntToLongFunction.class);
 
-        when(f.apply(anyInt())).thenThrow(RUNTIME_EXCEPTION);
+        when(f.apply(anyInt())).thenThrow(UNCHECKED);
 
         try {
             IntStream.of(0).mapToLong(rethrow(f)).count();
             shouldHaveThrown(RuntimeException.class);
         } catch (RuntimeException e) {
-            assertThat(e).isSameAs(RUNTIME_EXCEPTION);
+            assertThat(e).isSameAs(UNCHECKED);
         }
     }
 
@@ -198,36 +198,36 @@ public final class RethrowFunctionsTest
     }
 
     @Test
-    public void regularExceptionFromIntToDoubleFunctionIsWrapped()
+    public void checkedExceptionFromIntToDoubleFunctionIsWrapped()
         throws Throwable
     {
         final ThrowingIntToDoubleFunction f
             = mock(ThrowingIntToDoubleFunction.class);
 
-        when(f.apply(anyInt())).thenThrow(REGULAR_EXCEPTION);
+        when(f.apply(anyInt())).thenThrow(CHECKED);
 
         try {
             IntStream.of(0).mapToDouble(rethrow(f)).count();
             shouldHaveThrown(ThrownFromLambdaException.class);
         } catch (ThrownFromLambdaException e) {
-            assertThat(e.getCause()).isSameAs(REGULAR_EXCEPTION);
+            assertThat(e.getCause()).isSameAs(CHECKED);
         }
     }
 
     @Test
-    public void runtimeExceptionFromIntToDoubleFunctionIsThrownAsIs()
+    public void uncheckedExceptionFromIntToDoubleFunctionIsThrownAsIs()
         throws Throwable
     {
         final ThrowingIntToDoubleFunction f
             = mock(ThrowingIntToDoubleFunction.class);
 
-        when(f.apply(anyInt())).thenThrow(RUNTIME_EXCEPTION);
+        when(f.apply(anyInt())).thenThrow(UNCHECKED);
 
         try {
             IntStream.of(0).mapToDouble(rethrow(f)).count();
             shouldHaveThrown(RuntimeException.class);
         } catch (RuntimeException e) {
-            assertThat(e).isSameAs(RUNTIME_EXCEPTION);
+            assertThat(e).isSameAs(UNCHECKED);
         }
     }
 
@@ -252,34 +252,34 @@ public final class RethrowFunctionsTest
      * Long*Function
      */
     @Test
-    public void regularExceptionFromLongFunctionIsWrapped()
+    public void checkedExceptionFromLongFunctionIsWrapped()
         throws Throwable
     {
         final ThrowingLongFunction<Type1> f = mock(ThrowingLongFunction.class);
 
-        when(f.apply(anyLong())).thenThrow(REGULAR_EXCEPTION);
+        when(f.apply(anyLong())).thenThrow(CHECKED);
 
         try {
             LongStream.of(0L).mapToObj(rethrow(f)).count();
             shouldHaveThrown(ThrownFromLambdaException.class);
         } catch (ThrownFromLambdaException e) {
-            assertThat(e.getCause()).isSameAs(REGULAR_EXCEPTION);
+            assertThat(e.getCause()).isSameAs(CHECKED);
         }
     }
 
     @Test
-    public void runtimeExceptionFromLongFunctionIsThrownAsIs()
+    public void uncheckedExceptionFromLongFunctionIsThrownAsIs()
         throws Throwable
     {
         final ThrowingLongFunction<Type1> f = mock(ThrowingLongFunction.class);
 
-        when(f.apply(anyLong())).thenThrow(RUNTIME_EXCEPTION);
+        when(f.apply(anyLong())).thenThrow(UNCHECKED);
 
         try {
             LongStream.of(0L).mapToObj(rethrow(f)).count();
             shouldHaveThrown(RuntimeException.class);
         } catch (RuntimeException e) {
-            assertThat(e).isSameAs(RUNTIME_EXCEPTION);
+            assertThat(e).isSameAs(UNCHECKED);
         }
     }
 
@@ -300,36 +300,36 @@ public final class RethrowFunctionsTest
     }
 
     @Test
-    public void regularExceptionFromLongToIntFunctionIsWrapped()
+    public void checkedExceptionFromLongToIntFunctionIsWrapped()
         throws Throwable
     {
         final ThrowingLongToIntFunction f
             = mock(ThrowingLongToIntFunction.class);
 
-        when(f.apply(anyLong())).thenThrow(REGULAR_EXCEPTION);
+        when(f.apply(anyLong())).thenThrow(CHECKED);
 
         try {
             LongStream.of(0L).mapToInt(rethrow(f)).count();
             shouldHaveThrown(ThrownFromLambdaException.class);
         } catch (ThrownFromLambdaException e) {
-            assertThat(e.getCause()).isSameAs(REGULAR_EXCEPTION);
+            assertThat(e.getCause()).isSameAs(CHECKED);
         }
     }
 
     @Test
-    public void runtimeExceptionFromLongToIntFunctionIsThrownAsIs()
+    public void uncheckedExceptionFromLongToIntFunctionIsThrownAsIs()
         throws Throwable
     {
         final ThrowingLongToIntFunction f
             = mock(ThrowingLongToIntFunction.class);
 
-        when(f.apply(anyLong())).thenThrow(RUNTIME_EXCEPTION);
+        when(f.apply(anyLong())).thenThrow(UNCHECKED);
 
         try {
             LongStream.of(0L).mapToInt(rethrow(f)).count();
             shouldHaveThrown(RuntimeException.class);
         } catch (RuntimeException e) {
-            assertThat(e).isSameAs(RUNTIME_EXCEPTION);
+            assertThat(e).isSameAs(UNCHECKED);
         }
     }
 
@@ -351,36 +351,36 @@ public final class RethrowFunctionsTest
     }
 
     @Test
-    public void regularExceptionFromLongToDoubleFunctionIsWrapped()
+    public void checkedExceptionFromLongToDoubleFunctionIsWrapped()
         throws Throwable
     {
         final ThrowingLongToDoubleFunction f
             = mock(ThrowingLongToDoubleFunction.class);
 
-        when(f.apply(anyLong())).thenThrow(REGULAR_EXCEPTION);
+        when(f.apply(anyLong())).thenThrow(CHECKED);
 
         try {
             LongStream.of(0L).mapToDouble(rethrow(f)).count();
             shouldHaveThrown(ThrownFromLambdaException.class);
         } catch (ThrownFromLambdaException e) {
-            assertThat(e.getCause()).isSameAs(REGULAR_EXCEPTION);
+            assertThat(e.getCause()).isSameAs(CHECKED);
         }
     }
 
     @Test
-    public void runtimeExceptionFromLongToDoubleFunctionIsThrownAsIs()
+    public void uncheckedExceptionFromLongToDoubleFunctionIsThrownAsIs()
         throws Throwable
     {
         final ThrowingLongToDoubleFunction f
             = mock(ThrowingLongToDoubleFunction.class);
 
-        when(f.apply(anyLong())).thenThrow(RUNTIME_EXCEPTION);
+        when(f.apply(anyLong())).thenThrow(UNCHECKED);
 
         try {
             LongStream.of(0L).mapToDouble(rethrow(f)).count();
             shouldHaveThrown(RuntimeException.class);
         } catch (RuntimeException e) {
-            assertThat(e).isSameAs(RUNTIME_EXCEPTION);
+            assertThat(e).isSameAs(UNCHECKED);
         }
     }
 
@@ -405,36 +405,36 @@ public final class RethrowFunctionsTest
      * Double*Function
      */
     @Test
-    public void regularExceptionFromDoubleFunctionIsWrapped()
+    public void checkedExceptionFromDoubleFunctionIsWrapped()
         throws Throwable
     {
         final ThrowingDoubleFunction<Type1> f
             = mock(ThrowingDoubleFunction.class);
 
-        when(f.apply(anyDouble())).thenThrow(REGULAR_EXCEPTION);
+        when(f.apply(anyDouble())).thenThrow(CHECKED);
 
         try {
             DoubleStream.of(0.0).mapToObj(rethrow(f)).count();
             shouldHaveThrown(ThrownFromLambdaException.class);
         } catch (ThrownFromLambdaException e) {
-            assertThat(e.getCause()).isSameAs(REGULAR_EXCEPTION);
+            assertThat(e.getCause()).isSameAs(CHECKED);
         }
     }
 
     @Test
-    public void runtimeExceptionFromDoubleFunctionIsThrownAsIs()
+    public void uncheckedExceptionFromDoubleFunctionIsThrownAsIs()
         throws Throwable
     {
         final ThrowingDoubleFunction<Type1> f
             = mock(ThrowingDoubleFunction.class);
 
-        when(f.apply(anyDouble())).thenThrow(RUNTIME_EXCEPTION);
+        when(f.apply(anyDouble())).thenThrow(UNCHECKED);
 
         try {
             DoubleStream.of(0.0).mapToObj(rethrow(f)).count();
             shouldHaveThrown(RuntimeException.class);
         } catch (RuntimeException e) {
-            assertThat(e).isSameAs(RUNTIME_EXCEPTION);
+            assertThat(e).isSameAs(UNCHECKED);
         }
     }
 
@@ -456,36 +456,36 @@ public final class RethrowFunctionsTest
     }
 
     @Test
-    public void regularExceptionFromDoubleToIntFunctionIsWrapped()
+    public void checkedExceptionFromDoubleToIntFunctionIsWrapped()
         throws Throwable
     {
         final ThrowingDoubleToIntFunction f
             = mock(ThrowingDoubleToIntFunction.class);
 
-        when(f.apply(anyDouble())).thenThrow(REGULAR_EXCEPTION);
+        when(f.apply(anyDouble())).thenThrow(CHECKED);
 
         try {
             DoubleStream.of(0.0).mapToInt(rethrow(f)).count();
             shouldHaveThrown(ThrownFromLambdaException.class);
         } catch (ThrownFromLambdaException e) {
-            assertThat(e.getCause()).isSameAs(REGULAR_EXCEPTION);
+            assertThat(e.getCause()).isSameAs(CHECKED);
         }
     }
 
     @Test
-    public void runtimeExceptionFromDoubleToIntFunctionIsThrownAsIs()
+    public void uncheckedExceptionFromDoubleToIntFunctionIsThrownAsIs()
         throws Throwable
     {
         final ThrowingDoubleToIntFunction f
             = mock(ThrowingDoubleToIntFunction.class);
 
-        when(f.apply(anyDouble())).thenThrow(RUNTIME_EXCEPTION);
+        when(f.apply(anyDouble())).thenThrow(UNCHECKED);
 
         try {
             DoubleStream.of(0.0).mapToInt(rethrow(f)).count();
             shouldHaveThrown(RuntimeException.class);
         } catch (RuntimeException e) {
-            assertThat(e).isSameAs(RUNTIME_EXCEPTION);
+            assertThat(e).isSameAs(UNCHECKED);
         }
     }
 
@@ -507,36 +507,36 @@ public final class RethrowFunctionsTest
     }
 
     @Test
-    public void regularExceptionFromDoubleToLongFunctionIsWrapped()
+    public void checkedExceptionFromDoubleToLongFunctionIsWrapped()
         throws Throwable
     {
         final ThrowingDoubleToLongFunction f
             = mock(ThrowingDoubleToLongFunction.class);
 
-        when(f.apply(anyDouble())).thenThrow(REGULAR_EXCEPTION);
+        when(f.apply(anyDouble())).thenThrow(CHECKED);
 
         try {
             DoubleStream.of(0.0).mapToLong(rethrow(f)).count();
             shouldHaveThrown(ThrownFromLambdaException.class);
         } catch (ThrownFromLambdaException e) {
-            assertThat(e.getCause()).isSameAs(REGULAR_EXCEPTION);
+            assertThat(e.getCause()).isSameAs(CHECKED);
         }
     }
 
     @Test
-    public void runtimeExceptionFromDoubleToLongFunctionIsThrownAsIs()
+    public void uncheckedExceptionFromDoubleToLongFunctionIsThrownAsIs()
         throws Throwable
     {
         final ThrowingDoubleToLongFunction f
             = mock(ThrowingDoubleToLongFunction.class);
 
-        when(f.apply(anyDouble())).thenThrow(RUNTIME_EXCEPTION);
+        when(f.apply(anyDouble())).thenThrow(UNCHECKED);
 
         try {
             DoubleStream.of(0.0).mapToLong(rethrow(f)).count();
             shouldHaveThrown(RuntimeException.class);
         } catch (RuntimeException e) {
-            assertThat(e).isSameAs(RUNTIME_EXCEPTION);
+            assertThat(e).isSameAs(UNCHECKED);
         }
     }
 

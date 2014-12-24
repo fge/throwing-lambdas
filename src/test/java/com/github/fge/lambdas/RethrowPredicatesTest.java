@@ -15,8 +15,8 @@ import java.util.stream.Stream;
 import static com.github.fge.lambdas.CustomAssertions.shouldHaveThrown;
 import static com.github.fge.lambdas.Rethrow.rethrow;
 import static com.github.fge.lambdas.helpers.Throwables.ERROR;
-import static com.github.fge.lambdas.helpers.Throwables.REGULAR_EXCEPTION;
-import static com.github.fge.lambdas.helpers.Throwables.RUNTIME_EXCEPTION;
+import static com.github.fge.lambdas.helpers.Throwables.CHECKED;
+import static com.github.fge.lambdas.helpers.Throwables.UNCHECKED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyDouble;
@@ -34,34 +34,34 @@ import static org.mockito.Mockito.when;
 public final class RethrowPredicatesTest
 {
     @Test
-    public void regularExceptionThrownFromPredicateIsWrapped()
+    public void checkedExceptionThrownFromPredicateIsWrapped()
         throws Throwable
     {
         final ThrowingPredicate<Type1> p = mock(ThrowingPredicate.class);
 
-        when(p.test(any(Type1.class))).thenThrow(REGULAR_EXCEPTION);
+        when(p.test(any(Type1.class))).thenThrow(CHECKED);
 
         try {
             Stream.of(mock(Type1.class)).anyMatch(rethrow(p));
             shouldHaveThrown(ThrownFromLambdaException.class);
         } catch (ThrownFromLambdaException e) {
-            assertThat(e.getCause()).isSameAs(REGULAR_EXCEPTION);
+            assertThat(e.getCause()).isSameAs(CHECKED);
         }
     }
 
     @Test
-    public void runtimeExceptionThrownFromPredicateIsThrownAsIs()
+    public void uncheckedExceptionThrownFromPredicateIsThrownAsIs()
         throws Throwable
     {
         final ThrowingPredicate<Type1> p = mock(ThrowingPredicate.class);
 
-        when(p.test(any(Type1.class))).thenThrow(RUNTIME_EXCEPTION);
+        when(p.test(any(Type1.class))).thenThrow(UNCHECKED);
 
         try {
             Stream.of(mock(Type1.class)).anyMatch(rethrow(p));
             shouldHaveThrown(RuntimeException.class);
         } catch (RuntimeException e) {
-            assertThat(e).isSameAs(RUNTIME_EXCEPTION);
+            assertThat(e).isSameAs(UNCHECKED);
         }
     }
 
@@ -82,34 +82,34 @@ public final class RethrowPredicatesTest
     }
 
     @Test
-    public void regularExceptionThrownFromIntPredicateIsWrapped()
+    public void checkedExceptionThrownFromIntPredicateIsWrapped()
         throws Throwable
     {
         final ThrowingIntPredicate p = mock(ThrowingIntPredicate.class);
 
-        when(p.test(anyInt())).thenThrow(REGULAR_EXCEPTION);
+        when(p.test(anyInt())).thenThrow(CHECKED);
 
         try {
             IntStream.of(0).anyMatch(rethrow(p));
             shouldHaveThrown(ThrownFromLambdaException.class);
         } catch (ThrownFromLambdaException e) {
-            assertThat(e.getCause()).isSameAs(REGULAR_EXCEPTION);
+            assertThat(e.getCause()).isSameAs(CHECKED);
         }
     }
 
     @Test
-    public void runtimeExceptionThrownFromIntPredicateIsThrownAsIs()
+    public void uncheckedExceptionThrownFromIntPredicateIsThrownAsIs()
         throws Throwable
     {
         final ThrowingIntPredicate p = mock(ThrowingIntPredicate.class);
 
-        when(p.test(anyInt())).thenThrow(RUNTIME_EXCEPTION);
+        when(p.test(anyInt())).thenThrow(UNCHECKED);
 
         try {
             IntStream.of(0).anyMatch(rethrow(p));
             shouldHaveThrown(RuntimeException.class);
         } catch (RuntimeException e) {
-            assertThat(e).isSameAs(RUNTIME_EXCEPTION);
+            assertThat(e).isSameAs(UNCHECKED);
         }
     }
 
@@ -130,34 +130,34 @@ public final class RethrowPredicatesTest
     }
 
     @Test
-    public void regularExceptionThrownFromLongPredicateIsWrapped()
+    public void checkedExceptionThrownFromLongPredicateIsWrapped()
         throws Throwable
     {
         final ThrowingLongPredicate p = mock(ThrowingLongPredicate.class);
 
-        when(p.test(anyLong())).thenThrow(REGULAR_EXCEPTION);
+        when(p.test(anyLong())).thenThrow(CHECKED);
 
         try {
             LongStream.of(0L).anyMatch(rethrow(p));
             shouldHaveThrown(ThrownFromLambdaException.class);
         } catch (ThrownFromLambdaException e) {
-            assertThat(e.getCause()).isSameAs(REGULAR_EXCEPTION);
+            assertThat(e.getCause()).isSameAs(CHECKED);
         }
     }
 
     @Test
-    public void runtimeExceptionThrownFromLongPredicateIsThrownAsIs()
+    public void uncheckedExceptionThrownFromLongPredicateIsThrownAsIs()
         throws Throwable
     {
         final ThrowingLongPredicate p = mock(ThrowingLongPredicate.class);
 
-        when(p.test(anyLong())).thenThrow(RUNTIME_EXCEPTION);
+        when(p.test(anyLong())).thenThrow(UNCHECKED);
 
         try {
             LongStream.of(0L).anyMatch(rethrow(p));
             shouldHaveThrown(RuntimeException.class);
         } catch (RuntimeException e) {
-            assertThat(e).isSameAs(RUNTIME_EXCEPTION);
+            assertThat(e).isSameAs(UNCHECKED);
         }
     }
 
@@ -178,34 +178,34 @@ public final class RethrowPredicatesTest
     }
 
     @Test
-    public void regularExceptionThrownFromDoublePredicateIsWrapped()
+    public void checkedExceptionThrownFromDoublePredicateIsWrapped()
         throws Throwable
     {
         final ThrowingDoublePredicate p = mock(ThrowingDoublePredicate.class);
 
-        when(p.test(anyDouble())).thenThrow(REGULAR_EXCEPTION);
+        when(p.test(anyDouble())).thenThrow(CHECKED);
 
         try {
             DoubleStream.of(0.0).anyMatch(rethrow(p));
             shouldHaveThrown(ThrownFromLambdaException.class);
         } catch (ThrownFromLambdaException e) {
-            assertThat(e.getCause()).isSameAs(REGULAR_EXCEPTION);
+            assertThat(e.getCause()).isSameAs(CHECKED);
         }
     }
 
     @Test
-    public void runtimeExceptionThrownFromDoublePredicateIsThrownAsIs()
+    public void uncheckedExceptionThrownFromDoublePredicateIsThrownAsIs()
         throws Throwable
     {
         final ThrowingDoublePredicate p = mock(ThrowingDoublePredicate.class);
 
-        when(p.test(anyDouble())).thenThrow(RUNTIME_EXCEPTION);
+        when(p.test(anyDouble())).thenThrow(UNCHECKED);
 
         try {
             DoubleStream.of(0.0).anyMatch(rethrow(p));
             shouldHaveThrown(RuntimeException.class);
         } catch (RuntimeException e) {
-            assertThat(e).isSameAs(RUNTIME_EXCEPTION);
+            assertThat(e).isSameAs(UNCHECKED);
         }
     }
 

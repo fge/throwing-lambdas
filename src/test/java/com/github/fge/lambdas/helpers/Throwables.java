@@ -9,10 +9,9 @@ public final class Throwables
         throw new Error("nice try!");
     }
 
-    public static final Exception REGULAR_EXCEPTION = new IOException("meh");
+    public static final Exception CHECKED = new IOException();
 
-    public static final RuntimeException RUNTIME_EXCEPTION
-        = new RuntimeException("meh");
+    public static final RuntimeException UNCHECKED = new RuntimeException();
 
     public static final Error ERROR = new Error("meh");
 }
