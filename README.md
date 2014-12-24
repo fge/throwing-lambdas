@@ -58,14 +58,14 @@ public static <T, R> Function<T, R> rethrow(final ThrowingFunction<T, R> f)
         } catch (Error | RuntimeException e) {
             throw e;
         } catch (Throwable tooBad) {
-            throw new ThrownFromLambdaException(tooBad);
+            throw new ThrownByLambdaException(tooBad);
         }
     };
 }
 ```
 
 As you can see, all `RuntimeException`s and `Error`s are left _untouched_. Any other `Throwable` is
-wrapped into an unchecked `ThrownFromLambdaException`, and the cause is set as this `Throwable`.
+wrapped into an unchecked `ThrownByLambdaException`, and the cause is set as this `Throwable`.
 
 ### Why `Throwable`? Why not just `Exception`?
 

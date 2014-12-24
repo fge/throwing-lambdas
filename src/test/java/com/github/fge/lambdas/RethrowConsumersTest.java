@@ -1,9 +1,11 @@
 package com.github.fge.lambdas;
 
 import com.github.fge.lambdas.consumers.ThrowingConsumer;
+import com.github.fge.lambdas.consumers.ThrowingIntConsumer;
 import com.github.fge.lambdas.helpers.Type1;
 import org.testng.annotations.Test;
 
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static com.github.fge.lambdas.CustomAssertions.shouldHaveThrown;
@@ -13,6 +15,7 @@ import static com.github.fge.lambdas.helpers.Throwables.ERROR;
 import static com.github.fge.lambdas.helpers.Throwables.UNCHECKED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 
@@ -24,7 +27,7 @@ import static org.mockito.Mockito.mock;
 public final class RethrowConsumersTest
 {
     @Test
-    public void checkedExceptionThrownFromConsumerIsWrapped()
+    public void checkedExceptionThrownByConsumerIsWrapped()
         throws Throwable
     {
         final ThrowingConsumer<Type1> c = mock(ThrowingConsumer.class);
@@ -33,14 +36,14 @@ public final class RethrowConsumersTest
 
         try {
             Stream.of(mock(Type1.class)).forEach(rethrow(c));
-            shouldHaveThrown(ThrownFromLambdaException.class);
-        } catch (ThrownFromLambdaException e) {
+            shouldHaveThrown(ThrownByLambdaException.class);
+        } catch (ThrownByLambdaException e) {
             assertThat(e.getCause()).isSameAs(CHECKED);
         }
     }
 
     @Test
-    public void uncheckedExceptionThrownFromConsumerIsThrownAsIs()
+    public void uncheckedExceptionThrownByConsumerIsThrownAsIs()
         throws Throwable
     {
         final ThrowingConsumer<Type1> c = mock(ThrowingConsumer.class);
@@ -56,7 +59,7 @@ public final class RethrowConsumersTest
     }
 
     @Test
-    public void errorThrownFromConsumerIsThrownAsIs()
+    public void errorThrownByConsumerIsThrownAsIs()
         throws Throwable
     {
         final ThrowingConsumer<Type1> c = mock(ThrowingConsumer.class);
@@ -65,6 +68,54 @@ public final class RethrowConsumersTest
 
         try {
             Stream.of(mock(Type1.class)).forEach(rethrow(c));
+            shouldHaveThrown(Error.class);
+        } catch (Error e) {
+            assertThat(e).isSameAs(ERROR);
+        }
+    }
+
+    @Test
+    public void checkedExceptionThrownByIntConsumerIsWrapped()
+        throws Throwable
+    {
+        final ThrowingIntConsumer c = mock(ThrowingIntConsumer.class);
+
+        doThrow(CHECKED).when(c).accept(anyInt());
+
+        try {
+            IntStream.of(0).forEach(rethrow(c));
+            shouldHaveThrown(ThrownByLambdaException.class);
+        } catch (ThrownByLambdaException e) {
+            assertThat(e.getCause()).isSameAs(CHECKED);
+        }
+    }
+
+    @Test
+    public void uncheckedExceptionThrownByIntConsumerIsThrownAsIs()
+        throws Throwable
+    {
+        final ThrowingIntConsumer c = mock(ThrowingIntConsumer.class);
+
+        doThrow(UNCHECKED).when(c).accept(anyInt());
+
+        try {
+            IntStream.of(0).forEach(rethrow(c));
+            shouldHaveThrown(RuntimeException.class);
+        } catch (RuntimeException e) {
+            assertThat(e).isSameAs(UNCHECKED);
+        }
+    }
+
+    @Test
+    public void errorThrownByIntConsumerIsThrownAsIs()
+        throws Throwable
+    {
+        final ThrowingIntConsumer c = mock(ThrowingIntConsumer.class);
+
+        doThrow(ERROR).when(c).accept(anyInt());
+
+        try {
+            IntStream.of(0).forEach(rethrow(c));
             shouldHaveThrown(Error.class);
         } catch (Error e) {
             assertThat(e).isSameAs(ERROR);

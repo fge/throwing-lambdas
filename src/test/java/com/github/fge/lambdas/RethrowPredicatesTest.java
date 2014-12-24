@@ -34,7 +34,7 @@ import static org.mockito.Mockito.when;
 public final class RethrowPredicatesTest
 {
     @Test
-    public void checkedExceptionThrownFromPredicateIsWrapped()
+    public void checkedExceptionThrownByPredicateIsWrapped()
         throws Throwable
     {
         final ThrowingPredicate<Type1> p = mock(ThrowingPredicate.class);
@@ -43,14 +43,14 @@ public final class RethrowPredicatesTest
 
         try {
             Stream.of(mock(Type1.class)).anyMatch(rethrow(p));
-            shouldHaveThrown(ThrownFromLambdaException.class);
-        } catch (ThrownFromLambdaException e) {
+            shouldHaveThrown(ThrownByLambdaException.class);
+        } catch (ThrownByLambdaException e) {
             assertThat(e.getCause()).isSameAs(CHECKED);
         }
     }
 
     @Test
-    public void uncheckedExceptionThrownFromPredicateIsThrownAsIs()
+    public void uncheckedExceptionThrownByPredicateIsThrownAsIs()
         throws Throwable
     {
         final ThrowingPredicate<Type1> p = mock(ThrowingPredicate.class);
@@ -66,7 +66,7 @@ public final class RethrowPredicatesTest
     }
 
     @Test
-    public void errorThrownFromPredicateIsThrownAsIs()
+    public void errorThrownByPredicateIsThrownAsIs()
         throws Throwable
     {
         final ThrowingPredicate<Type1> p = mock(ThrowingPredicate.class);
@@ -82,7 +82,7 @@ public final class RethrowPredicatesTest
     }
 
     @Test
-    public void checkedExceptionThrownFromIntPredicateIsWrapped()
+    public void checkedExceptionThrownByIntPredicateIsWrapped()
         throws Throwable
     {
         final ThrowingIntPredicate p = mock(ThrowingIntPredicate.class);
@@ -91,14 +91,14 @@ public final class RethrowPredicatesTest
 
         try {
             IntStream.of(0).anyMatch(rethrow(p));
-            shouldHaveThrown(ThrownFromLambdaException.class);
-        } catch (ThrownFromLambdaException e) {
+            shouldHaveThrown(ThrownByLambdaException.class);
+        } catch (ThrownByLambdaException e) {
             assertThat(e.getCause()).isSameAs(CHECKED);
         }
     }
 
     @Test
-    public void uncheckedExceptionThrownFromIntPredicateIsThrownAsIs()
+    public void uncheckedExceptionThrownByIntPredicateIsThrownAsIs()
         throws Throwable
     {
         final ThrowingIntPredicate p = mock(ThrowingIntPredicate.class);
@@ -114,7 +114,7 @@ public final class RethrowPredicatesTest
     }
 
     @Test
-    public void errorThrownFromIntPredicateisThrownAsIs()
+    public void errorThrownByIntPredicateisThrownAsIs()
         throws Throwable
     {
         final ThrowingIntPredicate p = mock(ThrowingIntPredicate.class);
@@ -130,7 +130,7 @@ public final class RethrowPredicatesTest
     }
 
     @Test
-    public void checkedExceptionThrownFromLongPredicateIsWrapped()
+    public void checkedExceptionThrownByLongPredicateIsWrapped()
         throws Throwable
     {
         final ThrowingLongPredicate p = mock(ThrowingLongPredicate.class);
@@ -139,14 +139,14 @@ public final class RethrowPredicatesTest
 
         try {
             LongStream.of(0L).anyMatch(rethrow(p));
-            shouldHaveThrown(ThrownFromLambdaException.class);
-        } catch (ThrownFromLambdaException e) {
+            shouldHaveThrown(ThrownByLambdaException.class);
+        } catch (ThrownByLambdaException e) {
             assertThat(e.getCause()).isSameAs(CHECKED);
         }
     }
 
     @Test
-    public void uncheckedExceptionThrownFromLongPredicateIsThrownAsIs()
+    public void uncheckedExceptionThrownByLongPredicateIsThrownAsIs()
         throws Throwable
     {
         final ThrowingLongPredicate p = mock(ThrowingLongPredicate.class);
@@ -162,7 +162,7 @@ public final class RethrowPredicatesTest
     }
 
     @Test
-    public void errorThrownFromLongPredicateisThrownAsIs()
+    public void errorThrownByLongPredicateisThrownAsIs()
         throws Throwable
     {
         final ThrowingLongPredicate p = mock(ThrowingLongPredicate.class);
@@ -178,7 +178,7 @@ public final class RethrowPredicatesTest
     }
 
     @Test
-    public void checkedExceptionThrownFromDoublePredicateIsWrapped()
+    public void checkedExceptionThrownByDoublePredicateIsWrapped()
         throws Throwable
     {
         final ThrowingDoublePredicate p = mock(ThrowingDoublePredicate.class);
@@ -187,14 +187,14 @@ public final class RethrowPredicatesTest
 
         try {
             DoubleStream.of(0.0).anyMatch(rethrow(p));
-            shouldHaveThrown(ThrownFromLambdaException.class);
-        } catch (ThrownFromLambdaException e) {
+            shouldHaveThrown(ThrownByLambdaException.class);
+        } catch (ThrownByLambdaException e) {
             assertThat(e.getCause()).isSameAs(CHECKED);
         }
     }
 
     @Test
-    public void uncheckedExceptionThrownFromDoublePredicateIsThrownAsIs()
+    public void uncheckedExceptionThrownByDoublePredicateIsThrownAsIs()
         throws Throwable
     {
         final ThrowingDoublePredicate p = mock(ThrowingDoublePredicate.class);
@@ -210,7 +210,7 @@ public final class RethrowPredicatesTest
     }
 
     @Test
-    public void errorThrownFromDoublePredicateisThrownAsIs()
+    public void errorThrownByDoublePredicateisThrownAsIs()
         throws Throwable
     {
         final ThrowingDoublePredicate p = mock(ThrowingDoublePredicate.class);

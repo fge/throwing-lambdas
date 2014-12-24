@@ -2,6 +2,7 @@ package com.github.fge.lambdas;
 
 
 import com.github.fge.lambdas.consumers.ThrowingConsumer;
+import com.github.fge.lambdas.consumers.ThrowingIntConsumer;
 import com.github.fge.lambdas.functions.ThrowingDoubleFunction;
 import com.github.fge.lambdas.functions.ThrowingDoubleToIntFunction;
 import com.github.fge.lambdas.functions.ThrowingDoubleToLongFunction;
@@ -23,6 +24,7 @@ import java.util.function.DoublePredicate;
 import java.util.function.DoubleToIntFunction;
 import java.util.function.DoubleToLongFunction;
 import java.util.function.Function;
+import java.util.function.IntConsumer;
 import java.util.function.IntFunction;
 import java.util.function.IntPredicate;
 import java.util.function.IntToDoubleFunction;
@@ -48,7 +50,7 @@ public class Rethrow
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable tooBad) {
-                throw new ThrownFromLambdaException(tooBad);
+                throw new ThrownByLambdaException(tooBad);
             }
         };
     }
@@ -61,7 +63,7 @@ public class Rethrow
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable tooBad) {
-                throw new ThrownFromLambdaException(tooBad);
+                throw new ThrownByLambdaException(tooBad);
             }
         };
     }
@@ -74,7 +76,7 @@ public class Rethrow
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable tooBad) {
-                throw new ThrownFromLambdaException(tooBad);
+                throw new ThrownByLambdaException(tooBad);
             }
         };
     }
@@ -88,7 +90,7 @@ public class Rethrow
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable tooBad) {
-                throw new ThrownFromLambdaException(tooBad);
+                throw new ThrownByLambdaException(tooBad);
             }
         };
     }
@@ -101,7 +103,7 @@ public class Rethrow
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable tooBad) {
-                throw new ThrownFromLambdaException(tooBad);
+                throw new ThrownByLambdaException(tooBad);
             }
         };
     }
@@ -115,7 +117,7 @@ public class Rethrow
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable tooBad) {
-                throw new ThrownFromLambdaException(tooBad);
+                throw new ThrownByLambdaException(tooBad);
             }
         };
     }
@@ -128,7 +130,7 @@ public class Rethrow
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable tooBad) {
-                throw new ThrownFromLambdaException(tooBad);
+                throw new ThrownByLambdaException(tooBad);
             }
         };
     }
@@ -142,7 +144,7 @@ public class Rethrow
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable tooBad) {
-                throw new ThrownFromLambdaException(tooBad);
+                throw new ThrownByLambdaException(tooBad);
             }
         };
     }
@@ -156,7 +158,7 @@ public class Rethrow
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable tooBad) {
-                throw new ThrownFromLambdaException(tooBad);
+                throw new ThrownByLambdaException(tooBad);
             }
         };
     }
@@ -170,7 +172,7 @@ public class Rethrow
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable tooBad) {
-                throw new ThrownFromLambdaException(tooBad);
+                throw new ThrownByLambdaException(tooBad);
             }
         };
     }
@@ -183,7 +185,7 @@ public class Rethrow
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable tooBad) {
-                throw new ThrownFromLambdaException(tooBad);
+                throw new ThrownByLambdaException(tooBad);
             }
         };
     }
@@ -196,7 +198,7 @@ public class Rethrow
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable tooBad) {
-                throw new ThrownFromLambdaException(tooBad);
+                throw new ThrownByLambdaException(tooBad);
             }
         };
     }
@@ -209,7 +211,7 @@ public class Rethrow
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable tooBad) {
-                throw new ThrownFromLambdaException(tooBad);
+                throw new ThrownByLambdaException(tooBad);
             }
         };
     }
@@ -222,7 +224,7 @@ public class Rethrow
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable tooBad) {
-                throw new ThrownFromLambdaException(tooBad);
+                throw new ThrownByLambdaException(tooBad);
             }
         };
     }
@@ -239,7 +241,20 @@ public class Rethrow
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable tooBad) {
-                throw new ThrownFromLambdaException(tooBad);
+                throw new ThrownByLambdaException(tooBad);
+            }
+        };
+    }
+
+    public static IntConsumer rethrow(final ThrowingIntConsumer c)
+    {
+        return t -> {
+            try {
+                c.accept(t);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable tooBad) {
+                throw new ThrownByLambdaException(tooBad);
             }
         };
     }
