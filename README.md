@@ -13,10 +13,12 @@ entries in a directory. Right now you have to do this:
 
 ```java
 Files.list(somedir).map(
-    path -> try {
-        return path.toRealPath();
-    } catch (IOException e) {
-        throw new RuntimeException(e);
+    path -> {
+        try {
+            return path.toRealPath();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }).forEach(System.out::println);
 ```
 
