@@ -19,6 +19,7 @@ import com.github.fge.lambdas.predicates.ThrowingDoublePredicate;
 import com.github.fge.lambdas.predicates.ThrowingIntPredicate;
 import com.github.fge.lambdas.predicates.ThrowingLongPredicate;
 import com.github.fge.lambdas.predicates.ThrowingPredicate;
+import com.github.fge.lambdas.suppliers.ThrowingSupplier;
 
 import java.util.function.Consumer;
 import java.util.function.DoubleConsumer;
@@ -38,6 +39,7 @@ import java.util.function.LongPredicate;
 import java.util.function.LongToDoubleFunction;
 import java.util.function.LongToIntFunction;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 @SuppressWarnings("NonFinalUtilityClass")
 public class Rethrow
@@ -281,6 +283,18 @@ public class Rethrow
         return t -> {
             try {
                 c.accept(t);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable tooBad) {
+                throw new ThrownByLambdaException(tooBad);
+            }
+        };
+    }
+
+    public static <T> Supplier<T> rethrow(final ThrowingSupplier<T> s) {
+        return () -> {
+            try {
+                return s.get();
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable tooBad) {
