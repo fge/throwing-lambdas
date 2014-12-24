@@ -2,7 +2,9 @@ package com.github.fge.lambdas;
 
 
 import com.github.fge.lambdas.consumers.ThrowingConsumer;
+import com.github.fge.lambdas.consumers.ThrowingDoubleConsumer;
 import com.github.fge.lambdas.consumers.ThrowingIntConsumer;
+import com.github.fge.lambdas.consumers.ThrowingLongConsumer;
 import com.github.fge.lambdas.functions.ThrowingDoubleFunction;
 import com.github.fge.lambdas.functions.ThrowingDoubleToIntFunction;
 import com.github.fge.lambdas.functions.ThrowingDoubleToLongFunction;
@@ -19,6 +21,7 @@ import com.github.fge.lambdas.predicates.ThrowingLongPredicate;
 import com.github.fge.lambdas.predicates.ThrowingPredicate;
 
 import java.util.function.Consumer;
+import java.util.function.DoubleConsumer;
 import java.util.function.DoubleFunction;
 import java.util.function.DoublePredicate;
 import java.util.function.DoubleToIntFunction;
@@ -29,6 +32,7 @@ import java.util.function.IntFunction;
 import java.util.function.IntPredicate;
 import java.util.function.IntToDoubleFunction;
 import java.util.function.IntToLongFunction;
+import java.util.function.LongConsumer;
 import java.util.function.LongFunction;
 import java.util.function.LongPredicate;
 import java.util.function.LongToDoubleFunction;
@@ -247,6 +251,32 @@ public class Rethrow
     }
 
     public static IntConsumer rethrow(final ThrowingIntConsumer c)
+    {
+        return t -> {
+            try {
+                c.accept(t);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable tooBad) {
+                throw new ThrownByLambdaException(tooBad);
+            }
+        };
+    }
+
+    public static LongConsumer rethrow(final ThrowingLongConsumer c)
+    {
+        return t -> {
+            try {
+                c.accept(t);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable tooBad) {
+                throw new ThrownByLambdaException(tooBad);
+            }
+        };
+    }
+
+    public static DoubleConsumer rethrow(final ThrowingDoubleConsumer c)
     {
         return t -> {
             try {
