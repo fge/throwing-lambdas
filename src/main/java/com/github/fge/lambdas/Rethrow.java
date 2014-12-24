@@ -19,23 +19,29 @@ import com.github.fge.lambdas.predicates.ThrowingDoublePredicate;
 import com.github.fge.lambdas.predicates.ThrowingIntPredicate;
 import com.github.fge.lambdas.predicates.ThrowingLongPredicate;
 import com.github.fge.lambdas.predicates.ThrowingPredicate;
+import com.github.fge.lambdas.suppliers.ThrowingDoubleSupplier;
+import com.github.fge.lambdas.suppliers.ThrowingIntSupplier;
+import com.github.fge.lambdas.suppliers.ThrowingLongSupplier;
 import com.github.fge.lambdas.suppliers.ThrowingSupplier;
 
 import java.util.function.Consumer;
 import java.util.function.DoubleConsumer;
 import java.util.function.DoubleFunction;
 import java.util.function.DoublePredicate;
+import java.util.function.DoubleSupplier;
 import java.util.function.DoubleToIntFunction;
 import java.util.function.DoubleToLongFunction;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
 import java.util.function.IntFunction;
 import java.util.function.IntPredicate;
+import java.util.function.IntSupplier;
 import java.util.function.IntToDoubleFunction;
 import java.util.function.IntToLongFunction;
 import java.util.function.LongConsumer;
 import java.util.function.LongFunction;
 import java.util.function.LongPredicate;
+import java.util.function.LongSupplier;
 import java.util.function.LongToDoubleFunction;
 import java.util.function.LongToIntFunction;
 import java.util.function.Predicate;
@@ -291,10 +297,50 @@ public class Rethrow
         };
     }
 
+    /*
+     * SUPPLIERS
+     */
+
     public static <T> Supplier<T> rethrow(final ThrowingSupplier<T> s) {
         return () -> {
             try {
                 return s.get();
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable tooBad) {
+                throw new ThrownByLambdaException(tooBad);
+            }
+        };
+    }
+
+    public static IntSupplier rethrow(final ThrowingIntSupplier s) {
+        return () -> {
+            try {
+                return s.getAsInt();
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable tooBad) {
+                throw new ThrownByLambdaException(tooBad);
+            }
+        };
+    }
+
+    public static LongSupplier rethrow(final ThrowingLongSupplier s) {
+        return () -> {
+            try {
+                return s.getAsLong();
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable tooBad) {
+                throw new ThrownByLambdaException(tooBad);
+            }
+        };
+    }
+
+    public static DoubleSupplier rethrow(final ThrowingDoubleSupplier s) {
+        return () -> {
+            try {
+                return s.getAsDouble();
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable tooBad) {
