@@ -85,14 +85,14 @@ Because some great candidates for lambdas throw that. One example is all the inv
 ### Why don't these interfaces implement `Serializable`?
 
 "Serialization is, unquestionably, the worst language feature ever added to any language that made
-it out of the nursery [...] And it's a gift that keeps on giving".
+it out of the nursery [...] And it's the gift that keeps on giving".
 
 This is not me saying it, it's [Brian Goetz](https://www.youtube.com/watch?v=C_QbkGU_lqY#t=45m35s).
 You know the name, right?
 
 Long story short: a serializable `@FunctionalInterface` ruins linkage performance and most
 optimizations which make up the strength of lambdas are they are implemented by the JVM. You _did_
-notice that none of the new interfaces didn't implement it, right? Well, that's the reason why.
+notice that none of the new interfaces implemented it, right? Well, that's the reason why.
 
 Therefore, any request to make them `Serializable` will be rejected with a flat out "NO", and the
 link to the video above will be added to any and all such requests.
