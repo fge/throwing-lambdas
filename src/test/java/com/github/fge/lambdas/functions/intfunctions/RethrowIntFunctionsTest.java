@@ -6,32 +6,22 @@ import org.testng.annotations.Test;
 
 import java.util.stream.IntStream;
 
-import static com.github.fge.lambdas.Rethrow.rethrow;
+import static com.github.fge.lambdas.functions.Functions.rethrow;
 import static com.github.fge.lambdas.helpers.CustomAssertions.shouldHaveThrown;
 import static com.github.fge.lambdas.helpers.Throwables.CHECKED;
 import static com.github.fge.lambdas.helpers.Throwables.ERROR;
 import static com.github.fge.lambdas.helpers.Throwables.UNCHECKED;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
-@SuppressWarnings({
-    "ProhibitedExceptionDeclared",
-    "unchecked",
-    "AutoBoxing",
-    "ErrorNotRethrown"
-})
+@SuppressWarnings("ErrorNotRethrown")
 public final class RethrowIntFunctionsTest
 {
     @Test
     public void wrappedIntFunctionThrowsAppropriateException()
-        throws Throwable
     {
-        final ThrowingIntFunction<Type1> f = mock(ThrowingIntFunction.class);
+        ThrowingIntFunction<Type1> f;
 
-        when(f.apply(anyInt()))
-            .thenThrow(CHECKED).thenThrow(UNCHECKED).thenThrow(ERROR);
+        f = i -> { throw CHECKED; };
 
         try {
             IntStream.of(0).mapToObj(rethrow(f)).count();
@@ -40,12 +30,16 @@ public final class RethrowIntFunctionsTest
             assertThat(e.getCause()).isSameAs(CHECKED);
         }
 
+        f = i -> { throw UNCHECKED; };
+
         try {
             IntStream.of(0).mapToObj(rethrow(f)).count();
             shouldHaveThrown(RuntimeException.class);
         } catch (RuntimeException e) {
             assertThat(e).isSameAs(UNCHECKED);
         }
+
+        f = i -> { throw  ERROR; };
 
         try {
             IntStream.of(0).mapToObj(rethrow(f)).count();
@@ -57,13 +51,10 @@ public final class RethrowIntFunctionsTest
 
     @Test
     public void wrappedIntToLongFunctionThrowsAppropriateException()
-        throws Throwable
     {
-        final ThrowingIntToLongFunction f
-            = mock(ThrowingIntToLongFunction.class);
+        ThrowingIntToLongFunction f;
 
-        when(f.apply(anyInt()))
-            .thenThrow(CHECKED).thenThrow(UNCHECKED).thenThrow(ERROR);
+        f = i -> { throw CHECKED; };
 
         try {
             IntStream.of(0).mapToLong(rethrow(f)).count();
@@ -72,12 +63,16 @@ public final class RethrowIntFunctionsTest
             assertThat(e.getCause()).isSameAs(CHECKED);
         }
 
+        f = i -> { throw UNCHECKED; };
+
         try {
             IntStream.of(0).mapToLong(rethrow(f)).count();
             shouldHaveThrown(RuntimeException.class);
         } catch (RuntimeException e) {
             assertThat(e).isSameAs(UNCHECKED);
         }
+
+        f = i -> { throw ERROR; };
 
         try {
             IntStream.of(0).mapToLong(rethrow(f)).count();
@@ -89,13 +84,10 @@ public final class RethrowIntFunctionsTest
 
     @Test
     public void wrappedIntToDoubleFunctionThrowsAppropriateException()
-        throws Throwable
     {
-        final ThrowingIntToDoubleFunction f
-            = mock(ThrowingIntToDoubleFunction.class);
+        ThrowingIntToDoubleFunction f;
 
-        when(f.apply(anyInt()))
-            .thenThrow(CHECKED).thenThrow(UNCHECKED).thenThrow(ERROR);
+        f = i -> { throw CHECKED; };
 
         try {
             IntStream.of(0).mapToDouble(rethrow(f)).count();
@@ -104,12 +96,16 @@ public final class RethrowIntFunctionsTest
             assertThat(e.getCause()).isSameAs(CHECKED);
         }
 
+        f = i -> { throw UNCHECKED; };
+
         try {
             IntStream.of(0).mapToDouble(rethrow(f)).count();
             shouldHaveThrown(RuntimeException.class);
         } catch (RuntimeException e) {
             assertThat(e).isSameAs(UNCHECKED);
         }
+
+        f = i -> { throw ERROR; };
 
         try {
             IntStream.of(0).mapToDouble(rethrow(f)).count();

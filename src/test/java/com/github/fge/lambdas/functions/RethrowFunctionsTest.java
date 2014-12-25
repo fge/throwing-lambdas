@@ -3,38 +3,29 @@ package com.github.fge.lambdas.functions;
 import com.github.fge.lambdas.ThrownByLambdaException;
 import com.github.fge.lambdas.helpers.Type1;
 import com.github.fge.lambdas.helpers.Type2;
+import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
+import java.util.function.BinaryOperator;
 import java.util.stream.Stream;
 
-import static com.github.fge.lambdas.Rethrow.rethrow;
+import static com.github.fge.lambdas.functions.Functions.rethrow;
 import static com.github.fge.lambdas.helpers.CustomAssertions.shouldHaveThrown;
 import static com.github.fge.lambdas.helpers.Throwables.CHECKED;
 import static com.github.fge.lambdas.helpers.Throwables.ERROR;
 import static com.github.fge.lambdas.helpers.Throwables.UNCHECKED;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@SuppressWarnings({
-    "ProhibitedExceptionDeclared",
-    "unchecked",
-    "ErrorNotRethrown"
-})
+@SuppressWarnings("ErrorNotRethrown")
 public final class RethrowFunctionsTest
 {
-    /*
-     * Function
-     */
-
     @Test
     public void wrappedFunctionThrowsAppropriateException()
-        throws Throwable
     {
-        final ThrowingFunction<Type1, Type2> f = mock(ThrowingFunction.class);
+        ThrowingFunction<Type1, Type2> f;
 
-        when(f.apply(Type1.any()))
-            .thenThrow(CHECKED).thenThrow(UNCHECKED).thenThrow(ERROR);
+        f = t -> { throw CHECKED; };
 
         try {
             Stream.of(Type1.mock()).map(rethrow(f)).count();
@@ -43,12 +34,16 @@ public final class RethrowFunctionsTest
             assertThat(e.getCause()).isSameAs(CHECKED);
         }
 
+        f = t -> { throw UNCHECKED; };
+
         try {
             Stream.of(Type1.mock()).map(rethrow(f)).count();
             shouldHaveThrown(RuntimeException.class);
         } catch (RuntimeException e) {
             assertThat(e).isSameAs(UNCHECKED);
         }
+
+        f = t -> { throw ERROR; };
 
         try {
             Stream.of(Type1.mock()).map(rethrow(f)).count();
@@ -59,31 +54,36 @@ public final class RethrowFunctionsTest
     }
 
     @Test
-    public void wrappedUnaryOperatorThrowsAppropriateException()
-        throws Throwable
+    public void wrappedBiFunctionThrowsAppropriateException()
     {
-        final ThrowingUnaryOperator<Type1> o
-            = mock(ThrowingUnaryOperator.class);
+        @SuppressWarnings("unchecked")
+        final BinaryOperator<Type2> o = Mockito.mock(BinaryOperator.class);
+        when(o.apply(Type2.any(), Type2.any())).thenReturn(Type2.mock());
 
-        when(o.apply(Type1.any()))
-            .thenThrow(CHECKED).thenThrow(UNCHECKED).thenThrow(ERROR);
+        ThrowingBiFunction<Type2, Type1, Type2> f;
+
+        f = (t, u) -> { throw CHECKED; };
 
         try {
-            Stream.of(Type1.mock()).map(rethrow(o)).count();
+            Stream.of(Type1.mock()).reduce(Type2.mock(), rethrow(f), o);
             shouldHaveThrown(ThrownByLambdaException.class);
         } catch (ThrownByLambdaException e) {
             assertThat(e.getCause()).isSameAs(CHECKED);
         }
 
+        f = (t, u) -> { throw UNCHECKED; };
+
         try {
-            Stream.of(Type1.mock()).map(rethrow(o)).count();
+            Stream.of(Type1.mock()).reduce(Type2.mock(), rethrow(f), o);
             shouldHaveThrown(RuntimeException.class);
         } catch (RuntimeException e) {
             assertThat(e).isSameAs(UNCHECKED);
         }
 
+        f = (t, u) -> { throw ERROR; };
+
         try {
-            Stream.of(Type1.mock()).map(rethrow(o)).count();
+            Stream.of(Type1.mock()).reduce(Type2.mock(), rethrow(f), o);
             shouldHaveThrown(Error.class);
         } catch (Error e) {
             assertThat(e).isSameAs(ERROR);

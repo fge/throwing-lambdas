@@ -1,20 +1,20 @@
-package com.github.fge.lambdas.functions.doublefunctions;
+package com.github.fge.lambdas.functions;
 
 import com.github.fge.lambdas.ThrownByLambdaException;
 
-import java.util.function.DoubleToIntFunction;
+import java.util.function.BiFunction;
 
-public interface ThrowingDoubleToIntFunction
-    extends DoubleToIntFunction
+public interface ThrowingBiFunction<T, U, R>
+    extends BiFunction<T, U, R>
 {
-    int doApplyAsInt(double value)
+    R doApply(T t, U u)
         throws Throwable;
 
     @Override
-    default int applyAsInt(double value)
+    default R apply(T t, U u)
     {
         try {
-            return doApplyAsInt(value);
+            return doApply(t, u);
         } catch (Error | RuntimeException e) {
             throw e;
         } catch (Throwable tooBad) {

@@ -1,20 +1,20 @@
-package com.github.fge.lambdas.functions.doublefunctions;
+package com.github.fge.lambdas.functions.operators;
 
 import com.github.fge.lambdas.ThrownByLambdaException;
 
-import java.util.function.DoubleToIntFunction;
+import java.util.function.UnaryOperator;
 
-public interface ThrowingDoubleToIntFunction
-    extends DoubleToIntFunction
+public interface ThrowingUnaryOperator<T>
+    extends UnaryOperator<T>
 {
-    int doApplyAsInt(double value)
+    T doApply(T t)
         throws Throwable;
 
     @Override
-    default int applyAsInt(double value)
+    default T apply(T t)
     {
         try {
-            return doApplyAsInt(value);
+            return doApply(t);
         } catch (Error | RuntimeException e) {
             throw e;
         } catch (Throwable tooBad) {
