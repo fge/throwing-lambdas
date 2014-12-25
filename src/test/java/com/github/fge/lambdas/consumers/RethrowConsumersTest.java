@@ -2,40 +2,32 @@ package com.github.fge.lambdas.consumers;
 
 import com.github.fge.lambdas.ThrownByLambdaException;
 import com.github.fge.lambdas.helpers.Type1;
+import com.github.fge.lambdas.helpers.Type2;
 import org.testng.annotations.Test;
 
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
-import static com.github.fge.lambdas.Rethrow.rethrow;
+import static com.github.fge.lambdas.consumers.Consumers.rethrow;
 import static com.github.fge.lambdas.helpers.CustomAssertions.shouldHaveThrown;
 import static com.github.fge.lambdas.helpers.Throwables.CHECKED;
 import static com.github.fge.lambdas.helpers.Throwables.ERROR;
 import static com.github.fge.lambdas.helpers.Throwables.UNCHECKED;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.anyDouble;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
 
-@SuppressWarnings({
-    "unchecked",
-    "ProhibitedExceptionDeclared",
-    "ErrorNotRethrown"
-})
+@SuppressWarnings("ErrorNotRethrown")
 public final class RethrowConsumersTest
 {
     @Test
     public void wrappedConsumerThrowsAppropriateException()
-        throws Throwable
     {
-        final ThrowingConsumer<Type1> c = mock(ThrowingConsumer.class);
+        ThrowingConsumer<Type1> c;
 
-        doThrow(CHECKED).doThrow(UNCHECKED).doThrow(ERROR)
-            .when(c).accept(Type1.any());
+        c = t -> { throw CHECKED; };
 
         try {
             Stream.of(Type1.mock()).forEach(rethrow(c));
@@ -44,12 +36,16 @@ public final class RethrowConsumersTest
             assertThat(e.getCause()).isSameAs(CHECKED);
         }
 
+        c = t -> { throw UNCHECKED; };
+
         try {
             Stream.of(Type1.mock()).forEach(rethrow(c));
             shouldHaveThrown(RuntimeException.class);
         } catch (RuntimeException e) {
             assertThat(e).isSameAs(UNCHECKED);
         }
+
+        c = t -> { throw ERROR; };
 
         try {
             Stream.of(Type1.mock()).forEach(rethrow(c));
@@ -61,12 +57,10 @@ public final class RethrowConsumersTest
 
     @Test
     public void wrappedIntConsumerThrowsAppropriateException()
-        throws Throwable
     {
-        final ThrowingIntConsumer c = mock(ThrowingIntConsumer.class);
+        ThrowingIntConsumer c;
 
-        doThrow(CHECKED).doThrow(UNCHECKED).doThrow(ERROR)
-            .when(c).accept(anyInt());
+        c = value -> { throw CHECKED; };
 
         try {
             IntStream.of(0).forEach(rethrow(c));
@@ -75,12 +69,16 @@ public final class RethrowConsumersTest
             assertThat(e.getCause()).isSameAs(CHECKED);
         }
 
+        c = value -> { throw UNCHECKED; };
+
         try {
             IntStream.of(0).forEach(rethrow(c));
             shouldHaveThrown(RuntimeException.class);
         } catch (RuntimeException e) {
             assertThat(e).isSameAs(UNCHECKED);
         }
+
+        c = value -> { throw ERROR; };
 
         try {
             IntStream.of(0).forEach(rethrow(c));
@@ -92,12 +90,10 @@ public final class RethrowConsumersTest
 
     @Test
     public void wrappedLongConsumerThrowsAppropriateException()
-        throws Throwable
     {
-        final ThrowingLongConsumer c = mock(ThrowingLongConsumer.class);
+        ThrowingLongConsumer c;
 
-        doThrow(CHECKED).doThrow(UNCHECKED).doThrow(ERROR)
-            .when(c).accept(anyLong());
+        c = value -> { throw CHECKED; };
 
         try {
             LongStream.of(0L).forEach(rethrow(c));
@@ -106,12 +102,16 @@ public final class RethrowConsumersTest
             assertThat(e.getCause()).isSameAs(CHECKED);
         }
 
+        c = value -> { throw UNCHECKED; };
+
         try {
             LongStream.of(0L).forEach(rethrow(c));
             shouldHaveThrown(RuntimeException.class);
         } catch (RuntimeException e) {
             assertThat(e).isSameAs(UNCHECKED);
         }
+
+        c = value -> { throw ERROR; };
 
         try {
             LongStream.of(0L).forEach(rethrow(c));
@@ -123,12 +123,10 @@ public final class RethrowConsumersTest
 
     @Test
     public void wrappedDoubleConsumerThrowsAppropriateException()
-        throws Throwable
     {
-        final ThrowingDoubleConsumer c = mock(ThrowingDoubleConsumer.class);
+        ThrowingDoubleConsumer c;
 
-        doThrow(CHECKED).doThrow(UNCHECKED).doThrow(ERROR)
-            .when(c).accept(anyDouble());
+        c = value -> { throw CHECKED; };
 
         try {
             DoubleStream.of(0.0).forEach(rethrow(c));
@@ -137,6 +135,8 @@ public final class RethrowConsumersTest
             assertThat(e.getCause()).isSameAs(CHECKED);
         }
 
+        c = value -> { throw UNCHECKED; };
+
         try {
             DoubleStream.of(0.0).forEach(rethrow(c));
             shouldHaveThrown(RuntimeException.class);
@@ -144,10 +144,51 @@ public final class RethrowConsumersTest
             assertThat(e).isSameAs(UNCHECKED);
         }
 
+        c = value -> { throw ERROR; };
+
         try {
             DoubleStream.of(0.0).forEach(rethrow(c));
             shouldHaveThrown(Error.class);
         } catch (Error e) {
+            assertThat(e).isSameAs(ERROR);
+        }
+    }
+
+    @Test
+    public void wrappedBiConsumerThrowsAppropriateException()
+    {
+        final Supplier<Type2> supplier = Type2::mock;
+        final BiConsumer<Type2, Type2> combiner = (t, u) -> {};
+
+        ThrowingBiConsumer<Type2, Type1> accumulator;
+
+        accumulator = (t, u) -> { throw CHECKED; };
+
+        try {
+            Stream.of(Type1.mock())
+                .collect(supplier, Consumers.rethrow(accumulator), combiner);
+            shouldHaveThrown(ThrownByLambdaException.class);
+        } catch (ThrownByLambdaException e) {
+            assertThat(e.getCause()).isSameAs(CHECKED);
+        }
+
+        accumulator = (t, u) -> { throw UNCHECKED; };
+
+        try {
+            Stream.of(Type1.mock())
+                .collect(supplier, Consumers.rethrow(accumulator), combiner);
+            shouldHaveThrown(RuntimeException.class);
+        } catch (RuntimeException e) {
+            assertThat(e).isSameAs(UNCHECKED);
+        }
+
+        accumulator = (t, u) -> { throw ERROR; };
+
+        try {
+            Stream.of(Type1.mock())
+                .collect(supplier, Consumers.rethrow(accumulator), combiner);
+            shouldHaveThrown(Error.class);
+        } catch (RuntimeException e) {
             assertThat(e).isSameAs(ERROR);
         }
     }

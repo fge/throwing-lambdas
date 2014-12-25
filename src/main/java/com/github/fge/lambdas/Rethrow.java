@@ -1,11 +1,7 @@
 package com.github.fge.lambdas;
 
 
-import com.github.fge.lambdas.consumers.ThrowingConsumer;
-import com.github.fge.lambdas.consumers.ThrowingDoubleConsumer;
-import com.github.fge.lambdas.consumers.ThrowingIntConsumer;
-import com.github.fge.lambdas.consumers.ThrowingLongConsumer;
-import com.github.fge.lambdas.consumers.twoarity.ThrowingBiConsumer;
+import com.github.fge.lambdas.consumers.ThrowingBiConsumer;
 import com.github.fge.lambdas.predicates.ThrowingDoublePredicate;
 import com.github.fge.lambdas.predicates.ThrowingIntPredicate;
 import com.github.fge.lambdas.predicates.ThrowingLongPredicate;
@@ -16,14 +12,10 @@ import com.github.fge.lambdas.suppliers.ThrowingLongSupplier;
 import com.github.fge.lambdas.suppliers.ThrowingSupplier;
 
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.function.DoubleConsumer;
 import java.util.function.DoublePredicate;
 import java.util.function.DoubleSupplier;
-import java.util.function.IntConsumer;
 import java.util.function.IntPredicate;
 import java.util.function.IntSupplier;
-import java.util.function.LongConsumer;
 import java.util.function.LongPredicate;
 import java.util.function.LongSupplier;
 import java.util.function.Predicate;
@@ -76,62 +68,6 @@ public class Rethrow
         return t -> {
             try {
                 return p.test(t);
-            } catch (Error | RuntimeException e) {
-                throw e;
-            } catch (Throwable tooBad) {
-                throw new ThrownByLambdaException(tooBad);
-            }
-        };
-    }
-
-    /*
-     * CONSUMERS
-     */
-
-    public static <T> Consumer<T> rethrow(final ThrowingConsumer<T> c)
-    {
-        return t -> {
-            try {
-                c.accept(t);
-            } catch (Error | RuntimeException e) {
-                throw e;
-            } catch (Throwable tooBad) {
-                throw new ThrownByLambdaException(tooBad);
-            }
-        };
-    }
-
-    public static IntConsumer rethrow(final ThrowingIntConsumer c)
-    {
-        return t -> {
-            try {
-                c.accept(t);
-            } catch (Error | RuntimeException e) {
-                throw e;
-            } catch (Throwable tooBad) {
-                throw new ThrownByLambdaException(tooBad);
-            }
-        };
-    }
-
-    public static LongConsumer rethrow(final ThrowingLongConsumer c)
-    {
-        return t -> {
-            try {
-                c.accept(t);
-            } catch (Error | RuntimeException e) {
-                throw e;
-            } catch (Throwable tooBad) {
-                throw new ThrownByLambdaException(tooBad);
-            }
-        };
-    }
-
-    public static DoubleConsumer rethrow(final ThrowingDoubleConsumer c)
-    {
-        return t -> {
-            try {
-                c.accept(t);
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable tooBad) {

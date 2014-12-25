@@ -1,6 +1,7 @@
 package com.github.fge.lambdas.consumers.twoarity;
 
 import com.github.fge.lambdas.ThrownByLambdaException;
+import com.github.fge.lambdas.consumers.ThrowingBiConsumer;
 import com.github.fge.lambdas.helpers.Type1;
 import com.github.fge.lambdas.helpers.Type2;
 import org.testng.annotations.Test;
