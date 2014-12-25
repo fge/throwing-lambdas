@@ -6,9 +6,14 @@ Requires Java 8.
 
 ## What this is
 
-This package allows an easy usage of lambdas which can potentially throw exceptions. Its focus is
-first and foremost on all functional interfaces used in streams (either general streams or their
-primitive specializations: `IntStream`, `LongStream` and `DoubleStream`).
+This package allows you to easily use lambdas (whether they be hand-written lambdas or method
+references) which can potentially throw checked exceptions. Unchecked exceptions (and `Error`s) are
+still thrown "as is".
+
+The primary focus of this package is on everything `Stream`, including their primitive type
+specializations (`IntStream`, `LongStream` and `DoubleStream`).
+
+## Short example
 
 Let's take an example; you want to list the real paths (ie, following symbolic links and all) of all
 entries in a directory. Right now you have to do this:
@@ -24,6 +29,10 @@ Files.list(somedir).map(
     }).forEach(System.out::println);
 ```
 
+But that's a waste; `Path`'s `.toRealPath()` is a method and could easily be used as a method
+reference, except that it throws a checked exception... And lambdas unfortunately cannot propagate
+exceptions out of their context.
+
 With this package you can do this instead:
 
 ```java
@@ -33,9 +42,14 @@ Files.list(somedir).map(rethrow(Path::toRealPath))
     .forEach(System.out::println);
 ```
 
-## Further reading
+You can see more about what you can do [here](https://github.com/fge/throwing-lambdas/wiki/How-to-use).
 
-A quick usage guide is [here](https://github.com/fge/throwing-lambdas/wiki/How-to-use).
+## Status
+
+Apart from `Collector` (this one is not as easy), all interfaces used by all `*Stream` are covered
+by this package. Yes, all 39 of them. And all are tested.
+
+## Further reading
 
 If you want to see how this works, see [this
 page](https://github.com/fge/throwing-lambdas/wiki/How-it-works).
