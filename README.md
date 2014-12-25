@@ -13,6 +13,27 @@ still thrown "as is".
 The primary focus of this package is on everything `Stream`, including their primitive type
 specializations (`IntStream`, `LongStream` and `DoubleStream`).
 
+No further dependencies than the JRE itself is required.
+
+## Versions
+
+The current version is **0.1.0**. It is available on Maven central. Using
+gradle:
+
+```gradle
+compile(group: "com.github.fge", name: "throwing-lambdas", version: "0.1.0");
+```
+
+Using maven:
+
+```xml
+<dependency>
+    <groupId>com.github.fge</groupId>
+    <artifactId>throwing-lambdas</artifactId>
+    <version>0.1.0</version>
+</dependency>
+```
+
 ## Short example
 
 Let's take an example; you want to list the real paths (ie, following symbolic links and all) of all
