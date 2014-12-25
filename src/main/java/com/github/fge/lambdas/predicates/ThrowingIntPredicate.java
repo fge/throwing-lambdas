@@ -1,10 +1,11 @@
 package com.github.fge.lambdas.predicates;
 
-import java.util.function.IntPredicate;
-
 import com.github.fge.lambdas.ThrownByLambdaException;
 
-public interface ThrowingIntPredicate extends IntPredicate
+import java.util.function.IntPredicate;
+
+public interface ThrowingIntPredicate
+    extends IntPredicate
 {
     boolean doTest(int value)
         throws Throwable;

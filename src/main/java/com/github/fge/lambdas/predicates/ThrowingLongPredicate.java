@@ -4,7 +4,8 @@ import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.LongPredicate;
 
-public interface ThrowingLongPredicate extends LongPredicate
+public interface ThrowingLongPredicate
+    extends LongPredicate
 {
     boolean doTest(long value)
         throws Throwable;

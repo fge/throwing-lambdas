@@ -4,7 +4,8 @@ import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.Predicate;
 
-public interface ThrowingPredicate<T> extends Predicate<T>
+public interface ThrowingPredicate<T>
+    extends Predicate<T>
 {
     boolean doTest(T t)
         throws Throwable;

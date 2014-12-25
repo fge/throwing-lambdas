@@ -9,26 +9,20 @@ import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
-import static com.github.fge.lambdas.predicates.Predicates.rethrow;
 import static com.github.fge.lambdas.helpers.CustomAssertions.shouldHaveThrown;
 import static com.github.fge.lambdas.helpers.Throwables.CHECKED;
 import static com.github.fge.lambdas.helpers.Throwables.ERROR;
 import static com.github.fge.lambdas.helpers.Throwables.UNCHECKED;
+import static com.github.fge.lambdas.predicates.Predicates.rethrow;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.anyDouble;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @SuppressWarnings("ErrorNotRethrown")
 public final class RethrowPredicatesTest
 {
     @Test
     public void wrappedPredicateThrowsAppropriateException()
-        throws Throwable
     {
-        final ThrowingPredicate<Type1> p;
+        ThrowingPredicate<Type1> p;
 
         p = t -> { throw CHECKED; };
 
@@ -60,9 +54,8 @@ public final class RethrowPredicatesTest
 
     @Test
     public void wrappedIntPredicateThrowsAppropriateException()
-        throws Throwable
     {
-        final ThrowingIntPredicate p;
+        ThrowingIntPredicate p;
 
         p = t -> { throw CHECKED; };
 
@@ -94,9 +87,8 @@ public final class RethrowPredicatesTest
 
     @Test
     public void wrappedLongPredicateThrowAppropriateException()
-        throws Throwable
     {
-        final ThrowingLongPredicate p;
+        ThrowingLongPredicate p;
 
         p = t -> { throw CHECKED; };
 
@@ -130,7 +122,7 @@ public final class RethrowPredicatesTest
     public void wrappedDoublePredicateThrowsAppropriateException()
         throws Throwable
     {
-        final ThrowingDoublePredicate p;
+        ThrowingDoublePredicate p;
 
         p = t -> { throw CHECKED; };
 

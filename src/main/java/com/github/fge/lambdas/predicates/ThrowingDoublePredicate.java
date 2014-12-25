@@ -4,7 +4,8 @@ import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.DoublePredicate;
 
-public interface ThrowingDoublePredicate extends DoublePredicate
+public interface ThrowingDoublePredicate
+    extends DoublePredicate
 {
     boolean doTest(double value)
         throws Throwable;
