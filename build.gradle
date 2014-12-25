@@ -82,7 +82,7 @@ test {
 }
 
 pitest {
-    pitestVersion = "1.1.2"; // see https://github.com/hcoles/pitest/issues/150
+    pitestVersion = "1.1.3"; // see https://github.com/hcoles/pitest/issues/150
 }
 
 /*
