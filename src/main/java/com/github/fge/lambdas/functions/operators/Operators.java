@@ -1,6 +1,8 @@
 package com.github.fge.lambdas.functions.operators;
 
 import java.util.function.BinaryOperator;
+import java.util.function.DoubleBinaryOperator;
+import java.util.function.DoubleUnaryOperator;
 import java.util.function.UnaryOperator;
 
 public final class Operators
@@ -15,8 +17,20 @@ public final class Operators
         return o;
     }
 
+    public static DoubleUnaryOperator rethrow(
+        final ThrowingDoubleUnaryOperator o)
+    {
+        return o;
+    }
+
     public static <T> BinaryOperator<T> rethrow(
         final ThrowingBinaryOperator<T> o)
+    {
+        return o;
+    }
+
+    public static DoubleBinaryOperator rethrow(
+        final ThrowingDoubleBinaryOperator o)
     {
         return o;
     }
