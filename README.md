@@ -6,7 +6,9 @@ Requires Java 8.
 
 ## What this is
 
-This package allows an easy usage of lambdas which can potentially throw exceptions.
+This package allows an easy usage of lambdas which can potentially throw exceptions. Its focus is
+first and foremost on all functional interfaces used in streams (either general streams or their
+primitive specializations: `IntStream`, `LongStream` and `DoubleStream`).
 
 Let's take an example; you want to list the real paths (ie, following symbolic links and all) of all
 entries in a directory. Right now you have to do this:
@@ -35,6 +37,8 @@ Files.list(somedir).map(rethrow(Path::toRealPath))
 
 If you want to see how this works, see [this
 page](https://github.com/fge/throwing-lambdas/wiki/How-it-works).
+
+Future plans [here](https://github.com/fge/throwing-lambdas/wiki/Future-plans).
 
 There is also a [FAQ](https://github.com/fge/throwing-lambdas/wiki/FAQ) available.
 
