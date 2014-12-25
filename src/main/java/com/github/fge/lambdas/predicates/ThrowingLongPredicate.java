@@ -4,6 +4,7 @@ import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.LongPredicate;
 
+@FunctionalInterface
 public interface ThrowingLongPredicate
     extends LongPredicate
 {

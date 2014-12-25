@@ -4,6 +4,7 @@ import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.Predicate;
 
+@FunctionalInterface
 public interface ThrowingPredicate<T>
     extends Predicate<T>
 {

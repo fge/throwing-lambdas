@@ -4,6 +4,7 @@ import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.LongToDoubleFunction;
 
+@FunctionalInterface
 public interface ThrowingLongToDoubleFunction
     extends LongToDoubleFunction
 {

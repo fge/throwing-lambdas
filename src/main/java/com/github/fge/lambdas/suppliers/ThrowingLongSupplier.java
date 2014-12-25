@@ -4,6 +4,7 @@ import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.LongSupplier;
 
+@FunctionalInterface
 public interface ThrowingLongSupplier
     extends LongSupplier
 {

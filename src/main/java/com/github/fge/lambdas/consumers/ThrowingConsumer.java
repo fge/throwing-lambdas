@@ -4,6 +4,7 @@ import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.Consumer;
 
+@FunctionalInterface
 public interface ThrowingConsumer<T>
     extends Consumer<T>
 {

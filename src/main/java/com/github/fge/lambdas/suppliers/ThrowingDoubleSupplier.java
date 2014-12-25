@@ -4,6 +4,7 @@ import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.DoubleSupplier;
 
+@FunctionalInterface
 public interface ThrowingDoubleSupplier
     extends DoubleSupplier
 {

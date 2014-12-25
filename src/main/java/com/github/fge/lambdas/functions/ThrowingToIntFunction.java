@@ -4,6 +4,7 @@ import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.ToIntFunction;
 
+@FunctionalInterface
 public interface ThrowingToIntFunction<T>
     extends ToIntFunction<T>
 {

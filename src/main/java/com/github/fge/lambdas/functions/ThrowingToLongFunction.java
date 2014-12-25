@@ -4,6 +4,7 @@ import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.ToLongFunction;
 
+@FunctionalInterface
 public interface ThrowingToLongFunction<T>
     extends ToLongFunction<T>
 {

@@ -4,6 +4,7 @@ import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.IntPredicate;
 
+@FunctionalInterface
 public interface ThrowingIntPredicate
     extends IntPredicate
 {

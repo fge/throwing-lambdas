@@ -4,6 +4,7 @@ import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.DoubleFunction;
 
+@FunctionalInterface
 public interface ThrowingDoubleFunction<R>
     extends DoubleFunction<R>
 {

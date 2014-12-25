@@ -4,6 +4,7 @@ import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.BiConsumer;
 
+@FunctionalInterface
 public interface ThrowingBiConsumer<T, U>
     extends BiConsumer<T, U>
 {

@@ -4,6 +4,7 @@ import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.IntSupplier;
 
+@FunctionalInterface
 public interface ThrowingIntSupplier
     extends IntSupplier
 {

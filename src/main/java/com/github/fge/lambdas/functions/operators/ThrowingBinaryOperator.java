@@ -4,6 +4,7 @@ import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.BinaryOperator;
 
+@FunctionalInterface
 public interface ThrowingBinaryOperator<T>
     extends BinaryOperator<T>
 {

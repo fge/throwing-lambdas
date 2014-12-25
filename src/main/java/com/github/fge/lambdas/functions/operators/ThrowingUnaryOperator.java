@@ -4,6 +4,7 @@ import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.UnaryOperator;
 
+@FunctionalInterface
 public interface ThrowingUnaryOperator<T>
     extends UnaryOperator<T>
 {

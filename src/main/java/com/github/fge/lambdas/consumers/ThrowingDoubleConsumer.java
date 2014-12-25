@@ -4,6 +4,7 @@ import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.DoubleConsumer;
 
+@FunctionalInterface
 public interface ThrowingDoubleConsumer
     extends DoubleConsumer
 {
