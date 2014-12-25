@@ -35,6 +35,8 @@ Files.list(somedir).map(rethrow(Path::toRealPath))
 
 ## Further reading
 
+A quick usage guide is [here](https://github.com/fge/throwing-lambdas/wiki/How-to-use).
+
 If you want to see how this works, see [this
 page](https://github.com/fge/throwing-lambdas/wiki/How-it-works).
 

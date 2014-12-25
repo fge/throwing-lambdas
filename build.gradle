@@ -45,7 +45,7 @@ apply(plugin: "propdeps-eclipse");
 apply(plugin: "info.solidsoft.pitest");
 
 group = "com.github.fge";
-version = "1.0.0-SNAPSHOT";
+version = "0.1.0-SNAPSHOT";
 description = "Convenient wrapper methods for \"throwing lambdas\"";
 sourceCompatibility = "1.8";
 targetCompatibility = "1.8"; // defaults to sourceCompatibility
