@@ -15,38 +15,37 @@ import static com.github.fge.lambdas.helpers.Throwables.CHECKED;
 import static com.github.fge.lambdas.helpers.Throwables.ERROR;
 import static com.github.fge.lambdas.helpers.Throwables.UNCHECKED;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
-@SuppressWarnings({ "unchecked", "ProhibitedExceptionDeclared",
-    "ErrorNotRethrown", "AutoBoxing" })
+@SuppressWarnings("ErrorNotRethrown")
 public final class RethrowSuppliersTest
 {
     @Test
     public void wrappedSupplierThrowsAppropriateExceptions()
-        throws Throwable
     {
-        final ThrowingSupplier<Type1> s = mock(ThrowingSupplier.class);
+        ThrowingSupplier<Type1> s;
 
-        when(s.get()).thenThrow(CHECKED).thenThrow(UNCHECKED)
-            .thenThrow(ERROR);
+        s = () -> { throw CHECKED; };
 
         try {
-            Stream.generate(rethrow(s)).count();
+            Stream.generate(Suppliers.rethrow(s)).count();
             shouldHaveThrown(ThrownByLambdaException.class);
         } catch (ThrownByLambdaException e) {
             assertThat(e.getCause()).isSameAs(CHECKED);
         }
 
+        s = () -> { throw UNCHECKED; };
+
         try {
-            Stream.generate(rethrow(s)).count();
+            Stream.generate(Suppliers.rethrow(s)).count();
             shouldHaveThrown(RuntimeException.class);
         } catch (RuntimeException e) {
             assertThat(e).isSameAs(UNCHECKED);
         }
 
+        s = () -> { throw ERROR; };
+
         try {
-            Stream.generate(rethrow(s)).count();
+            Stream.generate(Suppliers.rethrow(s)).count();
             shouldHaveThrown(Error.class);
         } catch (Error e) {
             assertThat(e).isSameAs(ERROR);
@@ -55,19 +54,19 @@ public final class RethrowSuppliersTest
 
     @Test
     public void wrappedIntSupplierThrowsAppropriateException()
-        throws Throwable
     {
-        final ThrowingIntSupplier s = mock(ThrowingIntSupplier.class);
+        ThrowingIntSupplier s;
 
-        when(s.getAsInt())
-            .thenThrow(CHECKED).thenThrow(UNCHECKED).thenThrow(ERROR);
+        s = () -> { throw CHECKED; };
 
         try {
-            IntStream.generate(rethrow(s)).count();
+            IntStream.generate(Suppliers.rethrow(s)).count();
             shouldHaveThrown(ThrownByLambdaException.class);
         } catch (ThrownByLambdaException e) {
             assertThat(e.getCause()).isSameAs(CHECKED);
         }
+
+        s = () -> { throw UNCHECKED; };
 
         try {
             IntStream.generate(rethrow(s)).count();
@@ -75,6 +74,8 @@ public final class RethrowSuppliersTest
         } catch (RuntimeException e) {
             assertThat(e).isSameAs(UNCHECKED);
         }
+
+        s = () -> { throw ERROR; };
 
         try {
             IntStream.generate(rethrow(s)).count();
@@ -86,19 +87,19 @@ public final class RethrowSuppliersTest
 
     @Test
     public void wrappedLongSupplierThrowsAppropriateException()
-        throws Throwable
     {
-        final ThrowingLongSupplier s = mock(ThrowingLongSupplier.class);
+        ThrowingLongSupplier s;
 
-        when(s.getAsLong())
-            .thenThrow(CHECKED).thenThrow(UNCHECKED).thenThrow(ERROR);
+        s = () -> { throw CHECKED; };
 
         try {
-            LongStream.generate(rethrow(s)).count();
+            LongStream.generate(Suppliers.rethrow(s)).count();
             shouldHaveThrown(ThrownByLambdaException.class);
         } catch (ThrownByLambdaException e) {
             assertThat(e.getCause()).isSameAs(CHECKED);
         }
+
+        s = () -> { throw UNCHECKED; };
 
         try {
             LongStream.generate(rethrow(s)).count();
@@ -106,6 +107,8 @@ public final class RethrowSuppliersTest
         } catch (RuntimeException e) {
             assertThat(e).isSameAs(UNCHECKED);
         }
+
+        s = () -> { throw ERROR; };
 
         try {
             LongStream.generate(rethrow(s)).count();
@@ -117,19 +120,19 @@ public final class RethrowSuppliersTest
 
     @Test
     public void wrappedDoubleSupplierThrowsAppropriateException()
-        throws Throwable
     {
-        final ThrowingDoubleSupplier s = mock(ThrowingDoubleSupplier.class);
+        ThrowingDoubleSupplier s;
 
-        when(s.getAsDouble())
-            .thenThrow(CHECKED).thenThrow(UNCHECKED).thenThrow(ERROR);
+        s = () -> { throw CHECKED; };
 
         try {
-            DoubleStream.generate(rethrow(s)).count();
+            DoubleStream.generate(Suppliers.rethrow(s)).count();
             shouldHaveThrown(ThrownByLambdaException.class);
         } catch (ThrownByLambdaException e) {
             assertThat(e.getCause()).isSameAs(CHECKED);
         }
+
+        s = () -> { throw UNCHECKED; };
 
         try {
             DoubleStream.generate(rethrow(s)).count();
@@ -137,6 +140,8 @@ public final class RethrowSuppliersTest
         } catch (RuntimeException e) {
             assertThat(e).isSameAs(UNCHECKED);
         }
+
+        s = () -> { throw ERROR; };
 
         try {
             DoubleStream.generate(rethrow(s)).count();
