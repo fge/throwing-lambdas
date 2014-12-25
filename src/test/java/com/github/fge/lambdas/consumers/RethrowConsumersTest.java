@@ -192,4 +192,115 @@ public final class RethrowConsumersTest
             assertThat(e).isSameAs(ERROR);
         }
     }
+
+    @Test
+    public void wrappedObjIntConsumerThrowsAppropriateException()
+    {
+        final Supplier<Type1> supplier = Type1::mock;
+        final BiConsumer<Type1, Type1> combiner = (t, u) -> {};
+
+        ThrowingObjIntConsumer<Type1> accumulator;
+
+        accumulator = (t, value) -> { throw CHECKED; };
+
+        try {
+            IntStream.of(0).collect(supplier, rethrow(accumulator), combiner);
+            shouldHaveThrown(ThrownByLambdaException.class);
+        } catch (ThrownByLambdaException e) {
+            assertThat(e.getCause()).isSameAs(CHECKED);
+        }
+
+        accumulator = (t, value) -> { throw UNCHECKED; };
+
+        try {
+            IntStream.of(0).collect(supplier, rethrow(accumulator), combiner);
+            shouldHaveThrown(RuntimeException.class);
+        } catch (RuntimeException e) {
+            assertThat(e).isSameAs(UNCHECKED);
+        }
+
+        accumulator = (t, value) -> { throw ERROR; };
+
+        try {
+            IntStream.of(0).collect(supplier, rethrow(accumulator), combiner);
+            shouldHaveThrown(Error.class);
+        } catch (Error e) {
+            assertThat(e).isSameAs(ERROR);
+        }
+    }
+
+    @Test
+    public void wrappedObjLongConsumerThrowsAppropriateException()
+    {
+        final Supplier<Type1> supplier = Type1::mock;
+        final BiConsumer<Type1, Type1> combiner = (t, u) -> {};
+
+        ThrowingObjLongConsumer<Type1> accumulator;
+
+        accumulator = (t, value) -> { throw CHECKED; };
+
+        try {
+            LongStream.of(0L).collect(supplier, rethrow(accumulator), combiner);
+            shouldHaveThrown(ThrownByLambdaException.class);
+        } catch (ThrownByLambdaException e) {
+            assertThat(e.getCause()).isSameAs(CHECKED);
+        }
+
+        accumulator = (t, value) -> { throw UNCHECKED; };
+
+        try {
+            LongStream.of(0L).collect(supplier, rethrow(accumulator), combiner);
+            shouldHaveThrown(RuntimeException.class);
+        } catch (RuntimeException e) {
+            assertThat(e).isSameAs(UNCHECKED);
+        }
+
+        accumulator = (t, value) -> { throw ERROR; };
+
+        try {
+            LongStream.of(0L).collect(supplier, rethrow(accumulator), combiner);
+            shouldHaveThrown(Error.class);
+        } catch (Error e) {
+            assertThat(e).isSameAs(ERROR);
+        }
+    }
+
+    @Test
+    public void wrappedObjDoubleConsumerThrowsAppropriateException()
+    {
+        final Supplier<Type1> supplier = Type1::mock;
+        final BiConsumer<Type1, Type1> combiner = (t, u) -> {};
+
+        ThrowingObjDoubleConsumer<Type1> accumulator;
+
+        accumulator = (t, value) -> { throw CHECKED; };
+
+        try {
+            DoubleStream.of(0.0)
+                .collect(supplier, rethrow(accumulator), combiner);
+            shouldHaveThrown(ThrownByLambdaException.class);
+        } catch (ThrownByLambdaException e) {
+            assertThat(e.getCause()).isSameAs(CHECKED);
+        }
+
+        accumulator = (t, value) -> { throw UNCHECKED; };
+
+        try {
+            DoubleStream.of(0.0)
+                .collect(supplier, rethrow(accumulator), combiner);
+            shouldHaveThrown(RuntimeException.class);
+        } catch (RuntimeException e) {
+            assertThat(e).isSameAs(UNCHECKED);
+        }
+
+        accumulator = (t, value) -> { throw ERROR; };
+
+        try {
+            DoubleStream.of(0.0)
+                .collect(supplier, rethrow(accumulator), combiner);
+            shouldHaveThrown(Error.class);
+        } catch (Error e) {
+            assertThat(e).isSameAs(ERROR);
+        }
+    }
 }
