@@ -1,7 +1,23 @@
 package com.github.fge.lambdas.predicates;
 
-public interface ThrowingPredicate<T>
+import com.github.fge.lambdas.ThrownByLambdaException;
+
+import java.util.function.Predicate;
+
+public interface ThrowingPredicate<T> extends Predicate<T>
 {
-    boolean test(T t)
+    boolean doTest(T t)
         throws Throwable;
+    
+    @Override
+    default boolean test(T t)
+    {
+        try {
+            return doTest(t);
+        } catch (Error | RuntimeException e) {
+            throw e;
+        } catch (Throwable tooBad) {
+            throw new ThrownByLambdaException(tooBad);
+        }
+    }
 }

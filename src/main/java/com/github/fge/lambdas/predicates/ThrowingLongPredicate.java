@@ -1,7 +1,23 @@
 package com.github.fge.lambdas.predicates;
 
-public interface ThrowingLongPredicate
+import com.github.fge.lambdas.ThrownByLambdaException;
+
+import java.util.function.LongPredicate;
+
+public interface ThrowingLongPredicate extends LongPredicate
 {
-    boolean test(long value)
+    boolean doTest(long value)
         throws Throwable;
+
+    @Override
+    default boolean test(long value)
+    {
+        try {
+            return doTest(value);
+        } catch (Error | RuntimeException e) {
+            throw e;
+        } catch (Throwable tooBad) {
+            throw new ThrownByLambdaException(tooBad);
+        }
+    }
 }

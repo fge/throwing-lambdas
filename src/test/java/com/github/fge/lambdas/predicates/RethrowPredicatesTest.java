@@ -9,7 +9,7 @@ import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
-import static com.github.fge.lambdas.Rethrow.rethrow;
+import static com.github.fge.lambdas.predicates.Predicates.rethrow;
 import static com.github.fge.lambdas.helpers.CustomAssertions.shouldHaveThrown;
 import static com.github.fge.lambdas.helpers.Throwables.CHECKED;
 import static com.github.fge.lambdas.helpers.Throwables.ERROR;
@@ -21,22 +21,16 @@ import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@SuppressWarnings({
-    "unchecked",
-    "AutoBoxing",
-    "ProhibitedExceptionDeclared",
-    "ErrorNotRethrown"
-})
+@SuppressWarnings("ErrorNotRethrown")
 public final class RethrowPredicatesTest
 {
     @Test
     public void wrappedPredicateThrowsAppropriateException()
         throws Throwable
     {
-        final ThrowingPredicate<Type1> p = mock(ThrowingPredicate.class);
+        final ThrowingPredicate<Type1> p;
 
-        when(p.test(Type1.any()))
-            .thenThrow(CHECKED).thenThrow(UNCHECKED).thenThrow(ERROR);
+        p = t -> { throw CHECKED; };
 
         try {
             Stream.of(Type1.mock()).anyMatch(rethrow(p));
@@ -45,12 +39,16 @@ public final class RethrowPredicatesTest
             assertThat(e.getCause()).isSameAs(CHECKED);
         }
 
+        p = t -> { throw UNCHECKED; };
+
         try {
             Stream.of(Type1.mock()).anyMatch(rethrow(p));
             shouldHaveThrown(RuntimeException.class);
         } catch (RuntimeException e) {
             assertThat(e).isSameAs(UNCHECKED);
         }
+
+        p = t -> { throw ERROR; };
 
         try {
             Stream.of(Type1.mock()).anyMatch(rethrow(p));
@@ -64,10 +62,9 @@ public final class RethrowPredicatesTest
     public void wrappedIntPredicateThrowsAppropriateException()
         throws Throwable
     {
-        final ThrowingIntPredicate p = mock(ThrowingIntPredicate.class);
+        final ThrowingIntPredicate p;
 
-        when(p.test(anyInt()))
-            .thenThrow(CHECKED).thenThrow(UNCHECKED).thenThrow(ERROR);
+        p = t -> { throw CHECKED; };
 
         try {
             IntStream.of(0).anyMatch(rethrow(p));
@@ -76,12 +73,16 @@ public final class RethrowPredicatesTest
             assertThat(e.getCause()).isSameAs(CHECKED);
         }
 
+        p = t -> { throw UNCHECKED; };
+
         try {
             IntStream.of(0).anyMatch(rethrow(p));
             shouldHaveThrown(RuntimeException.class);
         } catch (RuntimeException e) {
             assertThat(e).isSameAs(UNCHECKED);
         }
+
+        p = t -> { throw ERROR; };
 
         try {
             IntStream.of(0).anyMatch(rethrow(p));
@@ -95,10 +96,9 @@ public final class RethrowPredicatesTest
     public void wrappedLongPredicateThrowAppropriateException()
         throws Throwable
     {
-        final ThrowingLongPredicate p = mock(ThrowingLongPredicate.class);
+        final ThrowingLongPredicate p;
 
-        when(p.test(anyLong()))
-            .thenThrow(CHECKED).thenThrow(UNCHECKED).thenThrow(ERROR);
+        p = t -> { throw CHECKED; };
 
         try {
             LongStream.of(0L).anyMatch(rethrow(p));
@@ -107,12 +107,16 @@ public final class RethrowPredicatesTest
             assertThat(e.getCause()).isSameAs(CHECKED);
         }
 
+        p = t -> { throw UNCHECKED; };
+
         try {
             LongStream.of(0L).anyMatch(rethrow(p));
             shouldHaveThrown(RuntimeException.class);
         } catch (RuntimeException e) {
             assertThat(e).isSameAs(UNCHECKED);
         }
+
+        p = t -> { throw ERROR; };
 
         try {
             LongStream.of(0L).anyMatch(rethrow(p));
@@ -126,10 +130,9 @@ public final class RethrowPredicatesTest
     public void wrappedDoublePredicateThrowsAppropriateException()
         throws Throwable
     {
-        final ThrowingDoublePredicate p = mock(ThrowingDoublePredicate.class);
+        final ThrowingDoublePredicate p;
 
-        when(p.test(anyDouble()))
-            .thenThrow(CHECKED).thenThrow(UNCHECKED).thenThrow(ERROR);
+        p = t -> { throw CHECKED; };
 
         try {
             DoubleStream.of(0.0).anyMatch(rethrow(p));
@@ -138,12 +141,16 @@ public final class RethrowPredicatesTest
             assertThat(e.getCause()).isSameAs(CHECKED);
         }
 
+        p = t -> { throw UNCHECKED; };
+
         try {
             DoubleStream.of(0.0).anyMatch(rethrow(p));
             shouldHaveThrown(RuntimeException.class);
         } catch (RuntimeException e) {
             assertThat(e).isSameAs(UNCHECKED);
         }
+
+        p = t -> { throw ERROR; };
 
         try {
             DoubleStream.of(0.0).anyMatch(rethrow(p));
