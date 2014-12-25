@@ -188,7 +188,7 @@ public final class RethrowConsumersTest
             Stream.of(Type1.mock())
                 .collect(supplier, Consumers.rethrow(accumulator), combiner);
             shouldHaveThrown(Error.class);
-        } catch (RuntimeException e) {
+        } catch (Error e) {
             assertThat(e).isSameAs(ERROR);
         }
     }

@@ -25,6 +25,9 @@ import java.util.function.IntToLongFunction;
 import java.util.function.LongFunction;
 import java.util.function.LongToDoubleFunction;
 import java.util.function.LongToIntFunction;
+import java.util.function.ToDoubleFunction;
+import java.util.function.ToIntFunction;
+import java.util.function.ToLongFunction;
 
 public final class Functions
 {
@@ -38,6 +41,23 @@ public final class Functions
      */
 
     public static <T, R> Function<T, R> rethrow(final ThrowingFunction<T, R> f)
+    {
+        return f;
+    }
+
+    public static <T> ToIntFunction<T> rethrow(final ThrowingToIntFunction<T> f)
+    {
+        return f;
+    }
+
+    public static <T> ToLongFunction<T> rethrow(
+        final ThrowingToLongFunction<T> f)
+    {
+        return f;
+    }
+
+    public static <T> ToDoubleFunction<T> rethrow(
+        final ThrowingToDoubleFunction<T> f)
     {
         return f;
     }

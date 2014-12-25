@@ -54,6 +54,105 @@ public final class RethrowFunctionsTest
     }
 
     @Test
+    public void wrappedToIntFunctionThrowsAppropriateException()
+    {
+        ThrowingToIntFunction<Type1> f;
+
+        f = value -> { throw CHECKED; };
+
+        try {
+            Stream.of(Type1.mock()).mapToInt(rethrow(f)).count();
+            shouldHaveThrown(ThrownByLambdaException.class);
+        } catch (ThrownByLambdaException e) {
+            assertThat(e.getCause()).isSameAs(CHECKED);
+        }
+
+        f = value -> { throw UNCHECKED; };
+
+        try {
+            Stream.of(Type1.mock()).mapToInt(rethrow(f)).count();
+            shouldHaveThrown(RuntimeException.class);
+        } catch (RuntimeException e) {
+            assertThat(e).isSameAs(UNCHECKED);
+        }
+
+        f = value -> { throw ERROR; };
+
+        try {
+            Stream.of(Type1.mock()).mapToInt(rethrow(f)).count();
+            shouldHaveThrown(Error.class);
+        } catch (Error e) {
+            assertThat(e).isSameAs(ERROR);
+        }
+    }
+
+    @Test
+    public void wrappedToLongFunctionThrowsAppropriateException()
+    {
+        ThrowingToLongFunction<Type1> f;
+
+        f = value -> { throw CHECKED; };
+
+        try {
+            Stream.of(Type1.mock()).mapToLong(rethrow(f)).count();
+            shouldHaveThrown(ThrownByLambdaException.class);
+        } catch (ThrownByLambdaException e) {
+            assertThat(e.getCause()).isSameAs(CHECKED);
+        }
+
+        f = value -> { throw UNCHECKED; };
+
+        try {
+            Stream.of(Type1.mock()).mapToLong(rethrow(f)).count();
+            shouldHaveThrown(RuntimeException.class);
+        } catch (RuntimeException e) {
+            assertThat(e).isSameAs(UNCHECKED);
+        }
+
+        f = value -> { throw ERROR; };
+
+        try {
+            Stream.of(Type1.mock()).mapToLong(rethrow(f)).count();
+            shouldHaveThrown(Error.class);
+        } catch (Error e) {
+            assertThat(e).isSameAs(ERROR);
+        }
+    }
+
+    @Test
+    public void wrappedToDoubleFunctionThrowsAppropriateException()
+    {
+        ThrowingToDoubleFunction<Type1> f;
+
+        f = value -> { throw CHECKED; };
+
+        try {
+            Stream.of(Type1.mock()).mapToDouble(rethrow(f)).count();
+            shouldHaveThrown(ThrownByLambdaException.class);
+        } catch (ThrownByLambdaException e) {
+            assertThat(e.getCause()).isSameAs(CHECKED);
+        }
+
+        f = value -> { throw UNCHECKED; };
+
+        try {
+            Stream.of(Type1.mock()).mapToDouble(rethrow(f)).count();
+            shouldHaveThrown(RuntimeException.class);
+        } catch (RuntimeException e) {
+            assertThat(e).isSameAs(UNCHECKED);
+        }
+
+        f = value -> { throw ERROR; };
+
+        try {
+            Stream.of(Type1.mock()).mapToDouble(rethrow(f)).count();
+            shouldHaveThrown(Error.class);
+        } catch (Error e) {
+            assertThat(e).isSameAs(ERROR);
+        }
+    }
+
+    @Test
     public void wrappedBiFunctionThrowsAppropriateException()
     {
         @SuppressWarnings("unchecked")

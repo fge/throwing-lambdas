@@ -9,11 +9,11 @@ import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
-import static com.github.fge.lambdas.Rethrow.rethrow;
 import static com.github.fge.lambdas.helpers.CustomAssertions.shouldHaveThrown;
 import static com.github.fge.lambdas.helpers.Throwables.CHECKED;
 import static com.github.fge.lambdas.helpers.Throwables.ERROR;
 import static com.github.fge.lambdas.helpers.Throwables.UNCHECKED;
+import static com.github.fge.lambdas.suppliers.Suppliers.rethrow;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SuppressWarnings("ErrorNotRethrown")
@@ -27,7 +27,7 @@ public final class RethrowSuppliersTest
         s = () -> { throw CHECKED; };
 
         try {
-            Stream.generate(Suppliers.rethrow(s)).count();
+            Stream.generate(rethrow(s)).count();
             shouldHaveThrown(ThrownByLambdaException.class);
         } catch (ThrownByLambdaException e) {
             assertThat(e.getCause()).isSameAs(CHECKED);
@@ -36,7 +36,7 @@ public final class RethrowSuppliersTest
         s = () -> { throw UNCHECKED; };
 
         try {
-            Stream.generate(Suppliers.rethrow(s)).count();
+            Stream.generate(rethrow(s)).count();
             shouldHaveThrown(RuntimeException.class);
         } catch (RuntimeException e) {
             assertThat(e).isSameAs(UNCHECKED);
@@ -45,7 +45,7 @@ public final class RethrowSuppliersTest
         s = () -> { throw ERROR; };
 
         try {
-            Stream.generate(Suppliers.rethrow(s)).count();
+            Stream.generate(rethrow(s)).count();
             shouldHaveThrown(Error.class);
         } catch (Error e) {
             assertThat(e).isSameAs(ERROR);
@@ -60,7 +60,7 @@ public final class RethrowSuppliersTest
         s = () -> { throw CHECKED; };
 
         try {
-            IntStream.generate(Suppliers.rethrow(s)).count();
+            IntStream.generate(rethrow(s)).count();
             shouldHaveThrown(ThrownByLambdaException.class);
         } catch (ThrownByLambdaException e) {
             assertThat(e.getCause()).isSameAs(CHECKED);
@@ -93,7 +93,7 @@ public final class RethrowSuppliersTest
         s = () -> { throw CHECKED; };
 
         try {
-            LongStream.generate(Suppliers.rethrow(s)).count();
+            LongStream.generate(rethrow(s)).count();
             shouldHaveThrown(ThrownByLambdaException.class);
         } catch (ThrownByLambdaException e) {
             assertThat(e.getCause()).isSameAs(CHECKED);
@@ -126,7 +126,7 @@ public final class RethrowSuppliersTest
         s = () -> { throw CHECKED; };
 
         try {
-            DoubleStream.generate(Suppliers.rethrow(s)).count();
+            DoubleStream.generate(rethrow(s)).count();
             shouldHaveThrown(ThrownByLambdaException.class);
         } catch (ThrownByLambdaException e) {
             assertThat(e.getCause()).isSameAs(CHECKED);
