@@ -42,17 +42,12 @@ Files.list(somedir).map(rethrow(Path::toRealPath))
     .forEach(System.out::println);
 ```
 
-You can see more about what you can do [here](https://github.com/fge/throwing-lambdas/wiki/How-to-use).
-
-## Status
-
-Apart from `Collector` (this one is not as easy), all interfaces used by all `*Stream` are covered
-by this package. Yes, all 39 of them. And all are tested.
+If you want to see how this works, see [this
+page](https://github.com/fge/throwing-lambdas/wiki/How-it-works).
 
 ## Further reading
 
-If you want to see how this works, see [this
-page](https://github.com/fge/throwing-lambdas/wiki/How-it-works).
+You can see more about what you can do [here](https://github.com/fge/throwing-lambdas/wiki/How-to-use).
 
 Future plans [here](https://github.com/fge/throwing-lambdas/wiki/Future-plans).
 
