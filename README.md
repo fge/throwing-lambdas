@@ -63,6 +63,14 @@ Files.list(somedir).map(rethrow(Path::toRealPath))
     .forEach(System.out::println);
 ```
 
+Or this:
+
+```java
+final ThrowingFunction<Path, Path> f = Path::toRealPath;
+
+Files.list(somedir).map(f).forEach(System.out::println);
+```
+
 If you want to see how this works, see [this
 page](https://github.com/fge/throwing-lambdas/wiki/How-it-works).
 
