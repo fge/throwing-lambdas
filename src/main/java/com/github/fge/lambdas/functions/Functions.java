@@ -45,6 +45,12 @@ public final class Functions
         return f;
     }
 
+    public static <T, R> ThrowingFunction<T, R> wrap(
+        final ThrowingFunction<T, R> f)
+    {
+        return f;
+    }
+
     public static <T> ToIntFunction<T> rethrow(final ThrowingToIntFunction<T> f)
     {
         return f;
