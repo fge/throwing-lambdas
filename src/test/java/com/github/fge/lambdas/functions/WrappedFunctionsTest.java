@@ -5,32 +5,26 @@ import com.github.fge.lambdas.helpers.Type1;
 import com.github.fge.lambdas.helpers.Type2;
 import org.testng.annotations.Test;
 
-import java.util.Optional;
-import java.util.stream.Stream;
-
 import static com.github.fge.lambdas.functions.Functions.wrap;
 import static com.github.fge.lambdas.helpers.CustomAssertions.shouldHaveThrown;
 import static com.github.fge.lambdas.helpers.Throwables.CHECKED;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public final class WrapFunctionsTest
+public final class WrappedFunctionsTest
 {
     @Test
     public void wrappedFunctionDoesWhatIsExpected()
     {
         final ThrowingFunction<Type1, Type2> f
-            = wrap(t -> { throw CHECKED; });
+            = t -> { throw CHECKED; };
 
-        final Type2 defaultValue = Type2.mock();
-        final Optional<Type2> optional = Stream.of(Type1.mock())
-            .map(f.orReturn(defaultValue))
-            .findFirst();
+        final Type2 expected = Type2.mock();
+        final Type2 actual = wrap(f).orReturn(expected).apply(Type1.mock());
 
-        assertThat(optional.isPresent()).isTrue();
-        assertThat(optional.get()).isSameAs(defaultValue);
+        assertThat(actual).isSameAs(expected);
 
         try {
-            Stream.of(Type1.mock()).map(f.orThrow(MyException.class)).count();
+            wrap(f).orThrow(MyException.class).apply(Type1.mock());
             shouldHaveThrown(RuntimeException.class);
         } catch (RuntimeException e) {
             assertThat(e).isExactlyInstanceOf(MyException.class);
