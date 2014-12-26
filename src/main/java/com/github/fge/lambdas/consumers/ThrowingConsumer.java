@@ -1,8 +1,10 @@
 package com.github.fge.lambdas.consumers;
 
+import com.github.fge.lambdas.ThrowablesFactory;
 import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.Consumer;
+import java.util.function.IntConsumer;
 
 @FunctionalInterface
 public interface ThrowingConsumer<T>
@@ -21,5 +23,32 @@ public interface ThrowingConsumer<T>
         } catch (Throwable tooBad) {
             throw new ThrownByLambdaException(tooBad);
         }
+    }
+
+    default Consumer<T> orDoNothing()
+    {
+        return t -> {
+            try {
+                doAccept(t);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable ignored) {
+                // Does nothing.
+            }
+        };
+    }
+
+    default <E extends RuntimeException> Consumer<T> orThrow(
+        Class<E> exceptionClass)
+    {
+        return t -> {
+            try {
+                doAccept(t);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable tooBad) {
+                throw ThrowablesFactory.INSTANCE.get(exceptionClass, tooBad);
+            }
+        };
     }
 }
