@@ -73,7 +73,7 @@ public final class WrappedSuppliersTest
     {
         final ThrowingLongSupplier s = () -> { throw CHECKED; };
 
-        final long expected = 316006; // "GOOGLE" upside down on a calculator
+        final long expected = 316006L; // "GOOGLE" upside down on a calculator
         final long actual = wrap(s).orReturn(expected).getAsLong();
 
         assertThat(actual).isSameAs(expected);
