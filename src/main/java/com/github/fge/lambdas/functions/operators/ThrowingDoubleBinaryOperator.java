@@ -1,5 +1,6 @@
 package com.github.fge.lambdas.functions.operators;
 
+import com.github.fge.lambdas.ThrowablesFactory;
 import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.DoubleBinaryOperator;
@@ -21,5 +22,42 @@ public interface ThrowingDoubleBinaryOperator
         } catch (Throwable tooBad) {
             throw new ThrownByLambdaException(tooBad);
         }
+    }
+
+    default DoubleBinaryOperator orReturn(double defaultValue)
+    {
+        return (left, right) -> {
+            try {
+                return doApplyAsDouble(left, right);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable ignored) {
+                return defaultValue;
+            }
+        };
+    }
+
+    default DoubleBinaryOperator orReturnLeft()
+    {
+        return (left, right) -> left;
+    }
+
+    default DoubleBinaryOperator orReturnRight()
+    {
+        return (left, right) -> right;
+    }
+
+    default <E extends RuntimeException> DoubleBinaryOperator orThrow(
+        Class<E> exceptionClass)
+    {
+        return (left, right) -> {
+            try {
+                return doApplyAsDouble(left, right);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable tooBad) {
+                throw ThrowablesFactory.INSTANCE.get(exceptionClass, tooBad);
+            }
+        };
     }
 }

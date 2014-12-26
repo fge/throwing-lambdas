@@ -21,7 +21,19 @@ public final class Operators
         return o;
     }
 
+    public static <T> ThrowingUnaryOperator<T> wrap(
+        final ThrowingUnaryOperator<T> o)
+    {
+        return o;
+    }
+
     public static IntUnaryOperator rethrow(final ThrowingIntUnaryOperator o)
+    {
+        return o;
+    }
+
+    public static ThrowingIntUnaryOperator wrap(
+        final ThrowingIntUnaryOperator o)
     {
         return o;
     }
@@ -31,7 +43,19 @@ public final class Operators
         return o;
     }
 
+    public static ThrowingLongUnaryOperator wrap(
+        final ThrowingLongUnaryOperator o)
+    {
+        return o;
+    }
+
     public static DoubleUnaryOperator rethrow(
+        final ThrowingDoubleUnaryOperator o)
+    {
+        return o;
+    }
+
+    public static ThrowingDoubleUnaryOperator wrap(
         final ThrowingDoubleUnaryOperator o)
     {
         return o;
@@ -43,7 +67,19 @@ public final class Operators
         return o;
     }
 
+    public static <T> ThrowingBinaryOperator<T> wrap(
+        final ThrowingBinaryOperator<T> o)
+    {
+        return o;
+    }
+
     public static IntBinaryOperator rethrow(final ThrowingIntBinaryOperator o)
+    {
+        return o;
+    }
+
+    public static ThrowingIntBinaryOperator wrap(
+        final ThrowingIntBinaryOperator o)
     {
         return o;
     }
@@ -53,7 +89,19 @@ public final class Operators
         return o;
     }
 
+    public static ThrowingLongBinaryOperator wrap(
+        final ThrowingLongBinaryOperator o)
+    {
+        return o;
+    }
+
     public static DoubleBinaryOperator rethrow(
+        final ThrowingDoubleBinaryOperator o)
+    {
+        return o;
+    }
+
+    public static ThrowingDoubleBinaryOperator wrap(
         final ThrowingDoubleBinaryOperator o)
     {
         return o;

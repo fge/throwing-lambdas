@@ -210,4 +210,10 @@ public final class Functions
     {
         return f;
     }
+
+    public static <T, U, R> ThrowingBiFunction<T, U, R> wrap(
+        final ThrowingBiFunction<T, U, R> f)
+    {
+        return f;
+    }
 }

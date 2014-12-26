@@ -3,6 +3,7 @@ package com.github.fge.lambdas.functions;
 import com.github.fge.lambdas.helpers.MyException;
 import com.github.fge.lambdas.helpers.Type1;
 import com.github.fge.lambdas.helpers.Type2;
+import com.github.fge.lambdas.helpers.Type3;
 import org.testng.annotations.Test;
 
 import static com.github.fge.lambdas.functions.Functions.wrap;
@@ -84,6 +85,28 @@ public final class WrappedFunctionsTest
 
         try {
             wrap(f).orThrow(MyException.class).applyAsDouble(Type1.mock());
+            shouldHaveThrown(RuntimeException.class);
+        } catch (RuntimeException e) {
+            assertThat(e).isExactlyInstanceOf(MyException.class);
+            assertThat(e.getCause()).isSameAs(CHECKED);
+        }
+    }
+
+    @Test
+    public void wrappedBiFunctionDoesWhatIsExpected()
+    {
+        final ThrowingBiFunction<Type1, Type2, Type3> f
+            = (t, u) -> { throw CHECKED; };
+
+        final Type3 expected = Type3.mock();
+        final Type3 actual = wrap(f).orReturn(expected)
+            .apply(Type1.mock(), Type2.mock());
+
+        assertThat(actual).isSameAs(expected);
+
+        try {
+            wrap(f).orThrow(MyException.class)
+                .apply(Type1.mock(), Type2.mock());
             shouldHaveThrown(RuntimeException.class);
         } catch (RuntimeException e) {
             assertThat(e).isExactlyInstanceOf(MyException.class);

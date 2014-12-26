@@ -1,5 +1,6 @@
 package com.github.fge.lambdas.functions;
 
+import com.github.fge.lambdas.ThrowablesFactory;
 import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.BiFunction;
@@ -21,5 +22,32 @@ public interface ThrowingBiFunction<T, U, R>
         } catch (Throwable tooBad) {
             throw new ThrownByLambdaException(tooBad);
         }
+    }
+
+    default BiFunction<T, U, R> orReturn(R defaultValue)
+    {
+        return (t, u) -> {
+            try {
+                return doApply(t, u);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable ignored) {
+                return defaultValue;
+            }
+        };
+    }
+
+    default <E extends RuntimeException> BiFunction<T, U, R> orThrow(
+        Class<E> exceptionClass)
+    {
+        return (t, u) -> {
+            try {
+                return doApply(t, u);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable tooBad) {
+                throw ThrowablesFactory.INSTANCE.get(exceptionClass, tooBad);
+            }
+        };
     }
 }
