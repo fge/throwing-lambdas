@@ -31,4 +31,63 @@ public final class WrappedFunctionsTest
             assertThat(e.getCause()).isSameAs(CHECKED);
         }
     }
+
+    @Test
+    public void wrappedToIntFunctionDoesWhatIsExpected()
+    {
+        final ThrowingToIntFunction<Type1> f = value -> { throw CHECKED; };
+
+        final int expected = 42; // perfectly random, and the universal answer
+        final int actual = wrap(f).orReturn(expected).applyAsInt(Type1.mock());
+
+        assertThat(actual).isEqualTo(expected);
+
+        try {
+            wrap(f).orThrow(MyException.class).applyAsInt(Type1.mock());
+            shouldHaveThrown(RuntimeException.class);
+        } catch (RuntimeException e) {
+            assertThat(e).isExactlyInstanceOf(MyException.class);
+            assertThat(e.getCause()).isSameAs(CHECKED);
+        }
+    }
+
+    @Test
+    public void wrappedToLongFunctionDoesWhatIsExpected()
+    {
+        final ThrowingToLongFunction<Type1> f = value -> { throw CHECKED; };
+
+        final long expected = 42L;
+        final long actual = wrap(f).orReturn(expected)
+            .applyAsLong(Type1.mock());
+
+        assertThat(actual).isEqualTo(expected);
+
+        try {
+            wrap(f).orThrow(MyException.class).applyAsLong(Type1.mock());
+            shouldHaveThrown(RuntimeException.class);
+        } catch (RuntimeException e) {
+            assertThat(e).isExactlyInstanceOf(MyException.class);
+            assertThat(e.getCause()).isSameAs(CHECKED);
+        }
+    }
+
+    @Test
+    public void wrappedToDoubleFunctionDoesWhatIsExpected()
+    {
+        final ThrowingToDoubleFunction<Type1> f = value -> { throw CHECKED; };
+
+        final double expected = 42.0;
+        final double actual = wrap(f).orReturn(expected)
+            .applyAsDouble(Type1.mock());
+
+        assertThat(actual).isEqualTo(expected);
+
+        try {
+            wrap(f).orThrow(MyException.class).applyAsDouble(Type1.mock());
+            shouldHaveThrown(RuntimeException.class);
+        } catch (RuntimeException e) {
+            assertThat(e).isExactlyInstanceOf(MyException.class);
+            assertThat(e.getCause()).isSameAs(CHECKED);
+        }
+    }
 }

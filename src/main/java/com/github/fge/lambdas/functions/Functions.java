@@ -56,13 +56,31 @@ public final class Functions
         return f;
     }
 
+    public static <T> ThrowingToIntFunction<T> wrap(
+        final ThrowingToIntFunction<T> f)
+    {
+        return f;
+    }
+
     public static <T> ToLongFunction<T> rethrow(
         final ThrowingToLongFunction<T> f)
     {
         return f;
     }
 
+    public static <T> ThrowingToLongFunction<T> wrap(
+        final ThrowingToLongFunction<T> f)
+    {
+        return f;
+    }
+
     public static <T> ToDoubleFunction<T> rethrow(
+        final ThrowingToDoubleFunction<T> f)
+    {
+        return f;
+    }
+
+    public static <T> ThrowingToDoubleFunction<T> wrap(
         final ThrowingToDoubleFunction<T> f)
     {
         return f;
