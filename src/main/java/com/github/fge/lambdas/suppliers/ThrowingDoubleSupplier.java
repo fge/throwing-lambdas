@@ -1,5 +1,7 @@
+
 package com.github.fge.lambdas.suppliers;
 
+import com.github.fge.lambdas.ThrowablesFactory;
 import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.DoubleSupplier;
@@ -21,5 +23,32 @@ public interface ThrowingDoubleSupplier
         } catch (Throwable tooBad) {
             throw new ThrownByLambdaException(tooBad);
         }
+    }
+
+    default DoubleSupplier orReturn(double defaultValue)
+    {
+        return () -> {
+            try {
+                return doGetAsDouble();
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable tooBad) {
+                return defaultValue;
+            }
+        };
+    }
+
+    default <E extends RuntimeException> DoubleSupplier orThrow(
+        Class<E> exceptionClass)
+    {
+        return () -> {
+            try {
+                return doGetAsDouble();
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable tooBad) {
+                throw ThrowablesFactory.INSTANCE.get(exceptionClass, tooBad);
+            }
+        };
     }
 }
