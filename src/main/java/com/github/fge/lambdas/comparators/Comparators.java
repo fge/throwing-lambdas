@@ -13,4 +13,10 @@ public final class Comparators
     {
         return c;
     }
+
+    public static <T> ThrowingComparator<T> wrap(
+        final ThrowingComparator<T> c)
+    {
+        return c;
+    }
 }
