@@ -1,5 +1,6 @@
 package com.github.fge.lambdas.functions.intfunctions;
 
+import com.github.fge.lambdas.ThrowablesFactory;
 import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.IntToDoubleFunction;
@@ -22,4 +23,31 @@ public interface ThrowingIntToDoubleFunction
             throw new ThrownByLambdaException(tooBad);
         }
     };
+
+    default IntToDoubleFunction orReturn(double defaultValue)
+    {
+        return value -> {
+            try {
+                return doApplyAsDouble(value);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable ignored) {
+                return defaultValue;
+            }
+        };
+    }
+
+    default <E extends RuntimeException> IntToDoubleFunction orThrow(
+        Class<E> exceptionClass)
+    {
+        return value -> {
+            try {
+                return doApplyAsDouble(value);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable tooBad) {
+                throw ThrowablesFactory.INSTANCE.get(exceptionClass, tooBad);
+            }
+        };
+    }
 }

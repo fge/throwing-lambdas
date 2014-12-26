@@ -95,12 +95,30 @@ public final class Functions
         return f;
     }
 
+    public static <R> ThrowingIntFunction<R> wrap(
+        final ThrowingIntFunction<R> f)
+    {
+        return f;
+    }
+
     public static IntToLongFunction rethrow(final ThrowingIntToLongFunction f)
     {
         return f;
     }
 
+    public static ThrowingIntToLongFunction wrap(
+        final ThrowingIntToLongFunction f)
+    {
+        return f;
+    }
+
     public static IntToDoubleFunction rethrow(
+        final ThrowingIntToDoubleFunction f)
+    {
+        return f;
+    }
+
+    public static ThrowingIntToDoubleFunction wrap(
         final ThrowingIntToDoubleFunction f)
     {
         return f;
@@ -115,12 +133,30 @@ public final class Functions
         return f;
     }
 
+    public static <R> ThrowingLongFunction<R> wrap(
+        final ThrowingLongFunction<R> f)
+    {
+        return f;
+    }
+
     public static LongToIntFunction rethrow(final ThrowingLongToIntFunction f)
     {
         return f;
     }
 
+    public static ThrowingLongToIntFunction wrap(
+        final ThrowingLongToIntFunction f)
+    {
+        return f;
+    }
+
     public static LongToDoubleFunction rethrow(
+        final ThrowingLongToDoubleFunction f)
+    {
+        return f;
+    }
+
+    public static ThrowingLongToDoubleFunction wrap(
         final ThrowingLongToDoubleFunction f)
     {
         return f;
@@ -136,13 +172,31 @@ public final class Functions
         return f;
     }
 
+    public static <R> ThrowingDoubleFunction<R> wrap(
+        final ThrowingDoubleFunction<R> f)
+    {
+        return f;
+    }
+
     public static DoubleToIntFunction rethrow(
         final ThrowingDoubleToIntFunction f)
     {
         return f;
     }
 
+    public static ThrowingDoubleToIntFunction wrap(
+        final ThrowingDoubleToIntFunction f)
+    {
+        return f;
+    }
+
     public static DoubleToLongFunction rethrow(
+        final ThrowingDoubleToLongFunction f)
+    {
+        return f;
+    }
+
+    public static ThrowingDoubleToLongFunction wrap(
         final ThrowingDoubleToLongFunction f)
     {
         return f;
