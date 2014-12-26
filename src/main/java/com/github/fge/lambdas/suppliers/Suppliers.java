@@ -17,7 +17,17 @@ public final class Suppliers
         return s;
     }
 
+    public static <T> ThrowingSupplier<T> wrap(final ThrowingSupplier<T> s)
+    {
+        return s;
+    }
+
     public static IntSupplier rethrow(final ThrowingIntSupplier s)
+    {
+        return s;
+    }
+
+    public static ThrowingIntSupplier wrap(final ThrowingIntSupplier s)
     {
         return s;
     }
@@ -27,7 +37,17 @@ public final class Suppliers
         return s;
     }
 
+    public static ThrowingLongSupplier wrap(final ThrowingLongSupplier s)
+    {
+        return s;
+    }
+
     public static DoubleSupplier rethrow(final ThrowingDoubleSupplier s)
+    {
+        return s;
+    }
+
+    public static ThrowingDoubleSupplier wrap(final ThrowingDoubleSupplier s)
     {
         return s;
     }
