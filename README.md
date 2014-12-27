@@ -35,7 +35,7 @@ Files.list(someDirectory).map(path -> {
     } catch (IOException e) {
         throw new RuntimeException(e); // or something else
     }
-).etc().etc()
+}).etc().etc()
 ```
 
 With this package, instead, you can do this:
@@ -54,19 +54,7 @@ Files.list(someDirectory).map(Operators.wrap(Path::toRealPath).orReturnSelf())
     .etc().etc()
 ```
 
-The examples are limitless; for instance, you can parallelize
-[`Future`](http://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Future.html) collecting:
-
-```java
-final List<Foo> results = myExecutor.invokeAll(callables).stream().parallel()
-    .map(Functions.wrap(Future::get).orReturn(someDefaultFoo))
-    .collect(Collectors.toList());
-```
-
-You could parallelize
-[`ResultSet`](http://docs.oracle.com/javase/8/docs/api/java/sql/ResultSet.html) collecting from
-[`Statement`](http://docs.oracle.com/javase/8/docs/api/java/sql/Statement.html#executeQuery-java.lang.String-)s,
-etc etc;
+You can see more about what you can do [here](https://github.com/fge/throwing-lambdas/wiki/How-to-use).
 
 ## Versions
 
@@ -91,8 +79,6 @@ Using maven:
 
 If you want to see how this works, see [this
 page](https://github.com/fge/throwing-lambdas/wiki/How-it-works).
-
-You can see more about what you can do [here](https://github.com/fge/throwing-lambdas/wiki/How-to-use).
 
 Future plans [here](https://github.com/fge/throwing-lambdas/wiki/Future-plans).
 
