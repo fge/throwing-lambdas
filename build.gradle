@@ -28,7 +28,7 @@ buildscript {
         classpath(group: "org.springframework.build.gradle",
             name: "propdeps-plugin", version: "0.0.7");
         classpath(group: "info.solidsoft.gradle.pitest",
-            name: "gradle-pitest-plugin", version: "1.1.1");
+            name: "gradle-pitest-plugin", version: "1.1.2");
     }
 };
 
@@ -46,7 +46,7 @@ apply(plugin: "info.solidsoft.pitest");
 
 group = "com.github.fge";
 version = "0.2.0-SNAPSHOT";
-description = "Convenient wrapper methods for \"throwing lambdas\"";
+description = "Wrappers for methods/interfaces/lambdas throwing exceptions for use in functional interfaces";
 sourceCompatibility = "1.8";
 targetCompatibility = "1.8"; // defaults to sourceCompatibility
 
@@ -54,7 +54,7 @@ targetCompatibility = "1.8"; // defaults to sourceCompatibility
  * List of dependencies
  */
 dependencies {
-    testCompile(group: "org.testng", name: "testng", version: "6.8.8") {
+    testCompile(group: "org.testng", name: "testng", version: "6.8.13") {
         exclude(group: "junit", module: "junit");
         exclude(group: "org.beanshell", module: "bsh");
         exclude(group: "org.yaml", module: "snakeyaml");
