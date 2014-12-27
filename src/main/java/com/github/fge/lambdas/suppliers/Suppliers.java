@@ -1,10 +1,5 @@
 package com.github.fge.lambdas.suppliers;
 
-import java.util.function.DoubleSupplier;
-import java.util.function.IntSupplier;
-import java.util.function.LongSupplier;
-import java.util.function.Supplier;
-
 public final class Suppliers
 {
     private Suppliers()
@@ -12,9 +7,9 @@ public final class Suppliers
         throw new Error("nice try!");
     }
 
-    public static <T> Supplier<T> rethrow(final ThrowingSupplier<T> s)
+    public static <T> ThrowingSupplier<T> rethrow(final ThrowingSupplier<T> s)
     {
-        return s;
+        return wrap(s);
     }
 
     public static <T> ThrowingSupplier<T> wrap(final ThrowingSupplier<T> s)
@@ -22,9 +17,9 @@ public final class Suppliers
         return s;
     }
 
-    public static IntSupplier rethrow(final ThrowingIntSupplier s)
+    public static ThrowingIntSupplier rethrow(final ThrowingIntSupplier s)
     {
-        return s;
+        return wrap(s);
     }
 
     public static ThrowingIntSupplier wrap(final ThrowingIntSupplier s)
@@ -32,9 +27,9 @@ public final class Suppliers
         return s;
     }
 
-    public static LongSupplier rethrow(final ThrowingLongSupplier s)
+    public static ThrowingLongSupplier rethrow(final ThrowingLongSupplier s)
     {
-        return s;
+        return wrap(s);
     }
 
     public static ThrowingLongSupplier wrap(final ThrowingLongSupplier s)
@@ -42,9 +37,9 @@ public final class Suppliers
         return s;
     }
 
-    public static DoubleSupplier rethrow(final ThrowingDoubleSupplier s)
+    public static ThrowingDoubleSupplier rethrow(final ThrowingDoubleSupplier s)
     {
-        return s;
+        return wrap(s);
     }
 
     public static ThrowingDoubleSupplier wrap(final ThrowingDoubleSupplier s)

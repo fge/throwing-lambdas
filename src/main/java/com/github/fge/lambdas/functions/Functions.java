@@ -14,21 +14,6 @@ import com.github.fge.lambdas.functions.longfunctions
     .ThrowingLongToDoubleFunction;
 import com.github.fge.lambdas.functions.longfunctions.ThrowingLongToIntFunction;
 
-import java.util.function.BiFunction;
-import java.util.function.DoubleFunction;
-import java.util.function.DoubleToIntFunction;
-import java.util.function.DoubleToLongFunction;
-import java.util.function.Function;
-import java.util.function.IntFunction;
-import java.util.function.IntToDoubleFunction;
-import java.util.function.IntToLongFunction;
-import java.util.function.LongFunction;
-import java.util.function.LongToDoubleFunction;
-import java.util.function.LongToIntFunction;
-import java.util.function.ToDoubleFunction;
-import java.util.function.ToIntFunction;
-import java.util.function.ToLongFunction;
-
 public final class Functions
 {
     private Functions()
@@ -40,9 +25,9 @@ public final class Functions
      * Functions
      */
 
-    public static <T, R> Function<T, R> rethrow(final ThrowingFunction<T, R> f)
+    public static <T, R> ThrowingFunction<T, R> rethrow(final ThrowingFunction<T, R> f)
     {
-        return f;
+        return wrap(f);
     }
 
     public static <T, R> ThrowingFunction<T, R> wrap(
@@ -51,9 +36,9 @@ public final class Functions
         return f;
     }
 
-    public static <T> ToIntFunction<T> rethrow(final ThrowingToIntFunction<T> f)
+    public static <T> ThrowingToIntFunction<T> rethrow(final ThrowingToIntFunction<T> f)
     {
-        return f;
+        return wrap(f);
     }
 
     public static <T> ThrowingToIntFunction<T> wrap(
@@ -62,10 +47,10 @@ public final class Functions
         return f;
     }
 
-    public static <T> ToLongFunction<T> rethrow(
+    public static <T> ThrowingToLongFunction<T> rethrow(
         final ThrowingToLongFunction<T> f)
     {
-        return f;
+        return wrap(f);
     }
 
     public static <T> ThrowingToLongFunction<T> wrap(
@@ -74,10 +59,10 @@ public final class Functions
         return f;
     }
 
-    public static <T> ToDoubleFunction<T> rethrow(
+    public static <T> ThrowingToDoubleFunction<T> rethrow(
         final ThrowingToDoubleFunction<T> f)
     {
-        return f;
+        return wrap(f);
     }
 
     public static <T> ThrowingToDoubleFunction<T> wrap(
@@ -90,9 +75,9 @@ public final class Functions
      * Int functions
      */
 
-    public static <R> IntFunction<R> rethrow(final ThrowingIntFunction<R> f)
+    public static <R> ThrowingIntFunction<R> rethrow(final ThrowingIntFunction<R> f)
     {
-        return f;
+        return wrap(f);
     }
 
     public static <R> ThrowingIntFunction<R> wrap(
@@ -101,9 +86,9 @@ public final class Functions
         return f;
     }
 
-    public static IntToLongFunction rethrow(final ThrowingIntToLongFunction f)
+    public static ThrowingIntToLongFunction rethrow(final ThrowingIntToLongFunction f)
     {
-        return f;
+        return wrap(f);
     }
 
     public static ThrowingIntToLongFunction wrap(
@@ -112,10 +97,10 @@ public final class Functions
         return f;
     }
 
-    public static IntToDoubleFunction rethrow(
+    public static ThrowingIntToDoubleFunction rethrow(
         final ThrowingIntToDoubleFunction f)
     {
-        return f;
+        return wrap(f);
     }
 
     public static ThrowingIntToDoubleFunction wrap(
@@ -128,9 +113,9 @@ public final class Functions
      * Long functions
      */
 
-    public static <R> LongFunction<R> rethrow(final ThrowingLongFunction<R> f)
+    public static <R> ThrowingLongFunction<R> rethrow(final ThrowingLongFunction<R> f)
     {
-        return f;
+        return wrap(f);
     }
 
     public static <R> ThrowingLongFunction<R> wrap(
@@ -139,9 +124,9 @@ public final class Functions
         return f;
     }
 
-    public static LongToIntFunction rethrow(final ThrowingLongToIntFunction f)
+    public static ThrowingLongToIntFunction rethrow(final ThrowingLongToIntFunction f)
     {
-        return f;
+        return wrap(f);
     }
 
     public static ThrowingLongToIntFunction wrap(
@@ -150,10 +135,10 @@ public final class Functions
         return f;
     }
 
-    public static LongToDoubleFunction rethrow(
+    public static ThrowingLongToDoubleFunction rethrow(
         final ThrowingLongToDoubleFunction f)
     {
-        return f;
+        return wrap(f);
     }
 
     public static ThrowingLongToDoubleFunction wrap(
@@ -166,10 +151,10 @@ public final class Functions
      * Double functions
      */
 
-    public static <R> DoubleFunction<R> rethrow(
+    public static <R> ThrowingDoubleFunction<R> rethrow(
         final ThrowingDoubleFunction<R> f)
     {
-        return f;
+        return wrap(f);
     }
 
     public static <R> ThrowingDoubleFunction<R> wrap(
@@ -178,10 +163,10 @@ public final class Functions
         return f;
     }
 
-    public static DoubleToIntFunction rethrow(
+    public static ThrowingDoubleToIntFunction rethrow(
         final ThrowingDoubleToIntFunction f)
     {
-        return f;
+        return wrap(f);
     }
 
     public static ThrowingDoubleToIntFunction wrap(
@@ -190,10 +175,10 @@ public final class Functions
         return f;
     }
 
-    public static DoubleToLongFunction rethrow(
+    public static ThrowingDoubleToLongFunction rethrow(
         final ThrowingDoubleToLongFunction f)
     {
-        return f;
+        return wrap(f);
     }
 
     public static ThrowingDoubleToLongFunction wrap(
@@ -205,10 +190,10 @@ public final class Functions
     /*
      * Bifunctions
      */
-    public static <T, U, R> BiFunction<T, U, R> rethrow(
+    public static <T, U, R> ThrowingBiFunction<T, U, R> rethrow(
         final ThrowingBiFunction<T, U, R> f)
     {
-        return f;
+        return wrap(f);
     }
 
     public static <T, U, R> ThrowingBiFunction<T, U, R> wrap(

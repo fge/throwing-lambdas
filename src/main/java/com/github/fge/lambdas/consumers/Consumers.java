@@ -1,14 +1,5 @@
 package com.github.fge.lambdas.consumers;
 
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.function.DoubleConsumer;
-import java.util.function.IntConsumer;
-import java.util.function.LongConsumer;
-import java.util.function.ObjDoubleConsumer;
-import java.util.function.ObjIntConsumer;
-import java.util.function.ObjLongConsumer;
-
 public final class Consumers
 {
     private Consumers()
@@ -16,9 +7,9 @@ public final class Consumers
         throw new Error("nice try!");
     }
 
-    public static <T> Consumer<T> rethrow(final ThrowingConsumer<T> c)
+    public static <T> ThrowingConsumer<T> rethrow(final ThrowingConsumer<T> c)
     {
-        return c;
+        return wrap(c);
     }
 
     public static <T> ThrowingConsumer<T> wrap(final ThrowingConsumer<T> c)
@@ -26,9 +17,9 @@ public final class Consumers
         return c;
     }
 
-    public static IntConsumer rethrow(final ThrowingIntConsumer c)
+    public static ThrowingIntConsumer rethrow(final ThrowingIntConsumer c)
     {
-        return c;
+        return wrap(c);
     }
 
     public static ThrowingIntConsumer wrap(final ThrowingIntConsumer c)
@@ -36,9 +27,9 @@ public final class Consumers
         return c;
     }
 
-    public static LongConsumer rethrow(final ThrowingLongConsumer c)
+    public static ThrowingLongConsumer rethrow(final ThrowingLongConsumer c)
     {
-        return c;
+        return wrap(c);
     }
 
     public static ThrowingLongConsumer wrap(final ThrowingLongConsumer c)
@@ -46,9 +37,9 @@ public final class Consumers
         return c;
     }
 
-    public static DoubleConsumer rethrow(final ThrowingDoubleConsumer c)
+    public static ThrowingDoubleConsumer rethrow(final ThrowingDoubleConsumer c)
     {
-        return c;
+        return wrap(c);
     }
 
     public static ThrowingDoubleConsumer wrap(final ThrowingDoubleConsumer c)
@@ -56,10 +47,10 @@ public final class Consumers
         return c;
     }
 
-    public static <T, U> BiConsumer<T, U> rethrow(
+    public static <T, U> ThrowingBiConsumer<T, U> rethrow(
         final ThrowingBiConsumer<T, U> c)
     {
-        return c;
+        return wrap(c);
     }
 
     public static <T, U> ThrowingBiConsumer<T, U> wrap(
@@ -68,10 +59,10 @@ public final class Consumers
         return c;
     }
 
-    public static <T> ObjIntConsumer<T> rethrow(
+    public static <T> ThrowingObjIntConsumer<T> rethrow(
         final ThrowingObjIntConsumer<T> c)
     {
-        return c;
+        return wrap(c);
     }
 
     public static <T> ThrowingObjIntConsumer<T> wrap(
@@ -80,10 +71,10 @@ public final class Consumers
         return c;
     }
 
-    public static <T> ObjLongConsumer<T> rethrow(
+    public static <T> ThrowingObjLongConsumer<T> rethrow(
         final ThrowingObjLongConsumer<T> c)
     {
-        return c;
+        return wrap(c);
     }
 
     public static <T> ThrowingObjLongConsumer<T> wrap(
@@ -92,10 +83,10 @@ public final class Consumers
         return c;
     }
 
-    public static <T> ObjDoubleConsumer<T> rethrow(
+    public static <T> ThrowingObjDoubleConsumer<T> rethrow(
         final ThrowingObjDoubleConsumer<T> c)
     {
-        return c;
+        return wrap(c);
     }
 
     public static <T> ThrowingObjDoubleConsumer<T> wrap(
