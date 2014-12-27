@@ -1,10 +1,5 @@
 package com.github.fge.lambdas.predicates;
 
-import java.util.function.DoublePredicate;
-import java.util.function.IntPredicate;
-import java.util.function.LongPredicate;
-import java.util.function.Predicate;
-
 public final class Predicates
 {
     private Predicates()
@@ -12,9 +7,9 @@ public final class Predicates
         throw new Error("nice try!");
     }
 
-    public static <T> Predicate<T> rethrow(final ThrowingPredicate<T> p)
+    public static <T> ThrowingPredicate<T> rethrow(final ThrowingPredicate<T> p)
     {
-        return p;
+        return wrap(p);
     }
 
     public static <T> ThrowingPredicate<T> wrap(
@@ -23,9 +18,9 @@ public final class Predicates
         return p;
     }
 
-    public static IntPredicate rethrow(final ThrowingIntPredicate p)
+    public static ThrowingIntPredicate rethrow(final ThrowingIntPredicate p)
     {
-        return p;
+        return wrap(p);
     }
 
     public static ThrowingIntPredicate wrap(final ThrowingIntPredicate p)
@@ -33,9 +28,9 @@ public final class Predicates
         return p;
     }
 
-    public static LongPredicate rethrow(final ThrowingLongPredicate p)
+    public static ThrowingLongPredicate rethrow(final ThrowingLongPredicate p)
     {
-        return p;
+        return wrap(p);
     }
 
     public static ThrowingLongPredicate wrap(final ThrowingLongPredicate p)
@@ -43,9 +38,9 @@ public final class Predicates
         return p;
     }
 
-    public static DoublePredicate rethrow(final ThrowingDoublePredicate p)
+    public static ThrowingDoublePredicate rethrow(final ThrowingDoublePredicate p)
     {
-        return p;
+        return wrap(p);
     }
 
     public static ThrowingDoublePredicate wrap(final ThrowingDoublePredicate p)
