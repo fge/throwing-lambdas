@@ -39,7 +39,9 @@ public enum ThrowablesFactory
         } catch (Error | RuntimeException e) {
             throw e;
         } catch (Throwable oops) {
-            throw new IllegalStateException(oops);
+            final RuntimeException exception = new IllegalStateException(oops);
+            exception.addSuppressed(t);
+            throw exception;
         }
     }
 }
