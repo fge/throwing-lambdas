@@ -4,16 +4,73 @@ This project is licensed under both LGPLv3 and ASL 2.0. See file LICENSE for mor
 
 Requires Java 8.
 
+No further dependencies than the JRE itself is required.
+
 ## What this is
 
-This package allows you to easily use lambdas (whether they be hand-written lambdas or method
-references) which can potentially throw checked exceptions. Unchecked exceptions (and `Error`s) are
-still thrown "as is".
+This package allows you to use lambdas, methods or interfaces whose only impediment to their usages
+as [functional
+interfaces](http://docs.oracle.com/javase/8/docs/api/java/lang/FunctionalInterface.html) is the fact
+that they throw one or more exception(s).
 
-The primary focus of this package is on everything `Stream`, including their primitive type
-specializations (`IntStream`, `LongStream` and `DoubleStream`).
+All functional interfaces used in
+[`Stream`](http://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html)s are covered.
 
-No further dependencies than the JRE itself is required.
+## Sample usage
+
+For instance, let's take
+[`Path.toRealPath()`](http://docs.oracle.com/javase/8/docs/api/java/nio/file/Path.html#toRealPath-java.nio.file.LinkOption...-);
+provided you don't supply any link option, it is pretty close to being a `Function<Path, Path>` or
+even a `UnaryOperator<Path>`... Except that it can throw `IOException`!
+
+Therefore, using it as a mapping function in
+[`Stream.map()`](http://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#map-java.util.function.Function-),
+for instance, requires that you write some nasty-looking lambda:
+
+```java
+// Try and resolve all paths in some directory, following symlinks:
+Files.list(someDirectory).map(path -> {
+    try {
+        return path.toRealPath();
+    } catch (IOException e) {
+        throw new RuntimeException(e); // or something else
+    }
+).etc().etc()
+```
+
+With this package, instead, you can do this:
+
+```java
+// Throws ThrownByLambdaException if Path::toRealPath fails
+Files.list(someDirectory).map(Functions.rethrow(Path::toRealPath)).etc().etc()
+```
+
+Starting with 0.2.0 you will be even able to do this:
+
+```java
+// Throw a custom exception instead of ThrownByLambdaException
+Files.list(someDirectory)
+    .map(Functions.wrap(Path::toRealPath).orThrow(MyException.class))
+    .etc().etc()
+
+// Return self instead; Path::toRealPath is also a UnaryOperator<Path>
+Files.list(someDirectory).map(Operators.wrap(Path::toRealPath).orReturnSelf())
+    .etc().etc()
+```
+
+The examples are limitless; for instance, you can parallelize
+[`Future`](http://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Future.html) collecting:
+
+```java
+final List<Foo> results = myExecutor.invokeAll(callables).stream().parallel()
+    .map(Functions.wrap(Future::get).orReturn(someDefaultFoo))
+    .collect(Collectors.toList());
+```
+
+You could parallelize
+[`ResultSet`](http://docs.oracle.com/javase/8/docs/api/java/sql/ResultSet.html) collecting from
+[`Statement`](http://docs.oracle.com/javase/8/docs/api/java/sql/Statement.html#executeQuery-java.lang.String-)s,
+etc etc;
 
 ## Versions
 
@@ -34,55 +91,10 @@ Using maven:
 </dependency>
 ```
 
-## Short example
-
-Let's take an example; you want to list the real paths (ie, following symbolic links and all) of all
-entries in a directory. Right now you have to do this:
-
-```java
-Files.list(somedir).map(
-    path -> {
-        try {
-            return path.toRealPath();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }).forEach(System.out::println);
-```
-
-But that's a waste; `Path`'s `.toRealPath()` is a method and could easily be used as a method
-reference, except that it throws a checked exception... And lambdas unfortunately cannot propagate
-exceptions out of their context.
-
-With this package you can do this instead:
-
-```java
-import static com.github.fge.lambdas.functions.Functions.rethrow;
-
-Files.list(somedir).map(rethrow(Path::toRealPath))
-    .forEach(System.out::println);
-```
-
-Or this:
-
-```java
-final ThrowingFunction<Path, Path> f = Path::toRealPath;
-
-Files.list(somedir).map(f).forEach(System.out::println);
-```
-
-Or even this (**starting with 0.2.0**):
-
-```java
-final ThrowingUnaryOperator<Path> o = Path::toRealPath;
-
-FIles.list(somedir).map(o.orReturnSelf()).forEach(System.out::println);
-```
+## Further reading
 
 If you want to see how this works, see [this
 page](https://github.com/fge/throwing-lambdas/wiki/How-it-works).
-
-## Further reading
 
 You can see more about what you can do [here](https://github.com/fge/throwing-lambdas/wiki/How-to-use).
 
