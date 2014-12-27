@@ -31,7 +31,7 @@ public interface ThrowingSupplier<T>
                 return doGet();
             } catch (Error | RuntimeException e) {
                 throw e;
-            } catch (Throwable tooBad) {
+            } catch (Throwable ignored) {
                 return defaultValue;
             }
         };

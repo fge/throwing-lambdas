@@ -31,7 +31,7 @@ public interface ThrowingIntSupplier
                 return doGetAsInt();
             } catch (Error | RuntimeException e) {
                 throw e;
-            } catch (Throwable tooBad) {
+            } catch (Throwable ignored) {
                 return defaultValue;
             }
         };

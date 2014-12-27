@@ -39,12 +39,28 @@ public interface ThrowingBinaryOperator<T>
 
     default BinaryOperator<T> orReturnLeft()
     {
-        return (t, u) -> t;
+        return (t, u) -> {
+            try {
+                return doApply(t, u);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable ignored) {
+                return t;
+            }
+        };
     }
 
     default BinaryOperator<T> orReturnRight()
     {
-        return (t, u) -> u;
+        return (t, u) -> {
+            try {
+                return doApply(t, u);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable ignored) {
+                return u;
+            }
+        };
     }
 
     default <E extends RuntimeException> BinaryOperator<T> orThrow(

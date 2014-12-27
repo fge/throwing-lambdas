@@ -39,7 +39,15 @@ public interface ThrowingDoubleUnaryOperator
 
     default DoubleUnaryOperator orReturnSelf()
     {
-        return operand -> operand;
+        return operand -> {
+            try {
+                return doApplyAsDouble(operand);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable ignored) {
+                return operand;
+            }
+        };
     }
 
     default <E extends RuntimeException> DoubleUnaryOperator orThrow(

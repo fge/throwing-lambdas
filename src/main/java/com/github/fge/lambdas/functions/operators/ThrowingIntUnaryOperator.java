@@ -39,7 +39,15 @@ public interface ThrowingIntUnaryOperator
 
     default IntUnaryOperator orReturnSelf()
     {
-        return operand -> operand;
+        return operand -> {
+            try {
+                return doApplyAsInt(operand);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable ignored) {
+                return operand;
+            }
+        };
     }
 
     default <E extends RuntimeException> IntUnaryOperator orThrow(

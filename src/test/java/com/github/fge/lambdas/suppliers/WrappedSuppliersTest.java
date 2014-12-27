@@ -38,7 +38,7 @@ public final class WrappedSuppliersTest
         final int expected = 0xD0; // I have no idea what this is but eh.
         final int actual = wrap(s).orReturn(expected).getAsInt();
 
-        assertThat(actual).isSameAs(expected);
+        assertThat(actual).isEqualTo(expected);
 
         try {
             wrap(s).orThrow(MyException.class).getAsInt();
@@ -57,7 +57,7 @@ public final class WrappedSuppliersTest
         final double expected = 12.345; // Yeah sequence!
         final double actual = wrap(s).orReturn(expected).getAsDouble();
 
-        assertThat(actual).isSameAs(expected);
+        assertThat(actual).isEqualTo(expected);
 
         try {
             wrap(s).orThrow(MyException.class).getAsDouble();
@@ -76,7 +76,7 @@ public final class WrappedSuppliersTest
         final long expected = 316006L; // "GOOGLE" upside down on a calculator
         final long actual = wrap(s).orReturn(expected).getAsLong();
 
-        assertThat(actual).isSameAs(expected);
+        assertThat(actual).isEqualTo(expected);
 
         try {
             wrap(s).orThrow(MyException.class).getAsLong();

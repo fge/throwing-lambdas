@@ -31,7 +31,7 @@ public interface ThrowingUnaryOperator<T>
                 return doApply(t);
             } catch (Error | RuntimeException e) {
                 throw e;
-            } catch (Throwable tooBad) {
+            } catch (Throwable ignored) {
                 return defaultValue;
             }
         };
@@ -39,7 +39,15 @@ public interface ThrowingUnaryOperator<T>
 
     default UnaryOperator<T> orReturnSelf()
     {
-        return t -> t;
+        return t -> {
+            try {
+                return doApply(t);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable ignored) {
+                return t;
+            }
+        };
     }
 
     default <E extends RuntimeException> UnaryOperator<T> orThrow(

@@ -39,12 +39,28 @@ public interface ThrowingDoubleBinaryOperator
 
     default DoubleBinaryOperator orReturnLeft()
     {
-        return (left, right) -> left;
+        return (left, right) -> {
+            try {
+                return doApplyAsDouble(left, right);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable ignored) {
+                return left;
+            }
+        };
     }
 
     default DoubleBinaryOperator orReturnRight()
     {
-        return (left, right) -> right;
+        return (left, right) -> {
+            try {
+                return doApplyAsDouble(left, right);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable ignored) {
+                return right;
+            }
+        };
     }
 
     default <E extends RuntimeException> DoubleBinaryOperator orThrow(

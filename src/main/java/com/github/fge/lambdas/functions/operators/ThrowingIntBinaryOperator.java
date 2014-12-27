@@ -39,12 +39,28 @@ public interface ThrowingIntBinaryOperator
 
     default IntBinaryOperator orReturnLeft()
     {
-        return (left, right) -> left;
+        return (left, right) -> {
+            try {
+                return doApplyAsInt(left, right);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable ignored) {
+                return left;
+            }
+        };
     }
 
     default IntBinaryOperator orReturnRight()
     {
-        return (left, right) -> right;
+        return (left, right) -> {
+            try {
+                return doApplyAsInt(left, right);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable ignored) {
+                return right;
+            }
+        };
     }
 
     default <E extends RuntimeException> IntBinaryOperator orThrow(

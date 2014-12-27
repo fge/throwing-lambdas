@@ -39,12 +39,28 @@ public interface ThrowingLongBinaryOperator
 
     default LongBinaryOperator orReturnLeft()
     {
-        return (left, right) -> left;
+        return (left, right) -> {
+            try {
+                return doApplyAsLong(left, right);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable ignored) {
+                return left;
+            }
+        };
     }
 
     default LongBinaryOperator orReturnRight()
     {
-        return (left, right) -> right;
+        return (left, right) -> {
+            try {
+                return doApplyAsLong(left, right);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable ignored) {
+                return right;
+            }
+        };
     }
 
     default <E extends RuntimeException> LongBinaryOperator orThrow(
