@@ -4,7 +4,6 @@ import com.github.fge.lambdas.ThrowablesFactory;
 import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.Consumer;
-import java.util.function.IntConsumer;
 
 @FunctionalInterface
 public interface ThrowingConsumer<T>

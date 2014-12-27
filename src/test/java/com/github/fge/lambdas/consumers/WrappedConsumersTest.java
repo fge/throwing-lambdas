@@ -3,7 +3,6 @@ package com.github.fge.lambdas.consumers;
 import com.github.fge.lambdas.helpers.MyException;
 import com.github.fge.lambdas.helpers.Type1;
 import com.github.fge.lambdas.helpers.Type2;
-
 import org.testng.annotations.Test;
 
 import static com.github.fge.lambdas.consumers.Consumers.wrap;

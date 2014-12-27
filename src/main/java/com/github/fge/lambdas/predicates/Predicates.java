@@ -1,9 +1,9 @@
 package com.github.fge.lambdas.predicates;
 
-import java.util.function.Predicate;
+import java.util.function.DoublePredicate;
 import java.util.function.IntPredicate;
 import java.util.function.LongPredicate;
-import java.util.function.DoublePredicate;
+import java.util.function.Predicate;
 
 public final class Predicates
 {

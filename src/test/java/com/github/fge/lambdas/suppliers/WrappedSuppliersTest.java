@@ -4,9 +4,9 @@ import com.github.fge.lambdas.helpers.MyException;
 import com.github.fge.lambdas.helpers.Type1;
 import org.testng.annotations.Test;
 
-import static com.github.fge.lambdas.suppliers.Suppliers.wrap;
 import static com.github.fge.lambdas.helpers.CustomAssertions.shouldHaveThrown;
 import static com.github.fge.lambdas.helpers.Throwables.CHECKED;
+import static com.github.fge.lambdas.suppliers.Suppliers.wrap;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public final class WrappedSuppliersTest
