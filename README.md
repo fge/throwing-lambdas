@@ -41,13 +41,9 @@ Files.list(someDirectory).map(path -> {
 With this package, instead, you can do this:
 
 ```java
-// Throws ThrownByLambdaException if Path::toRealPath fails
-Files.list(someDirectory).map(Functions.rethrow(Path::toRealPath)).etc().etc()
-```
+// Throw ThrownByLambdaException if Path::toRealPath fails
+Files.list(someDirectory).map(Functions.wrap(Path::toRealPath)).etc().etc()
 
-Starting with 0.2.0 you will be even able to do this:
-
-```java
 // Throw a custom exception instead of ThrownByLambdaException
 Files.list(someDirectory)
     .map(Functions.wrap(Path::toRealPath).orThrow(MyException.class))
@@ -74,11 +70,11 @@ etc etc;
 
 ## Versions
 
-The current version is **0.1.0**. It is available on Maven central. Using
+The current version is **0.2.0**. It is available on Maven central. Using
 gradle:
 
 ```gradle
-compile(group: "com.github.fge", name: "throwing-lambdas", version: "0.1.0");
+compile(group: "com.github.fge", name: "throwing-lambdas", version: "0.2.0");
 ```
 
 Using maven:
@@ -87,7 +83,7 @@ Using maven:
 <dependency>
     <groupId>com.github.fge</groupId>
     <artifactId>throwing-lambdas</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
 </dependency>
 ```
 
