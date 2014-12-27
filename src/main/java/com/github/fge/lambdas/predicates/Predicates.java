@@ -17,7 +17,18 @@ public final class Predicates
         return p;
     }
 
+    public static <T> ThrowingPredicate<T> wrap(
+        final ThrowingPredicate<T> p)
+    {
+        return p;
+    }
+
     public static IntPredicate rethrow(final ThrowingIntPredicate p)
+    {
+        return p;
+    }
+
+    public static ThrowingIntPredicate wrap(final ThrowingIntPredicate p)
     {
         return p;
     }
@@ -27,7 +38,17 @@ public final class Predicates
         return p;
     }
 
+    public static ThrowingLongPredicate wrap(final ThrowingLongPredicate p)
+    {
+        return p;
+    }
+
     public static DoublePredicate rethrow(final ThrowingDoublePredicate p)
+    {
+        return p;
+    }
+
+    public static ThrowingDoublePredicate wrap(final ThrowingDoublePredicate p)
     {
         return p;
     }

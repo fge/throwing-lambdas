@@ -1,5 +1,6 @@
 package com.github.fge.lambdas.predicates;
 
+import com.github.fge.lambdas.ThrowablesFactory;
 import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.Predicate;
@@ -21,5 +22,32 @@ public interface ThrowingPredicate<T>
         } catch (Throwable tooBad) {
             throw new ThrownByLambdaException(tooBad);
         }
+    }
+
+    default Predicate<T> orReturn(boolean value)
+    {
+        return t -> {
+            try {
+                return doTest(t);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable ignored) {
+                return value;
+            }
+        };
+    }
+
+    default <E extends RuntimeException> Predicate<T> orThrow(
+        Class<E> exceptionClass)
+    {
+        return t -> {
+            try {
+                return doTest(t);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable tooBad) {
+                throw ThrowablesFactory.INSTANCE.get(exceptionClass, tooBad);
+            }
+        };
     }
 }
