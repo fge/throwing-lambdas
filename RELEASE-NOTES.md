@@ -1,4 +1,4 @@
-## 0.2.0 (IN PROGRESS)
+## 0.2.0
 
 * Add new .wrap() methods.
 * Add .orThrow() methods to Throwing* interfaces.
