@@ -1,13 +1,15 @@
 package com.github.fge.lambdas.consumers;
 
 import com.github.fge.lambdas.ThrowablesFactory;
+import com.github.fge.lambdas.ThrowingFunctionalInterface;
 import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.LongConsumer;
 
 @FunctionalInterface
 public interface ThrowingLongConsumer
-    extends LongConsumer
+    extends LongConsumer,
+    ThrowingFunctionalInterface<ThrowingLongConsumer, LongConsumer>
 {
     void doAccept(long value)
         throws Throwable;
@@ -24,7 +26,8 @@ public interface ThrowingLongConsumer
         }
     }
 
-    default LongConsumer orDoNothing()
+    @Override
+    default ThrowingLongConsumer orTryWith(ThrowingLongConsumer other)
     {
         return value -> {
             try {
@@ -32,11 +35,26 @@ public interface ThrowingLongConsumer
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                // Does nothing.
+                other.accept(value);
             }
         };
     }
 
+    @Override
+    default LongConsumer or(LongConsumer byDefault)
+    {
+        return value -> {
+            try {
+                doAccept(value);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable ignored) {
+                byDefault.accept(value);
+            }
+        };
+    }
+
+    @Override
     default <E extends RuntimeException> LongConsumer orThrow(
         Class<E> exceptionClass)
     {
@@ -47,6 +65,19 @@ public interface ThrowingLongConsumer
                 throw e;
             } catch (Throwable tooBad) {
                 throw ThrowablesFactory.INSTANCE.get(exceptionClass, tooBad);
+            }
+        };
+    }
+
+    default LongConsumer orDoNothing()
+    {
+        return value -> {
+            try {
+                doAccept(value);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable ignored) {
+                // Does nothing.
             }
         };
     }

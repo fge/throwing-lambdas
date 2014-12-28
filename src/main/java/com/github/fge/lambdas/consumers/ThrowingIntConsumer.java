@@ -1,13 +1,15 @@
 package com.github.fge.lambdas.consumers;
 
 import com.github.fge.lambdas.ThrowablesFactory;
+import com.github.fge.lambdas.ThrowingFunctionalInterface;
 import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.IntConsumer;
 
 @FunctionalInterface
 public interface ThrowingIntConsumer
-    extends IntConsumer
+    extends IntConsumer,
+    ThrowingFunctionalInterface<ThrowingIntConsumer, IntConsumer>
 {
     void doAccept(int value)
         throws Throwable;
@@ -24,7 +26,8 @@ public interface ThrowingIntConsumer
         }
     }
 
-    default IntConsumer orDoNothing()
+    @Override
+    default ThrowingIntConsumer orTryWith(ThrowingIntConsumer other)
     {
         return value -> {
             try {
@@ -32,11 +35,26 @@ public interface ThrowingIntConsumer
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                // Does nothing.
+                other.accept(value);
             }
         };
     }
 
+    @Override
+    default IntConsumer or(IntConsumer byDefault)
+    {
+        return value -> {
+            try {
+                doAccept(value);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable ignored) {
+                byDefault.accept(value);
+            }
+        };
+    }
+
+    @Override
     default <E extends RuntimeException> IntConsumer orThrow(
         Class<E> exceptionClass)
     {
@@ -47,6 +65,19 @@ public interface ThrowingIntConsumer
                 throw e;
             } catch (Throwable tooBad) {
                 throw ThrowablesFactory.INSTANCE.get(exceptionClass, tooBad);
+            }
+        };
+    }
+
+    default IntConsumer orDoNothing()
+    {
+        return value -> {
+            try {
+                doAccept(value);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable ignored) {
+                // Does nothing.
             }
         };
     }
