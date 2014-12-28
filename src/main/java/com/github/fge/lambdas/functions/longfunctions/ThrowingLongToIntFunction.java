@@ -1,13 +1,15 @@
 package com.github.fge.lambdas.functions.longfunctions;
 
 import com.github.fge.lambdas.ThrowablesFactory;
+import com.github.fge.lambdas.ThrowingFunctionalInterface;
 import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.LongToIntFunction;
 
 @FunctionalInterface
 public interface ThrowingLongToIntFunction
-    extends LongToIntFunction
+    extends LongToIntFunction,
+    ThrowingFunctionalInterface<ThrowingLongToIntFunction, LongToIntFunction>
 {
     int doApplyAsInt(long value)
         throws Throwable;
@@ -24,7 +26,9 @@ public interface ThrowingLongToIntFunction
         }
     }
 
-    default LongToIntFunction orReturn(int defaultValue)
+    @Override
+    default ThrowingLongToIntFunction orTryWith(
+        ThrowingLongToIntFunction other)
     {
         return value -> {
             try {
@@ -32,11 +36,26 @@ public interface ThrowingLongToIntFunction
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                return defaultValue;
+                return other.applyAsInt(value);
             }
         };
     }
 
+    @Override
+    default LongToIntFunction or(LongToIntFunction byDefault)
+    {
+        return value -> {
+            try {
+                return doApplyAsInt(value);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable ignored) {
+                return byDefault.applyAsInt(value);
+            }
+        };
+    }
+
+    @Override
     default <E extends RuntimeException> LongToIntFunction orThrow(
         Class<E> exceptionClass)
     {
@@ -47,6 +66,19 @@ public interface ThrowingLongToIntFunction
                 throw e;
             } catch (Throwable tooBad) {
                 throw ThrowablesFactory.INSTANCE.get(exceptionClass, tooBad);
+            }
+        };
+    }
+
+    default LongToIntFunction orReturn(int defaultValue)
+    {
+        return value -> {
+            try {
+                return doApplyAsInt(value);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable ignored) {
+                return defaultValue;
             }
         };
     }
