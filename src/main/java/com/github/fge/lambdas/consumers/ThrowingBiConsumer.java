@@ -1,13 +1,15 @@
 package com.github.fge.lambdas.consumers;
 
 import com.github.fge.lambdas.ThrowablesFactory;
+import com.github.fge.lambdas.ThrowingFunctionalInterface;
 import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.BiConsumer;
 
 @FunctionalInterface
 public interface ThrowingBiConsumer<T, U>
-    extends BiConsumer<T, U>
+    extends BiConsumer<T, U>,
+    ThrowingFunctionalInterface<ThrowingBiConsumer<T, U>, BiConsumer<T, U>>
 {
     void doAccept(T t, U u)
         throws Throwable;
@@ -24,7 +26,8 @@ public interface ThrowingBiConsumer<T, U>
         }
     }
 
-    default BiConsumer<T, U> orDoNothing()
+    @Override
+    default ThrowingBiConsumer<T, U> orTryWith(ThrowingBiConsumer<T, U> other)
     {
         return (t, u) -> {
             try {
@@ -32,11 +35,27 @@ public interface ThrowingBiConsumer<T, U>
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                // Does nothing.
+                other.accept(t, u);
             }
         };
     }
 
+    @Override
+    default BiConsumer<T, U> or(BiConsumer<T, U> byDefault)
+    {
+        return (t, u) -> {
+            try {
+                doAccept(t, u);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable ignored) {
+                byDefault.accept(t, u);
+            }
+        };
+    }
+
+
+    @Override
     default <E extends RuntimeException> BiConsumer<T, U> orThrow(
         Class<E> exceptionClass)
     {
@@ -47,6 +66,19 @@ public interface ThrowingBiConsumer<T, U>
                 throw e;
             } catch (Throwable tooBad) {
                 throw ThrowablesFactory.INSTANCE.get(exceptionClass, tooBad);
+            }
+        };
+    }
+
+    default BiConsumer<T, U> orDoNothing()
+    {
+        return (t, u) -> {
+            try {
+                doAccept(t, u);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable ignored) {
+                // Does nothing.
             }
         };
     }
