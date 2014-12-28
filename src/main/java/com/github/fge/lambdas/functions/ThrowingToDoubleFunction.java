@@ -1,13 +1,15 @@
 package com.github.fge.lambdas.functions;
 
 import com.github.fge.lambdas.ThrowablesFactory;
+import com.github.fge.lambdas.ThrowingFunctionalInterface;
 import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.ToDoubleFunction;
 
 @FunctionalInterface
 public interface ThrowingToDoubleFunction<T>
-    extends ToDoubleFunction<T>
+    extends ToDoubleFunction<T>,
+    ThrowingFunctionalInterface<ThrowingToDoubleFunction<T>, ToDoubleFunction<T>>
 {
     double doApplyAsDouble(T value)
         throws Throwable;
@@ -24,7 +26,9 @@ public interface ThrowingToDoubleFunction<T>
         }
     }
 
-    default ToDoubleFunction<T> orReturn(double defaultValue)
+    @Override
+    default ThrowingToDoubleFunction<T> orTryWith(
+        ThrowingToDoubleFunction<T> other)
     {
         return value -> {
             try {
@@ -32,11 +36,26 @@ public interface ThrowingToDoubleFunction<T>
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                return defaultValue;
+                return other.applyAsDouble(value);
             }
         };
     }
 
+    @Override
+    default ToDoubleFunction<T> or(ToDoubleFunction<T> byDefault)
+    {
+        return value -> {
+            try {
+                return doApplyAsDouble(value);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable ignored) {
+                return byDefault.applyAsDouble(value);
+            }
+        };
+    }
+
+    @Override
     default <E extends RuntimeException> ToDoubleFunction<T> orThrow(
         Class<E> exceptionClass)
     {
@@ -47,6 +66,19 @@ public interface ThrowingToDoubleFunction<T>
                 throw e;
             } catch (Throwable tooBad) {
                 throw ThrowablesFactory.INSTANCE.get(exceptionClass, tooBad);
+            }
+        };
+    }
+
+    default ToDoubleFunction<T> orReturn(double defaultValue)
+    {
+        return value -> {
+            try {
+                return doApplyAsDouble(value);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable ignored) {
+                return defaultValue;
             }
         };
     }
