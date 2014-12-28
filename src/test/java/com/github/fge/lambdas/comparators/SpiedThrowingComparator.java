@@ -7,7 +7,7 @@ import org.mockito.Mockito;
 public class SpiedThrowingComparator
     implements ThrowingComparator<Type1>
 {
-    public static SpiedThrowingComparator newSpy()
+    public static ThrowingComparator<Type1> newSpy()
     {
         return Mockito.spy(new SpiedThrowingComparator());
     }
