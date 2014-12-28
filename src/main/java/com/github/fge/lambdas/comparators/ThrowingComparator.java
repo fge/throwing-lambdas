@@ -27,21 +27,6 @@ public interface ThrowingComparator<T>
     }
 
     @Override
-    default <E extends RuntimeException> Comparator<T> orThrow(
-        Class<E> exceptionClass)
-    {
-        return (o1, o2) -> {
-            try {
-                return doCompare(o1, o2);
-            } catch (Error | RuntimeException e) {
-                throw e;
-            } catch (Throwable tooBad) {
-                throw ThrowablesFactory.INSTANCE.get(exceptionClass, tooBad);
-            }
-        };
-    }
-
-    @Override
     default ThrowingComparator<T> orTryWith(ThrowingComparator<T> other)
     {
         return (o1, o2) -> {
@@ -65,6 +50,22 @@ public interface ThrowingComparator<T>
                 throw e;
             } catch (Throwable tooBad) {
                 return byDefault.compare(o1, o2);
+            }
+        };
+    }
+
+
+    @Override
+    default <E extends RuntimeException> Comparator<T> orThrow(
+        Class<E> exceptionClass)
+    {
+        return (o1, o2) -> {
+            try {
+                return doCompare(o1, o2);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable tooBad) {
+                throw ThrowablesFactory.INSTANCE.get(exceptionClass, tooBad);
             }
         };
     }

@@ -7,14 +7,14 @@ package com.github.fge.lambdas;
  */
 public interface ThrowingFunctionalInterface<T extends N, N>
 {
+    T orTryWith(T other);
+
+    N or(N byDefault);
+
     <E extends RuntimeException> N orThrow(Class<E> exceptionClass);
 
     default <E extends RuntimeException> N as(Class<E> exceptionClass)
     {
         return orThrow(exceptionClass);
     }
-
-    T orTryWith(T other);
-
-    N or(N byDefault);
 }
