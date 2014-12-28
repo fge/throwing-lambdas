@@ -1,13 +1,15 @@
 package com.github.fge.lambdas.functions.doublefunctions;
 
 import com.github.fge.lambdas.ThrowablesFactory;
+import com.github.fge.lambdas.ThrowingFunctionalInterface;
 import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.DoubleToLongFunction;
 
 @FunctionalInterface
 public interface ThrowingDoubleToLongFunction
-    extends DoubleToLongFunction
+    extends DoubleToLongFunction,
+    ThrowingFunctionalInterface<ThrowingDoubleToLongFunction, DoubleToLongFunction>
 {
     long doApplyAsLong(double value)
         throws Throwable;
@@ -24,7 +26,9 @@ public interface ThrowingDoubleToLongFunction
         }
     }
 
-    default DoubleToLongFunction orReturn(long defaultValue)
+    @Override
+    default ThrowingDoubleToLongFunction orTryWith(
+        ThrowingDoubleToLongFunction other)
     {
         return value -> {
             try {
@@ -32,11 +36,26 @@ public interface ThrowingDoubleToLongFunction
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                return defaultValue;
+                return other.applyAsLong(value);
             }
         };
     }
 
+    @Override
+    default DoubleToLongFunction or(DoubleToLongFunction byDefault)
+    {
+        return value -> {
+            try {
+                return doApplyAsLong(value);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable ignored) {
+                return byDefault.applyAsLong(value);
+            }
+        };
+    }
+
+    @Override
     default <E extends RuntimeException> DoubleToLongFunction orThrow(
         Class<E> exceptionClass)
     {
@@ -47,6 +66,19 @@ public interface ThrowingDoubleToLongFunction
                 throw e;
             } catch (Throwable tooBad) {
                 throw ThrowablesFactory.INSTANCE.get(exceptionClass, tooBad);
+            }
+        };
+    }
+
+    default DoubleToLongFunction orReturn(long defaultValue)
+    {
+        return value -> {
+            try {
+                return doApplyAsLong(value);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable ignored) {
+                return defaultValue;
             }
         };
     }
