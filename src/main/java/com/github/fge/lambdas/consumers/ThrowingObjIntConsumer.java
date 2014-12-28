@@ -1,13 +1,15 @@
 package com.github.fge.lambdas.consumers;
 
 import com.github.fge.lambdas.ThrowablesFactory;
+import com.github.fge.lambdas.ThrowingFunctionalInterface;
 import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.ObjIntConsumer;
 
 @FunctionalInterface
 public interface ThrowingObjIntConsumer<T>
-    extends ObjIntConsumer<T>
+    extends ObjIntConsumer<T>,
+    ThrowingFunctionalInterface<ThrowingObjIntConsumer<T>, ObjIntConsumer<T>>
 {
     void doAccept(T t, int value)
         throws Throwable;
@@ -24,7 +26,8 @@ public interface ThrowingObjIntConsumer<T>
         }
     }
 
-    default ObjIntConsumer<T> orDoNothing()
+    @Override
+    default ThrowingObjIntConsumer<T> orTryWith(ThrowingObjIntConsumer<T> other)
     {
         return (t, value) -> {
             try {
@@ -32,11 +35,26 @@ public interface ThrowingObjIntConsumer<T>
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                // Does nothing.
+                other.accept(t, value);
             }
         };
     }
 
+    @Override
+    default ObjIntConsumer<T> or(ObjIntConsumer<T> byDefault)
+    {
+        return (t, value) -> {
+            try {
+                doAccept(t, value);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable ignored) {
+                byDefault.accept(t, value);
+            }
+        };
+    }
+
+    @Override
     default <E extends RuntimeException> ObjIntConsumer<T> orThrow(
         Class<E> exceptionClass)
     {
@@ -47,6 +65,19 @@ public interface ThrowingObjIntConsumer<T>
                 throw e;
             } catch (Throwable tooBad) {
                 throw ThrowablesFactory.INSTANCE.get(exceptionClass, tooBad);
+            }
+        };
+    }
+
+    default ObjIntConsumer<T> orDoNothing()
+    {
+        return (t, value) -> {
+            try {
+                doAccept(t, value);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable ignored) {
+                // Does nothing.
             }
         };
     }

@@ -1,13 +1,15 @@
 package com.github.fge.lambdas.consumers;
 
 import com.github.fge.lambdas.ThrowablesFactory;
+import com.github.fge.lambdas.ThrowingFunctionalInterface;
 import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.ObjDoubleConsumer;
 
 @FunctionalInterface
 public interface ThrowingObjDoubleConsumer<T>
-    extends ObjDoubleConsumer<T>
+    extends ObjDoubleConsumer<T>,
+    ThrowingFunctionalInterface<ThrowingObjDoubleConsumer<T>, ObjDoubleConsumer<T>>
 {
     void doAccept(T t, double value)
         throws Throwable;
@@ -24,7 +26,9 @@ public interface ThrowingObjDoubleConsumer<T>
         }
     }
 
-    default ObjDoubleConsumer<T> orDoNothing()
+    @Override
+    default ThrowingObjDoubleConsumer<T> orTryWith(
+        ThrowingObjDoubleConsumer<T> other)
     {
         return (t, value) -> {
             try {
@@ -32,11 +36,26 @@ public interface ThrowingObjDoubleConsumer<T>
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                // Does nothing.
+                other.accept(t, value);
             }
         };
     }
 
+    @Override
+    default ObjDoubleConsumer<T> or(ObjDoubleConsumer<T> byDefault)
+    {
+        return (t, value) -> {
+            try {
+                doAccept(t, value);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable ignored) {
+                byDefault.accept(t, value);
+            }
+        };
+    }
+
+    @Override
     default <E extends RuntimeException> ObjDoubleConsumer<T> orThrow(
         Class<E> exceptionClass)
     {
@@ -47,6 +66,19 @@ public interface ThrowingObjDoubleConsumer<T>
                 throw e;
             } catch (Throwable tooBad) {
                 throw ThrowablesFactory.INSTANCE.get(exceptionClass, tooBad);
+            }
+        };
+    }
+
+    default ObjDoubleConsumer<T> orDoNothing()
+    {
+        return (t, value) -> {
+            try {
+                doAccept(t, value);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable ignored) {
+                // Does nothing.
             }
         };
     }

@@ -1,13 +1,15 @@
 package com.github.fge.lambdas.consumers;
 
 import com.github.fge.lambdas.ThrowablesFactory;
+import com.github.fge.lambdas.ThrowingFunctionalInterface;
 import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.ObjLongConsumer;
 
 @FunctionalInterface
 public interface ThrowingObjLongConsumer<T>
-    extends ObjLongConsumer<T>
+    extends ObjLongConsumer<T>,
+    ThrowingFunctionalInterface<ThrowingObjLongConsumer<T>, ObjLongConsumer<T>>
 {
     void doAccept(T t, long value)
         throws Throwable;
@@ -24,7 +26,9 @@ public interface ThrowingObjLongConsumer<T>
         }
     }
 
-    default ObjLongConsumer<T> orDoNothing()
+    @Override
+    default ThrowingObjLongConsumer<T> orTryWith(
+        ThrowingObjLongConsumer<T> other)
     {
         return (t, value) -> {
             try {
@@ -32,11 +36,26 @@ public interface ThrowingObjLongConsumer<T>
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                // Does nothing.
+                other.accept(t, value);
             }
         };
     }
 
+    @Override
+    default ObjLongConsumer<T> or(ObjLongConsumer<T> byDefault)
+    {
+        return (t, value) -> {
+            try {
+                doAccept(t, value);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable ignored) {
+                byDefault.accept(t, value);
+            }
+        };
+    }
+
+    @Override
     default <E extends RuntimeException> ObjLongConsumer<T> orThrow(
         Class<E> exceptionClass)
     {
@@ -47,6 +66,19 @@ public interface ThrowingObjLongConsumer<T>
                 throw e;
             } catch (Throwable tooBad) {
                 throw ThrowablesFactory.INSTANCE.get(exceptionClass, tooBad);
+            }
+        };
+    }
+
+    default ObjLongConsumer<T> orDoNothing()
+    {
+        return (t, value) -> {
+            try {
+                doAccept(t, value);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable ignored) {
+                // Does nothing.
             }
         };
     }
