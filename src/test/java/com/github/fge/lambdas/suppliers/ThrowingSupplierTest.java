@@ -9,7 +9,8 @@ import java.util.concurrent.Callable;
 import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @SuppressWarnings({"ProhibitedExceptionDeclared", "unchecked",
     "OverlyBroadThrowsClause"})

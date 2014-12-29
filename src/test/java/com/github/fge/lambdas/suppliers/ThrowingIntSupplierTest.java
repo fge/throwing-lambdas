@@ -8,7 +8,8 @@ import java.util.concurrent.Callable;
 import java.util.function.IntSupplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @SuppressWarnings({"AutoBoxing", "OverlyBroadThrowsClause",
     "ProhibitedExceptionDeclared"})
