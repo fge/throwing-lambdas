@@ -1,13 +1,15 @@
 package com.github.fge.lambdas.functions.operators;
 
 import com.github.fge.lambdas.ThrowablesFactory;
+import com.github.fge.lambdas.ThrowingFunctionalInterface;
 import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.LongUnaryOperator;
 
 @FunctionalInterface
 public interface ThrowingLongUnaryOperator
-    extends LongUnaryOperator
+    extends LongUnaryOperator,
+    ThrowingFunctionalInterface<ThrowingLongUnaryOperator, LongUnaryOperator>
 {
     long doApplyAsLong(long operand)
         throws Throwable;
@@ -22,6 +24,50 @@ public interface ThrowingLongUnaryOperator
         } catch (Throwable tooBad) {
             throw new ThrownByLambdaException(tooBad);
         }
+    }
+
+    @Override
+    default ThrowingLongUnaryOperator orTryWith(
+        ThrowingLongUnaryOperator other)
+    {
+        return operand -> {
+            try {
+                return doApplyAsLong(operand);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable tooBad) {
+                return other.applyAsLong(operand);
+            }
+        };
+    }
+
+    @Override
+    default LongUnaryOperator or(LongUnaryOperator byDefault)
+    {
+        return operand -> {
+            try {
+                return doApplyAsLong(operand);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable tooBad) {
+                return byDefault.applyAsLong(operand);
+            }
+        };
+    }
+
+    @Override
+    default <E extends RuntimeException> LongUnaryOperator orThrow(
+        Class<E> exceptionClass)
+    {
+        return operand -> {
+            try {
+                return doApplyAsLong(operand);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable tooBad) {
+                throw ThrowablesFactory.INSTANCE.get(exceptionClass, tooBad);
+            }
+        };
     }
 
     default LongUnaryOperator orReturn(long defaultValue)
@@ -46,20 +92,6 @@ public interface ThrowingLongUnaryOperator
                 throw e;
             } catch (Throwable ignored) {
                 return operand;
-            }
-        };
-    }
-
-    default <E extends RuntimeException> LongUnaryOperator orThrow(
-        Class<E> exceptionClass)
-    {
-        return operand -> {
-            try {
-                return doApplyAsLong(operand);
-            } catch (Error | RuntimeException e) {
-                throw e;
-            } catch (Throwable tooBad) {
-                throw ThrowablesFactory.INSTANCE.get(exceptionClass, tooBad);
             }
         };
     }

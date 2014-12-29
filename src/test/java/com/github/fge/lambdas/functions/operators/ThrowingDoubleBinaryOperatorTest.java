@@ -1,7 +1,7 @@
-package com.github.fge.lambdas;
+package com.github.fge.lambdas.functions.operators;
 
-import com.github.fge.lambdas.functions.operators.SpiedThrowingDoubleBinaryOperator;
-import com.github.fge.lambdas.functions.operators.ThrowingDoubleBinaryOperator;
+import com.github.fge.lambdas.ThrowingInterfaceBaseTest;
+import com.github.fge.lambdas.ThrownByLambdaException;
 import com.github.fge.lambdas.helpers.MyException;
 
 import java.util.concurrent.Callable;
@@ -11,9 +11,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-/**
- * Created by fge on 12/29/14.
- */
 @SuppressWarnings({"ProhibitedExceptionDeclared", "AutoBoxing",
     "OverlyBroadThrowsClause"})
 public final class ThrowingDoubleBinaryOperatorTest
