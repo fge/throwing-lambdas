@@ -42,7 +42,7 @@ public interface ThrowingIntToDoubleFunction
     }
 
     @Override
-    default IntToDoubleFunction fallbackTo(IntToDoubleFunction byDefault)
+    default IntToDoubleFunction fallbackTo(IntToDoubleFunction fallback)
     {
         return value -> {
             try {
@@ -50,7 +50,7 @@ public interface ThrowingIntToDoubleFunction
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                return byDefault.applyAsDouble(value);
+                return fallback.applyAsDouble(value);
             }
         };
     }

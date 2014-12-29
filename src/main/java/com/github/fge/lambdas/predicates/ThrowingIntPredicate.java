@@ -41,7 +41,7 @@ public interface ThrowingIntPredicate
     }
 
     @Override
-    default IntPredicate fallbackTo(IntPredicate byDefault)
+    default IntPredicate fallbackTo(IntPredicate fallback)
     {
         return value -> {
             try {
@@ -49,7 +49,7 @@ public interface ThrowingIntPredicate
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                return byDefault.test(value);
+                return fallback.test(value);
             }
         };
     }

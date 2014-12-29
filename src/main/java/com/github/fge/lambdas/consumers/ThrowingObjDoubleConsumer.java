@@ -42,7 +42,7 @@ public interface ThrowingObjDoubleConsumer<T>
     }
 
     @Override
-    default ObjDoubleConsumer<T> fallbackTo(ObjDoubleConsumer<T> byDefault)
+    default ObjDoubleConsumer<T> fallbackTo(ObjDoubleConsumer<T> fallback)
     {
         return (t, value) -> {
             try {
@@ -50,7 +50,7 @@ public interface ThrowingObjDoubleConsumer<T>
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                byDefault.accept(t, value);
+                fallback.accept(t, value);
             }
         };
     }

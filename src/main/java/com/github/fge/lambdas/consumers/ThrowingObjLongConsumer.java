@@ -42,7 +42,7 @@ public interface ThrowingObjLongConsumer<T>
     }
 
     @Override
-    default ObjLongConsumer<T> fallbackTo(ObjLongConsumer<T> byDefault)
+    default ObjLongConsumer<T> fallbackTo(ObjLongConsumer<T> fallback)
     {
         return (t, value) -> {
             try {
@@ -50,7 +50,7 @@ public interface ThrowingObjLongConsumer<T>
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                byDefault.accept(t, value);
+                fallback.accept(t, value);
             }
         };
     }

@@ -41,7 +41,7 @@ public interface ThrowingIntSupplier
     }
 
     @Override
-    default IntSupplier fallbackTo(IntSupplier byDefault)
+    default IntSupplier fallbackTo(IntSupplier fallback)
     {
         return () -> {
             try {
@@ -49,7 +49,7 @@ public interface ThrowingIntSupplier
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                return byDefault.getAsInt();
+                return fallback.getAsInt();
             }
         };
     }

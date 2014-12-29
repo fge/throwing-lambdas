@@ -56,7 +56,7 @@ public interface ThrowingDoubleConsumer
     }
 
     @Override
-    default DoubleConsumer fallbackTo(DoubleConsumer byDefault)
+    default DoubleConsumer fallbackTo(DoubleConsumer fallback)
     {
         return value -> {
             try {
@@ -64,7 +64,7 @@ public interface ThrowingDoubleConsumer
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                byDefault.accept(value);
+                fallback.accept(value);
             }
         };
     }

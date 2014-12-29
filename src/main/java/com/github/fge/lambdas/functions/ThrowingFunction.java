@@ -41,7 +41,7 @@ public interface ThrowingFunction<T, R>
     }
 
     @Override
-    default Function<T, R> fallbackTo(Function<T, R> byDefault)
+    default Function<T, R> fallbackTo(Function<T, R> fallback)
     {
         return t -> {
             try {
@@ -49,7 +49,7 @@ public interface ThrowingFunction<T, R>
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                return byDefault.apply(t);
+                return fallback.apply(t);
             }
         };
     }

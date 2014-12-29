@@ -41,7 +41,7 @@ public interface ThrowingSupplier<T>
     }
 
     @Override
-    default Supplier<T> fallbackTo(Supplier<T> byDefault)
+    default Supplier<T> fallbackTo(Supplier<T> fallback)
     {
         return () -> {
             try {
@@ -49,7 +49,7 @@ public interface ThrowingSupplier<T>
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                return byDefault.get();
+                return fallback.get();
             }
         };
     }

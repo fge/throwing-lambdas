@@ -41,7 +41,7 @@ public interface ThrowingToIntFunction<T>
     }
 
     @Override
-    default ToIntFunction<T> fallbackTo(ToIntFunction<T> byDefault)
+    default ToIntFunction<T> fallbackTo(ToIntFunction<T> fallback)
     {
         return value -> {
             try {
@@ -49,7 +49,7 @@ public interface ThrowingToIntFunction<T>
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                return byDefault.applyAsInt(value);
+                return fallback.applyAsInt(value);
             }
         };
     }

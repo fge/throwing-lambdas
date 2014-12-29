@@ -42,7 +42,7 @@ public interface ThrowingBiFunction<T, U, R>
     }
 
     @Override
-    default BiFunction<T, U, R> fallbackTo(BiFunction<T, U, R> byDefault)
+    default BiFunction<T, U, R> fallbackTo(BiFunction<T, U, R> fallback)
     {
         return (t, u) -> {
             try {
@@ -50,7 +50,7 @@ public interface ThrowingBiFunction<T, U, R>
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                return byDefault.apply(t, u);
+                return fallback.apply(t, u);
             }
         };
     }

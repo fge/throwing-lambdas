@@ -41,7 +41,7 @@ public interface ThrowingDoubleFunction<R>
     }
 
     @Override
-    default DoubleFunction<R> fallbackTo(DoubleFunction<R> byDefault)
+    default DoubleFunction<R> fallbackTo(DoubleFunction<R> fallback)
     {
         return value -> {
             try {
@@ -49,7 +49,7 @@ public interface ThrowingDoubleFunction<R>
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                return byDefault.apply(value);
+                return fallback.apply(value);
             }
         };
     }

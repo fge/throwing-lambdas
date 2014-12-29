@@ -41,7 +41,7 @@ public interface ThrowingObjIntConsumer<T>
     }
 
     @Override
-    default ObjIntConsumer<T> fallbackTo(ObjIntConsumer<T> byDefault)
+    default ObjIntConsumer<T> fallbackTo(ObjIntConsumer<T> fallback)
     {
         return (t, value) -> {
             try {
@@ -49,7 +49,7 @@ public interface ThrowingObjIntConsumer<T>
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                byDefault.accept(t, value);
+                fallback.accept(t, value);
             }
         };
     }

@@ -42,7 +42,7 @@ public interface ThrowingLongFunction<R>
     }
 
     @Override
-    default LongFunction<R> fallbackTo(LongFunction<R> byDefault)
+    default LongFunction<R> fallbackTo(LongFunction<R> fallback)
     {
         return value -> {
             try {
@@ -50,7 +50,7 @@ public interface ThrowingLongFunction<R>
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                return byDefault.apply(value);
+                return fallback.apply(value);
             }
         };
     }

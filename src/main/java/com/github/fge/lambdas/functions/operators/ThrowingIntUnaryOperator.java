@@ -42,7 +42,7 @@ public interface ThrowingIntUnaryOperator
     }
 
     @Override
-    default IntUnaryOperator fallbackTo(IntUnaryOperator byDefault)
+    default IntUnaryOperator fallbackTo(IntUnaryOperator fallback)
     {
         return operand -> {
             try {
@@ -50,7 +50,7 @@ public interface ThrowingIntUnaryOperator
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                return byDefault.applyAsInt(operand);
+                return fallback.applyAsInt(operand);
             }
         };
     }

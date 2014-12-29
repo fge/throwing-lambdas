@@ -42,7 +42,7 @@ public interface ThrowingIntBinaryOperator
     }
 
     @Override
-    default IntBinaryOperator fallbackTo(IntBinaryOperator byDefault)
+    default IntBinaryOperator fallbackTo(IntBinaryOperator fallback)
     {
         return (left, right) -> {
             try {
@@ -50,7 +50,7 @@ public interface ThrowingIntBinaryOperator
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                return byDefault.applyAsInt(left, right);
+                return fallback.applyAsInt(left, right);
             }
         };
     }

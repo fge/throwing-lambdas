@@ -42,7 +42,7 @@ public interface ThrowingDoubleBinaryOperator
     }
 
     @Override
-    default DoubleBinaryOperator fallbackTo(DoubleBinaryOperator byDefault)
+    default DoubleBinaryOperator fallbackTo(DoubleBinaryOperator fallback)
     {
         return (left, right) -> {
             try {
@@ -50,7 +50,7 @@ public interface ThrowingDoubleBinaryOperator
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                return byDefault.applyAsDouble(left, right);
+                return fallback.applyAsDouble(left, right);
             }
         };
     }

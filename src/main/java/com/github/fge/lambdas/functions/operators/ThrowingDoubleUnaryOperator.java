@@ -42,7 +42,7 @@ public interface ThrowingDoubleUnaryOperator
     }
 
     @Override
-    default DoubleUnaryOperator fallbackTo(DoubleUnaryOperator byDefault)
+    default DoubleUnaryOperator fallbackTo(DoubleUnaryOperator fallback)
     {
         return operand -> {
             try {
@@ -50,7 +50,7 @@ public interface ThrowingDoubleUnaryOperator
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                return byDefault.applyAsDouble(operand);
+                return fallback.applyAsDouble(operand);
             }
         };
     }

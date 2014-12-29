@@ -42,7 +42,7 @@ public interface ThrowingUnaryOperator<T>
     }
 
     @Override
-    default UnaryOperator<T> fallbackTo(UnaryOperator<T> byDefault)
+    default UnaryOperator<T> fallbackTo(UnaryOperator<T> fallback)
     {
         return t -> {
             try {
@@ -50,7 +50,7 @@ public interface ThrowingUnaryOperator<T>
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                return byDefault.apply(t);
+                return fallback.apply(t);
             }
         };
     }

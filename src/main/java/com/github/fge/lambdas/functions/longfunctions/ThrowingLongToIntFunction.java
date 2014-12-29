@@ -42,7 +42,7 @@ public interface ThrowingLongToIntFunction
     }
 
     @Override
-    default LongToIntFunction fallbackTo(LongToIntFunction byDefault)
+    default LongToIntFunction fallbackTo(LongToIntFunction fallback)
     {
         return value -> {
             try {
@@ -50,7 +50,7 @@ public interface ThrowingLongToIntFunction
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                return byDefault.applyAsInt(value);
+                return fallback.applyAsInt(value);
             }
         };
     }

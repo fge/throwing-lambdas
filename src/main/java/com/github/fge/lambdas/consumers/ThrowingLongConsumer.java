@@ -41,7 +41,7 @@ public interface ThrowingLongConsumer
     }
 
     @Override
-    default LongConsumer fallbackTo(LongConsumer byDefault)
+    default LongConsumer fallbackTo(LongConsumer fallback)
     {
         return value -> {
             try {
@@ -49,7 +49,7 @@ public interface ThrowingLongConsumer
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                byDefault.accept(value);
+                fallback.accept(value);
             }
         };
     }

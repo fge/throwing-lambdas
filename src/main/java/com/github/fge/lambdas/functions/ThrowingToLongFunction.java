@@ -41,7 +41,7 @@ public interface ThrowingToLongFunction<T>
     }
 
     @Override
-    default ToLongFunction<T> fallbackTo(ToLongFunction<T> byDefault)
+    default ToLongFunction<T> fallbackTo(ToLongFunction<T> fallback)
     {
         return value -> {
             try {
@@ -49,7 +49,7 @@ public interface ThrowingToLongFunction<T>
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                return byDefault.applyAsLong(value);
+                return fallback.applyAsLong(value);
             }
         };
     }

@@ -42,7 +42,7 @@ public interface ThrowingLongBinaryOperator
     }
 
     @Override
-    default LongBinaryOperator fallbackTo(LongBinaryOperator byDefault)
+    default LongBinaryOperator fallbackTo(LongBinaryOperator fallback)
     {
         return (left, right) -> {
             try {
@@ -50,7 +50,7 @@ public interface ThrowingLongBinaryOperator
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                return byDefault.applyAsLong(left, right);
+                return fallback.applyAsLong(left, right);
             }
         };
     }

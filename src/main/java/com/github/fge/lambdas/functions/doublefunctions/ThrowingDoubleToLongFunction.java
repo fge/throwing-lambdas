@@ -42,7 +42,7 @@ public interface ThrowingDoubleToLongFunction
     }
 
     @Override
-    default DoubleToLongFunction fallbackTo(DoubleToLongFunction byDefault)
+    default DoubleToLongFunction fallbackTo(DoubleToLongFunction fallback)
     {
         return value -> {
             try {
@@ -50,7 +50,7 @@ public interface ThrowingDoubleToLongFunction
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                return byDefault.applyAsLong(value);
+                return fallback.applyAsLong(value);
             }
         };
     }

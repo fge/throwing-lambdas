@@ -41,7 +41,7 @@ public interface ThrowingIntConsumer
     }
 
     @Override
-    default IntConsumer fallbackTo(IntConsumer byDefault)
+    default IntConsumer fallbackTo(IntConsumer fallback)
     {
         return value -> {
             try {
@@ -49,7 +49,7 @@ public interface ThrowingIntConsumer
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                byDefault.accept(value);
+                fallback.accept(value);
             }
         };
     }

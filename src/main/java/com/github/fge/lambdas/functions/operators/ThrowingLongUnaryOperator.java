@@ -42,7 +42,7 @@ public interface ThrowingLongUnaryOperator
     }
 
     @Override
-    default LongUnaryOperator fallbackTo(LongUnaryOperator byDefault)
+    default LongUnaryOperator fallbackTo(LongUnaryOperator fallback)
     {
         return operand -> {
             try {
@@ -50,7 +50,7 @@ public interface ThrowingLongUnaryOperator
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                return byDefault.applyAsLong(operand);
+                return fallback.applyAsLong(operand);
             }
         };
     }

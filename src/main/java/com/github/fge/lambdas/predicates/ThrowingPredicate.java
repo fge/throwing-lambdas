@@ -42,7 +42,7 @@ public interface ThrowingPredicate<T>
     }
 
     @Override
-    default Predicate<T> fallbackTo(Predicate<T> byDefault)
+    default Predicate<T> fallbackTo(Predicate<T> fallback)
     {
         return t -> {
             try {
@@ -50,7 +50,7 @@ public interface ThrowingPredicate<T>
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                return byDefault.test(t);
+                return fallback.test(t);
             }
         };
     }

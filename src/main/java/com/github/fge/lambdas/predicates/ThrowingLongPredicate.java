@@ -42,7 +42,7 @@ public interface ThrowingLongPredicate
     }
 
     @Override
-    default LongPredicate fallbackTo(LongPredicate byDefault)
+    default LongPredicate fallbackTo(LongPredicate fallback)
     {
         return value -> {
             try {
@@ -50,7 +50,7 @@ public interface ThrowingLongPredicate
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                return byDefault.test(value);
+                return fallback.test(value);
             }
         };
     }

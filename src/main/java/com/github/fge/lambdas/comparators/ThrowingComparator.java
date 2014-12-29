@@ -41,7 +41,7 @@ public interface ThrowingComparator<T>
     }
 
     @Override
-    default Comparator<T> fallbackTo(Comparator<T> byDefault)
+    default Comparator<T> fallbackTo(Comparator<T> fallback)
     {
         return (o1, o2) -> {
             try {
@@ -49,7 +49,7 @@ public interface ThrowingComparator<T>
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                return byDefault.compare(o1, o2);
+                return fallback.compare(o1, o2);
             }
         };
     }

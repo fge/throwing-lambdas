@@ -42,7 +42,7 @@ public interface ThrowingDoubleSupplier
     }
 
     @Override
-    default DoubleSupplier fallbackTo(DoubleSupplier byDefault)
+    default DoubleSupplier fallbackTo(DoubleSupplier fallback)
     {
         return () -> {
             try {
@@ -50,7 +50,7 @@ public interface ThrowingDoubleSupplier
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                return byDefault.getAsDouble();
+                return fallback.getAsDouble();
             }
         };
     }

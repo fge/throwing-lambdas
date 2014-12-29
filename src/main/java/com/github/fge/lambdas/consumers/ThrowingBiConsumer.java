@@ -41,7 +41,7 @@ public interface ThrowingBiConsumer<T, U>
     }
 
     @Override
-    default BiConsumer<T, U> fallbackTo(BiConsumer<T, U> byDefault)
+    default BiConsumer<T, U> fallbackTo(BiConsumer<T, U> fallback)
     {
         return (t, u) -> {
             try {
@@ -49,7 +49,7 @@ public interface ThrowingBiConsumer<T, U>
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                byDefault.accept(t, u);
+                fallback.accept(t, u);
             }
         };
     }

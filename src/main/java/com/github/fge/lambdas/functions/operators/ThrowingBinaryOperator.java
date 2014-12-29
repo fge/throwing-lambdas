@@ -42,7 +42,7 @@ public interface ThrowingBinaryOperator<T>
     }
 
     @Override
-    default BinaryOperator<T> fallbackTo(BinaryOperator<T> byDefault)
+    default BinaryOperator<T> fallbackTo(BinaryOperator<T> fallback)
     {
         return (t, u) -> {
             try {
@@ -50,7 +50,7 @@ public interface ThrowingBinaryOperator<T>
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                return byDefault.apply(t, u);
+                return fallback.apply(t, u);
             }
         };
     }

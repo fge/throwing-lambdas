@@ -41,7 +41,7 @@ public interface ThrowingDoublePredicate
     }
 
     @Override
-    default DoublePredicate fallbackTo(DoublePredicate byDefault)
+    default DoublePredicate fallbackTo(DoublePredicate fallback)
     {
         return value -> {
             try {
@@ -49,7 +49,7 @@ public interface ThrowingDoublePredicate
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                return byDefault.test(value);
+                return fallback.test(value);
             }
         };
     }

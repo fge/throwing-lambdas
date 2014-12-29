@@ -41,7 +41,7 @@ public interface ThrowingLongSupplier
     }
 
     @Override
-    default LongSupplier fallbackTo(LongSupplier byDefault)
+    default LongSupplier fallbackTo(LongSupplier fallback)
     {
         return () -> {
             try {
@@ -49,7 +49,7 @@ public interface ThrowingLongSupplier
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                return byDefault.getAsLong();
+                return fallback.getAsLong();
             }
         };
     }

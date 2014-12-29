@@ -42,7 +42,7 @@ public interface ThrowingToDoubleFunction<T>
     }
 
     @Override
-    default ToDoubleFunction<T> fallbackTo(ToDoubleFunction<T> byDefault)
+    default ToDoubleFunction<T> fallbackTo(ToDoubleFunction<T> fallback)
     {
         return value -> {
             try {
@@ -50,7 +50,7 @@ public interface ThrowingToDoubleFunction<T>
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                return byDefault.applyAsDouble(value);
+                return fallback.applyAsDouble(value);
             }
         };
     }
