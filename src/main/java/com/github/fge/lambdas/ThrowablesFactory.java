@@ -57,7 +57,7 @@ public enum ThrowablesFactory
                 return LOOKUP.findConstructor(c, TYPE)
                     .asType(TYPE.changeReturnType(RuntimeException.class));
             } catch (IllegalAccessException | NoSuchMethodException e) {
-                throw new IllegalStateException(e);
+                throw new InstantiationException(e);
             }
         });
     }
@@ -66,7 +66,7 @@ public enum ThrowablesFactory
      * Build a new instance of a runtime exception
      *
      * <p>If the exception cannot be built for a reason or another, this method
-     * throws an {@link IllegalStateException}. In this exception:</p>
+     * throws an {@link InstantiationException}. In this exception:</p>
      *
      * <ul>
      *     <li>the exception having caused the instantiation failure is set as
@@ -82,7 +82,7 @@ public enum ThrowablesFactory
      * @return an instance of this runtime exception with the throwable passed
      * as an argument
      *
-     * @throws IllegalStateException see description
+     * @throws InstantiationException see description
      * @throws Error unexpected error when building the instance
      * @throws RuntimeException unexpected exception when building the instance
      */
@@ -92,12 +92,28 @@ public enum ThrowablesFactory
     {
         try {
             return (E) getHandle(c).invokeExact(t);
+        } catch (InstantiationException e) {
+            e.addSuppressed(t);
+            throw e;
         } catch (Error | RuntimeException e) {
             throw e;
         } catch (Throwable oops) {
-            final RuntimeException exception = new IllegalStateException(oops);
+            final RuntimeException exception = new InstantiationException(oops);
             exception.addSuppressed(t);
             throw exception;
+        }
+    }
+
+    /**
+     * Exception thrown by {@link ThrowablesFactory#INSTANCE#get(Class,
+     * Throwable)} when an instance of an exception class cannot be built
+     */
+    public static final class InstantiationException
+        extends RuntimeException
+    {
+        public InstantiationException(final Throwable cause)
+        {
+            super(cause);
         }
     }
 }
