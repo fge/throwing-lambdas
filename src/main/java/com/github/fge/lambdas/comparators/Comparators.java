@@ -7,14 +7,20 @@ public final class Comparators
         throw new Error("nice try!");
     }
 
-    public static <T> ThrowingComparator<T> rethrow(
+    public static <T> ThrowingComparator<T> wrap(final ThrowingComparator<T> c)
+    {
+        return c;
+    }
+
+    public static <T> ThrowingComparator<T> tryWith(
         final ThrowingComparator<T> c)
     {
         return wrap(c);
     }
 
-    public static <T> ThrowingComparator<T> wrap(final ThrowingComparator<T> c)
+    public static <T> ThrowingComparator<T> rethrow(
+        final ThrowingComparator<T> c)
     {
-        return c;
+        return wrap(c);
     }
 }
