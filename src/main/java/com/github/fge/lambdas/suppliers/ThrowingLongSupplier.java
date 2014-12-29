@@ -1,13 +1,15 @@
 package com.github.fge.lambdas.suppliers;
 
 import com.github.fge.lambdas.ThrowablesFactory;
+import com.github.fge.lambdas.ThrowingFunctionalInterface;
 import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.LongSupplier;
 
 @FunctionalInterface
 public interface ThrowingLongSupplier
-    extends LongSupplier
+    extends LongSupplier,
+    ThrowingFunctionalInterface<ThrowingLongSupplier, LongSupplier>
 {
     long doGetAsLong()
         throws Throwable;
@@ -22,6 +24,34 @@ public interface ThrowingLongSupplier
         } catch (Throwable tooBad) {
             throw new ThrownByLambdaException(tooBad);
         }
+    }
+
+    @Override
+    default ThrowingLongSupplier orTryWith(ThrowingLongSupplier other)
+    {
+        return () -> {
+            try {
+                return doGetAsLong();
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable ignored) {
+                return other.doGetAsLong();
+            }
+        };
+    }
+
+    @Override
+    default LongSupplier or(LongSupplier byDefault)
+    {
+        return () -> {
+            try {
+                return doGetAsLong();
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable ignored) {
+                return byDefault.getAsLong();
+            }
+        };
     }
 
     default LongSupplier orReturn(long defaultValue)

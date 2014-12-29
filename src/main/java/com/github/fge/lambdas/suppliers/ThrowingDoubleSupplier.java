@@ -2,13 +2,15 @@
 package com.github.fge.lambdas.suppliers;
 
 import com.github.fge.lambdas.ThrowablesFactory;
+import com.github.fge.lambdas.ThrowingFunctionalInterface;
 import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.DoubleSupplier;
 
 @FunctionalInterface
 public interface ThrowingDoubleSupplier
-    extends DoubleSupplier
+    extends DoubleSupplier,
+    ThrowingFunctionalInterface<ThrowingDoubleSupplier, DoubleSupplier>
 {
     double doGetAsDouble()
         throws Throwable;
@@ -23,6 +25,34 @@ public interface ThrowingDoubleSupplier
         } catch (Throwable tooBad) {
             throw new ThrownByLambdaException(tooBad);
         }
+    }
+
+    @Override
+    default ThrowingDoubleSupplier orTryWith(ThrowingDoubleSupplier other)
+    {
+        return () -> {
+            try {
+                return doGetAsDouble();
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable ignored) {
+                return other.doGetAsDouble();
+            }
+        };
+    }
+
+    @Override
+    default DoubleSupplier or(DoubleSupplier byDefault)
+    {
+        return () -> {
+            try {
+                return doGetAsDouble();
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable ignored) {
+                return byDefault.getAsDouble();
+            }
+        };
     }
 
     default DoubleSupplier orReturn(double defaultValue)
