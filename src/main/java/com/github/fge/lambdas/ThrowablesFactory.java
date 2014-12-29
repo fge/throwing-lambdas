@@ -2,6 +2,7 @@ package com.github.fge.lambdas;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodHandles.Lookup;
 import java.lang.invoke.MethodType;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,7 +21,7 @@ import java.util.function.Function;
  * </pre>
  *
  * <p>It is thread safe and uses a simple {@link ConcurrentHashMap} to collect
- * constructors of exception classes (as {@link MethodHandle}s.</p>
+ * constructors of exception classes (as {@link MethodHandle}s).</p>
  *
  * <p>Your exception class <strong>must</strong> have a constructor accepting a
  * single {@link Throwable} as an argument. When the throwing lambda throws a
@@ -32,7 +33,7 @@ import java.util.function.Function;
  *
  * @see RuntimeException#RuntimeException(Throwable)
  * @see MethodHandles#publicLookup()
- * @see MethodHandles.Lookup#findConstructor(Class, MethodType) 
+ * @see Lookup#findConstructor(Class, MethodType)
  * @see MethodHandle#invokeExact(Object...)
  * @see Map#computeIfAbsent(Object, Function)
  */
@@ -43,7 +44,7 @@ public enum ThrowablesFactory
     private final Map<Class<? extends RuntimeException>, MethodHandle> handles
         = new ConcurrentHashMap<>();
 
-    private static final MethodHandles.Lookup LOOKUP
+    private static final Lookup LOOKUP
         = MethodHandles.publicLookup();
 
     private static final MethodType TYPE
