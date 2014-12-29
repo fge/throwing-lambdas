@@ -7,17 +7,17 @@ public final class Consumers
         throw new Error("nice try!");
     }
 
-    public static <T> ThrowingConsumer<T> rethrow(final ThrowingConsumer<T> c)
-    {
-        return wrap(c);
-    }
-
     public static <T> ThrowingConsumer<T> wrap(final ThrowingConsumer<T> c)
     {
         return c;
     }
 
-    public static ThrowingIntConsumer rethrow(final ThrowingIntConsumer c)
+    public static <T> ThrowingConsumer<T> tryWith(final ThrowingConsumer<T> c)
+    {
+        return wrap(c);
+    }
+
+    public static <T> ThrowingConsumer<T> rethrow(final ThrowingConsumer<T> c)
     {
         return wrap(c);
     }
@@ -27,7 +27,12 @@ public final class Consumers
         return c;
     }
 
-    public static ThrowingLongConsumer rethrow(final ThrowingLongConsumer c)
+    public static ThrowingIntConsumer tryWith(final ThrowingIntConsumer c)
+    {
+        return wrap(c);
+    }
+
+    public static ThrowingIntConsumer rethrow(final ThrowingIntConsumer c)
     {
         return wrap(c);
     }
@@ -37,7 +42,12 @@ public final class Consumers
         return c;
     }
 
-    public static ThrowingDoubleConsumer rethrow(final ThrowingDoubleConsumer c)
+    public static ThrowingLongConsumer tryWith(final ThrowingLongConsumer c)
+    {
+        return wrap(c);
+    }
+
+    public static ThrowingLongConsumer rethrow(final ThrowingLongConsumer c)
     {
         return wrap(c);
     }
@@ -47,8 +57,12 @@ public final class Consumers
         return c;
     }
 
-    public static <T, U> ThrowingBiConsumer<T, U> rethrow(
-        final ThrowingBiConsumer<T, U> c)
+    public static ThrowingDoubleConsumer tryWith(final ThrowingDoubleConsumer c)
+    {
+        return wrap(c);
+    }
+
+    public static ThrowingDoubleConsumer rethrow(final ThrowingDoubleConsumer c)
     {
         return wrap(c);
     }
@@ -59,8 +73,14 @@ public final class Consumers
         return c;
     }
 
-    public static <T> ThrowingObjIntConsumer<T> rethrow(
-        final ThrowingObjIntConsumer<T> c)
+    public static <T, U> ThrowingBiConsumer<T, U> tryWith(
+        final ThrowingBiConsumer<T, U> c)
+    {
+        return wrap(c);
+    }
+
+    public static <T, U> ThrowingBiConsumer<T, U> rethrow(
+        final ThrowingBiConsumer<T, U> c)
     {
         return wrap(c);
     }
@@ -71,8 +91,14 @@ public final class Consumers
         return c;
     }
 
-    public static <T> ThrowingObjLongConsumer<T> rethrow(
-        final ThrowingObjLongConsumer<T> c)
+    public static <T> ThrowingObjIntConsumer<T> tryWith(
+        final ThrowingObjIntConsumer<T> c)
+    {
+        return wrap(c);
+    }
+
+    public static <T> ThrowingObjIntConsumer<T> rethrow(
+        final ThrowingObjIntConsumer<T> c)
     {
         return wrap(c);
     }
@@ -83,8 +109,14 @@ public final class Consumers
         return c;
     }
 
-    public static <T> ThrowingObjDoubleConsumer<T> rethrow(
-        final ThrowingObjDoubleConsumer<T> c)
+    public static <T> ThrowingObjLongConsumer<T> tryWith(
+        final ThrowingObjLongConsumer<T> c)
+    {
+        return wrap(c);
+    }
+
+    public static <T> ThrowingObjLongConsumer<T> rethrow(
+        final ThrowingObjLongConsumer<T> c)
     {
         return wrap(c);
     }
@@ -93,5 +125,17 @@ public final class Consumers
         final ThrowingObjDoubleConsumer<T> c)
     {
         return c;
+    }
+
+    public static <T> ThrowingObjDoubleConsumer<T> tryWith(
+        final ThrowingObjDoubleConsumer<T> c)
+    {
+        return wrap(c);
+    }
+
+    public static <T> ThrowingObjDoubleConsumer<T> rethrow(
+        final ThrowingObjDoubleConsumer<T> c)
+    {
+        return wrap(c);
     }
 }
