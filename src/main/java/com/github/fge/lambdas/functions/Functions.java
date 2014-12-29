@@ -24,19 +24,20 @@ public final class Functions
     /*
      * Functions
      */
-
-    public static <T, R> ThrowingFunction<T, R> rethrow(final ThrowingFunction<T, R> f)
-    {
-        return wrap(f);
-    }
-
     public static <T, R> ThrowingFunction<T, R> wrap(
         final ThrowingFunction<T, R> f)
     {
         return f;
     }
 
-    public static <T> ThrowingToIntFunction<T> rethrow(final ThrowingToIntFunction<T> f)
+    public static <T, R> ThrowingFunction<T, R> tryWith(
+        final ThrowingFunction<T, R> f)
+    {
+        return wrap(f);
+    }
+
+    public static <T, R> ThrowingFunction<T, R> rethrow(
+        final ThrowingFunction<T, R> f)
     {
         return wrap(f);
     }
@@ -47,8 +48,14 @@ public final class Functions
         return f;
     }
 
-    public static <T> ThrowingToLongFunction<T> rethrow(
-        final ThrowingToLongFunction<T> f)
+    public static <T> ThrowingToIntFunction<T> tryWith(
+        final ThrowingToIntFunction<T> f)
+    {
+        return wrap(f);
+    }
+
+    public static <T> ThrowingToIntFunction<T> rethrow(
+        final ThrowingToIntFunction<T> f)
     {
         return wrap(f);
     }
@@ -59,8 +66,14 @@ public final class Functions
         return f;
     }
 
-    public static <T> ThrowingToDoubleFunction<T> rethrow(
-        final ThrowingToDoubleFunction<T> f)
+    public static <T> ThrowingToLongFunction<T> tryWith(
+        final ThrowingToLongFunction<T> f)
+    {
+        return wrap(f);
+    }
+
+    public static <T> ThrowingToLongFunction<T> rethrow(
+        final ThrowingToLongFunction<T> f)
     {
         return wrap(f);
     }
@@ -71,14 +84,21 @@ public final class Functions
         return f;
     }
 
-    /*
-     * Int functions
-     */
-
-    public static <R> ThrowingIntFunction<R> rethrow(final ThrowingIntFunction<R> f)
+    public static <T> ThrowingToDoubleFunction<T> tryWith(
+        final ThrowingToDoubleFunction<T> f)
     {
         return wrap(f);
     }
+
+    public static <T> ThrowingToDoubleFunction<T> rethrow(
+        final ThrowingToDoubleFunction<T> f)
+    {
+        return wrap(f);
+    }
+
+    /*
+     * Int functions
+     */
 
     public static <R> ThrowingIntFunction<R> wrap(
         final ThrowingIntFunction<R> f)
@@ -86,7 +106,14 @@ public final class Functions
         return f;
     }
 
-    public static ThrowingIntToLongFunction rethrow(final ThrowingIntToLongFunction f)
+    public static <R> ThrowingIntFunction<R> tryWith(
+        final ThrowingIntFunction<R> f)
+    {
+        return wrap(f);
+    }
+
+    public static <R> ThrowingIntFunction<R> rethrow(
+        final ThrowingIntFunction<R> f)
     {
         return wrap(f);
     }
@@ -97,8 +124,14 @@ public final class Functions
         return f;
     }
 
-    public static ThrowingIntToDoubleFunction rethrow(
-        final ThrowingIntToDoubleFunction f)
+    public static ThrowingIntToLongFunction tryWith(
+        final ThrowingIntToLongFunction f)
+    {
+        return wrap(f);
+    }
+
+    public static ThrowingIntToLongFunction rethrow(
+        final ThrowingIntToLongFunction f)
     {
         return wrap(f);
     }
@@ -109,14 +142,21 @@ public final class Functions
         return f;
     }
 
-    /*
-     * Long functions
-     */
-
-    public static <R> ThrowingLongFunction<R> rethrow(final ThrowingLongFunction<R> f)
+    public static ThrowingIntToDoubleFunction tryWith(
+        final ThrowingIntToDoubleFunction f)
     {
         return wrap(f);
     }
+
+    public static ThrowingIntToDoubleFunction rethrow(
+        final ThrowingIntToDoubleFunction f)
+    {
+        return wrap(f);
+    }
+
+    /*
+     * Long functions
+     */
 
     public static <R> ThrowingLongFunction<R> wrap(
         final ThrowingLongFunction<R> f)
@@ -124,7 +164,14 @@ public final class Functions
         return f;
     }
 
-    public static ThrowingLongToIntFunction rethrow(final ThrowingLongToIntFunction f)
+    public static <R> ThrowingLongFunction<R> tryWith(
+        final ThrowingLongFunction<R> f)
+    {
+        return wrap(f);
+    }
+
+    public static <R> ThrowingLongFunction<R> rethrow(
+        final ThrowingLongFunction<R> f)
     {
         return wrap(f);
     }
@@ -135,8 +182,14 @@ public final class Functions
         return f;
     }
 
-    public static ThrowingLongToDoubleFunction rethrow(
-        final ThrowingLongToDoubleFunction f)
+    public static ThrowingLongToIntFunction tryWith(
+        final ThrowingLongToIntFunction f)
+    {
+        return wrap(f);
+    }
+
+    public static ThrowingLongToIntFunction rethrow(
+        final ThrowingLongToIntFunction f)
     {
         return wrap(f);
     }
@@ -147,15 +200,21 @@ public final class Functions
         return f;
     }
 
-    /*
-     * Double functions
-     */
-
-    public static <R> ThrowingDoubleFunction<R> rethrow(
-        final ThrowingDoubleFunction<R> f)
+    public static ThrowingLongToDoubleFunction tryWith(
+        final ThrowingLongToDoubleFunction f)
     {
         return wrap(f);
     }
+
+    public static ThrowingLongToDoubleFunction rethrow(
+        final ThrowingLongToDoubleFunction f)
+    {
+        return wrap(f);
+    }
+
+    /*
+     * Double functions
+     */
 
     public static <R> ThrowingDoubleFunction<R> wrap(
         final ThrowingDoubleFunction<R> f)
@@ -163,8 +222,14 @@ public final class Functions
         return f;
     }
 
-    public static ThrowingDoubleToIntFunction rethrow(
-        final ThrowingDoubleToIntFunction f)
+    public static <R> ThrowingDoubleFunction<R> tryWith(
+        final ThrowingDoubleFunction<R> f)
+    {
+        return wrap(f);
+    }
+
+    public static <R> ThrowingDoubleFunction<R> rethrow(
+        final ThrowingDoubleFunction<R> f)
     {
         return wrap(f);
     }
@@ -175,8 +240,14 @@ public final class Functions
         return f;
     }
 
-    public static ThrowingDoubleToLongFunction rethrow(
-        final ThrowingDoubleToLongFunction f)
+    public static ThrowingDoubleToIntFunction tryWith(
+        final ThrowingDoubleToIntFunction f)
+    {
+        return wrap(f);
+    }
+
+    public static ThrowingDoubleToIntFunction rethrow(
+        final ThrowingDoubleToIntFunction f)
     {
         return wrap(f);
     }
@@ -187,18 +258,37 @@ public final class Functions
         return f;
     }
 
-    /*
-     * Bifunctions
-     */
-    public static <T, U, R> ThrowingBiFunction<T, U, R> rethrow(
-        final ThrowingBiFunction<T, U, R> f)
+    public static ThrowingDoubleToLongFunction tryWith(
+        final ThrowingDoubleToLongFunction f)
     {
         return wrap(f);
     }
+
+    public static ThrowingDoubleToLongFunction rethrow(
+        final ThrowingDoubleToLongFunction f)
+    {
+        return wrap(f);
+    }
+
+    /*
+     * Bifunctions
+     */
 
     public static <T, U, R> ThrowingBiFunction<T, U, R> wrap(
         final ThrowingBiFunction<T, U, R> f)
     {
         return f;
+    }
+
+    public static <T, U, R> ThrowingBiFunction<T, U, R> tryWith(
+        final ThrowingBiFunction<T, U, R> f)
+    {
+        return wrap(f);
+    }
+
+    public static <T, U, R> ThrowingBiFunction<T, U, R> rethrow(
+        final ThrowingBiFunction<T, U, R> f)
+    {
+        return wrap(f);
     }
 }
