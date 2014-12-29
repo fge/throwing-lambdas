@@ -11,11 +11,11 @@ import java.util.function.Supplier;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-public class ThrowingSupplierTest
-    extends ThrowingInterfaceBaseTest<ThrowingSupplier<Type1>,
-            Supplier<Type1>, Type1>
+@SuppressWarnings({"ProhibitedExceptionDeclared", "unchecked",
+    "OverlyBroadThrowsClause"})
+public final class ThrowingSupplierTest
+    extends ThrowingInterfaceBaseTest<ThrowingSupplier<Type1>, Supplier<Type1>, Type1>
 {
-
     private final Type1 ret1 = Type1.mock();
     private final Type1 ret2 = Type1.mock();
 
@@ -26,7 +26,8 @@ public class ThrowingSupplierTest
     }
 
     @Override
-    protected ThrowingSupplier<Type1> getPreparedInstance() throws Throwable
+    protected ThrowingSupplier<Type1> getPreparedInstance()
+        throws Throwable
     {
         final ThrowingSupplier<Type1> spy = getBaseInstance();
 
@@ -43,15 +44,15 @@ public class ThrowingSupplierTest
     }
 
     @Override
-    protected Runnable runnableFrom(Supplier<Type1> instance)
+    protected Runnable runnableFrom(final Supplier<Type1> instance)
     {
-        return () -> instance.get();
+        return instance::get;
     }
 
     @Override
-    protected Callable<Type1> callableFrom(Supplier<Type1> instance)
+    protected Callable<Type1> callableFrom(final Supplier<Type1> instance)
     {
-        return () -> instance.get();
+        return instance::get;
     }
 
     @Override

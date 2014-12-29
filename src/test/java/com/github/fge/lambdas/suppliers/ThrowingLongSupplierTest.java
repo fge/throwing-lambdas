@@ -10,13 +10,13 @@ import java.util.function.LongSupplier;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-public class ThrowingLongSupplierTest
-        extends ThrowingInterfaceBaseTest<ThrowingLongSupplier,
-        LongSupplier, Long>
+@SuppressWarnings({"ProhibitedExceptionDeclared", "AutoBoxing",
+    "OverlyBroadThrowsClause"})
+public final class ThrowingLongSupplierTest
+    extends ThrowingInterfaceBaseTest<ThrowingLongSupplier, LongSupplier, Long>
 {
-
-    private final Long ret1 = 42L; // Arbitrarily random, also The Answer.
-    private final Long ret2 = 24L; // Opposite of The Answer.
+    private final long ret1 = 42L; // Arbitrarily random, also The Answer.
+    private final long ret2 = 24L; // Opposite of The Answer.
 
     @Override
     protected ThrowingLongSupplier getBaseInstance()
@@ -25,12 +25,13 @@ public class ThrowingLongSupplierTest
     }
 
     @Override
-    protected ThrowingLongSupplier getPreparedInstance() throws Throwable
+    protected ThrowingLongSupplier getPreparedInstance()
+        throws Throwable
     {
         final ThrowingLongSupplier spy = getBaseInstance();
 
         when(spy.doGetAsLong()).thenReturn(ret1).thenThrow(checked)
-                .thenThrow(unchecked).thenThrow(error);
+            .thenThrow(unchecked).thenThrow(error);
 
         return spy;
     }
@@ -42,27 +43,27 @@ public class ThrowingLongSupplierTest
     }
 
     @Override
-    protected Runnable runnableFrom(LongSupplier instance)
+    protected Runnable runnableFrom(final LongSupplier instance)
     {
-        return () -> instance.getAsLong();
+        return instance::getAsLong;
     }
 
     @Override
-    protected Callable<Long> callableFrom(LongSupplier instance)
+    protected Callable<Long> callableFrom(final LongSupplier instance)
     {
-        return () -> instance.getAsLong();
+        return instance::getAsLong;
     }
 
     @Override
     public void testUnchained()
-            throws Throwable
+        throws Throwable
     {
         final ThrowingLongSupplier instance = getPreparedInstance();
 
         final Runnable runnable = runnableFrom(instance);
         final Callable<Long> callable = callableFrom(instance);
 
-        assertThat(callable.call()).isSameAs(ret1);
+        assertThat(callable.call()).isEqualTo(ret1);
 
         verifyCheckedRethrow(runnable, ThrownByLambdaException.class);
 
@@ -73,15 +74,15 @@ public class ThrowingLongSupplierTest
 
     @Override
     public void testChainedWithOrThrow()
-            throws Throwable
+        throws Throwable
     {
         final LongSupplier instance
-                = getPreparedInstance().orThrow(MyException.class);
+            = getPreparedInstance().orThrow(MyException.class);
 
         final Runnable runnable = runnableFrom(instance);
         final Callable<Long> callable = callableFrom(instance);
 
-        assertThat(callable.call()).isSameAs(ret1);
+        assertThat(callable.call()).isEqualTo(ret1);
 
         verifyCheckedRethrow(runnable, MyException.class);
 
@@ -92,7 +93,7 @@ public class ThrowingLongSupplierTest
 
     @Override
     public void testChainedWithOrTryWith()
-            throws Throwable
+        throws Throwable
     {
         final ThrowingLongSupplier first = getPreparedInstance();
         final ThrowingLongSupplier second = getBaseInstance();
@@ -103,9 +104,9 @@ public class ThrowingLongSupplierTest
         final Runnable runnable = runnableFrom(instance);
         final Callable<Long> callable = callableFrom(instance);
 
-        assertThat(callable.call()).isSameAs(ret1);
+        assertThat(callable.call()).isEqualTo(ret1);
 
-        assertThat(callable.call()).isSameAs(ret2);
+        assertThat(callable.call()).isEqualTo(ret2);
 
         verifyUncheckedThrow(runnable);
 
@@ -114,7 +115,7 @@ public class ThrowingLongSupplierTest
 
     @Override
     public void testChainedWithOr()
-            throws Throwable
+        throws Throwable
     {
         final ThrowingLongSupplier first = getPreparedInstance();
         final LongSupplier second = getNonThrowingInstance();
@@ -125,8 +126,8 @@ public class ThrowingLongSupplierTest
         final Runnable runnable = runnableFrom(instance);
         final Callable<Long> callable = callableFrom(instance);
 
-        assertThat(callable.call()).isSameAs(ret1);
-        assertThat(callable.call()).isSameAs(ret2);
+        assertThat(callable.call()).isEqualTo(ret1);
+        assertThat(callable.call()).isEqualTo(ret2);
 
         verifyUncheckedThrow(runnable);
 
@@ -134,7 +135,7 @@ public class ThrowingLongSupplierTest
     }
 
     public void testChainedWithOrReturn()
-            throws Throwable
+        throws Throwable
     {
         final ThrowingLongSupplier first = getPreparedInstance();
 
@@ -143,8 +144,8 @@ public class ThrowingLongSupplierTest
         final Runnable runnable = runnableFrom(instance);
         final Callable<Long> callable = callableFrom(instance);
 
-        assertThat(callable.call()).isSameAs(ret1);
-        assertThat(callable.call()).isSameAs(ret2);
+        assertThat(callable.call()).isEqualTo(ret1);
+        assertThat(callable.call()).isEqualTo(ret2);
 
         verifyUncheckedThrow(runnable);
 

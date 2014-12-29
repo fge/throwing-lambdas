@@ -12,8 +12,8 @@ public class SpiedThrowingDoubleSupplier
 
     @Override
     public double doGetAsDouble()
-            throws Throwable
+        throws Throwable
     {
-        return 0.0D; // Not null, but good enough, hopefully.
+        return 0.0D;
     }
 }

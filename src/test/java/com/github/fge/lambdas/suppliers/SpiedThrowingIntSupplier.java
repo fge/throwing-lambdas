@@ -11,7 +11,9 @@ public class SpiedThrowingIntSupplier
     }
 
     @Override
-    public int doGetAsInt() throws Throwable {
+    public int doGetAsInt()
+        throws Throwable
+    {
         return 0; // Not null, but good enough, hopefully.
     }
 }

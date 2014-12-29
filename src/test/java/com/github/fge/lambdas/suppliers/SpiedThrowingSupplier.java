@@ -13,7 +13,7 @@ public class SpiedThrowingSupplier
 
     @Override
     public Type1 doGet()
-            throws Throwable
+        throws Throwable
     {
         return null;
     }

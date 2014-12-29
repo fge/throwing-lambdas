@@ -11,7 +11,9 @@ public class SpiedThrowingLongSupplier
     }
 
     @Override
-    public long doGetAsLong() throws Throwable {
+    public long doGetAsLong()
+        throws Throwable
+    {
         return 0L; // Not null, but good enough, hopefully.
     }
 }

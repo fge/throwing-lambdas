@@ -10,11 +10,11 @@ import java.util.function.DoubleSupplier;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-public class ThrowingDoubleSupplierTest
-        extends ThrowingInterfaceBaseTest<ThrowingDoubleSupplier,
-        DoubleSupplier, Double>
+@SuppressWarnings({"OverlyBroadThrowsClause", "AutoBoxing",
+    "ProhibitedExceptionDeclared"})
+public final class ThrowingDoubleSupplierTest
+    extends ThrowingInterfaceBaseTest<ThrowingDoubleSupplier, DoubleSupplier, Double>
 {
-
     private final double ret1 = 0.5;
     private final double ret2 = 0.25;
 
@@ -25,12 +25,13 @@ public class ThrowingDoubleSupplierTest
     }
 
     @Override
-    protected ThrowingDoubleSupplier getPreparedInstance() throws Throwable
+    protected ThrowingDoubleSupplier getPreparedInstance()
+        throws Throwable
     {
         final ThrowingDoubleSupplier spy = getBaseInstance();
 
         when(spy.doGetAsDouble()).thenReturn(ret1).thenThrow(checked)
-                .thenThrow(unchecked).thenThrow(error);
+            .thenThrow(unchecked).thenThrow(error);
 
         return spy;
     }
@@ -42,15 +43,15 @@ public class ThrowingDoubleSupplierTest
     }
 
     @Override
-    protected Runnable runnableFrom(DoubleSupplier instance)
+    protected Runnable runnableFrom(final DoubleSupplier instance)
     {
-        return () -> instance.getAsDouble();
+        return instance::getAsDouble;
     }
 
     @Override
-    protected Callable<Double> callableFrom(DoubleSupplier instance)
+    protected Callable<Double> callableFrom(final DoubleSupplier instance)
     {
-        return () -> instance.getAsDouble();
+        return instance::getAsDouble;
     }
 
     @Override
@@ -62,7 +63,7 @@ public class ThrowingDoubleSupplierTest
         final Runnable runnable = runnableFrom(instance);
         final Callable<Double> callable = callableFrom(instance);
 
-        assertThat(callable.call()).isSameAs(ret1);
+        assertThat(callable.call()).isEqualTo(ret1);
 
         verifyCheckedRethrow(runnable, ThrownByLambdaException.class);
 
@@ -73,15 +74,15 @@ public class ThrowingDoubleSupplierTest
 
     @Override
     public void testChainedWithOrThrow()
-            throws Throwable
+        throws Throwable
     {
         final DoubleSupplier instance
-                = getPreparedInstance().orThrow(MyException.class);
+            = getPreparedInstance().orThrow(MyException.class);
 
         final Runnable runnable = runnableFrom(instance);
         final Callable<Double> callable = callableFrom(instance);
 
-        assertThat(callable.call()).isSameAs(ret1);
+        assertThat(callable.call()).isEqualTo(ret1);
 
         verifyCheckedRethrow(runnable, MyException.class);
 
@@ -92,7 +93,7 @@ public class ThrowingDoubleSupplierTest
 
     @Override
     public void testChainedWithOrTryWith()
-            throws Throwable
+        throws Throwable
     {
         final ThrowingDoubleSupplier first = getPreparedInstance();
         final ThrowingDoubleSupplier second = getBaseInstance();
@@ -103,9 +104,8 @@ public class ThrowingDoubleSupplierTest
         final Runnable runnable = runnableFrom(instance);
         final Callable<Double> callable = callableFrom(instance);
 
-        assertThat(callable.call()).isSameAs(ret1);
-
-        assertThat(callable.call()).isSameAs(ret2);
+        assertThat(callable.call()).isEqualTo(ret1);
+        assertThat(callable.call()).isEqualTo(ret2);
 
         verifyUncheckedThrow(runnable);
 
@@ -114,7 +114,7 @@ public class ThrowingDoubleSupplierTest
 
     @Override
     public void testChainedWithOr()
-            throws Throwable
+        throws Throwable
     {
         final ThrowingDoubleSupplier first = getPreparedInstance();
         final DoubleSupplier second = getNonThrowingInstance();
@@ -125,8 +125,8 @@ public class ThrowingDoubleSupplierTest
         final Runnable runnable = runnableFrom(instance);
         final Callable<Double> callable = callableFrom(instance);
 
-        assertThat(callable.call()).isSameAs(ret1);
-        assertThat(callable.call()).isSameAs(ret2);
+        assertThat(callable.call()).isEqualTo(ret1);
+        assertThat(callable.call()).isEqualTo(ret2);
 
         verifyUncheckedThrow(runnable);
 
@@ -134,7 +134,7 @@ public class ThrowingDoubleSupplierTest
     }
 
     public void testChainedWithOrReturn()
-            throws Throwable
+        throws Throwable
     {
         final ThrowingDoubleSupplier first = getPreparedInstance();
 
@@ -143,8 +143,8 @@ public class ThrowingDoubleSupplierTest
         final Runnable runnable = runnableFrom(instance);
         final Callable<Double> callable = callableFrom(instance);
 
-        assertThat(callable.call()).isSameAs(ret1);
-        assertThat(callable.call()).isSameAs(ret2);
+        assertThat(callable.call()).isEqualTo(ret1);
+        assertThat(callable.call()).isEqualTo(ret2);
 
         verifyUncheckedThrow(runnable);
 

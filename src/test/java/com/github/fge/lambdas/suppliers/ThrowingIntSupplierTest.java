@@ -10,13 +10,14 @@ import java.util.function.IntSupplier;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-public class ThrowingIntSupplierTest
-        extends ThrowingInterfaceBaseTest<ThrowingIntSupplier,
-        IntSupplier, Integer>
+@SuppressWarnings({"AutoBoxing", "OverlyBroadThrowsClause",
+    "ProhibitedExceptionDeclared"})
+public final class ThrowingIntSupplierTest
+        extends ThrowingInterfaceBaseTest<ThrowingIntSupplier, IntSupplier, Integer>
 {
 
-    private final Integer ret1 = 42; // Arbitrarily random, also The Answer.
-    private final Integer ret2 = 24; // Opposite of The Answer.
+    private final int ret1 = 42; // Arbitrarily random, also The Answer.
+    private final int ret2 = 24; // Opposite of The Answer.
 
     @Override
     protected ThrowingIntSupplier getBaseInstance()
@@ -25,12 +26,13 @@ public class ThrowingIntSupplierTest
     }
 
     @Override
-    protected ThrowingIntSupplier getPreparedInstance() throws Throwable
+    protected ThrowingIntSupplier getPreparedInstance()
+        throws Throwable
     {
         final ThrowingIntSupplier spy = getBaseInstance();
 
         when(spy.doGetAsInt()).thenReturn(ret1).thenThrow(checked)
-                .thenThrow(unchecked).thenThrow(error);
+            .thenThrow(unchecked).thenThrow(error);
 
         return spy;
     }
@@ -42,15 +44,15 @@ public class ThrowingIntSupplierTest
     }
 
     @Override
-    protected Runnable runnableFrom(IntSupplier instance)
+    protected Runnable runnableFrom(final IntSupplier instance)
     {
-        return () -> instance.getAsInt();
+        return instance::getAsInt;
     }
 
     @Override
-    protected Callable<Integer> callableFrom(IntSupplier instance)
+    protected Callable<Integer> callableFrom(final IntSupplier instance)
     {
-        return () -> instance.getAsInt();
+        return instance::getAsInt;
     }
 
     @Override
@@ -62,7 +64,7 @@ public class ThrowingIntSupplierTest
         final Runnable runnable = runnableFrom(instance);
         final Callable<Integer> callable = callableFrom(instance);
 
-        assertThat(callable.call()).isSameAs(ret1);
+        assertThat(callable.call()).isEqualTo(ret1);
 
         verifyCheckedRethrow(runnable, ThrownByLambdaException.class);
 
@@ -81,7 +83,7 @@ public class ThrowingIntSupplierTest
         final Runnable runnable = runnableFrom(instance);
         final Callable<Integer> callable = callableFrom(instance);
 
-        assertThat(callable.call()).isSameAs(ret1);
+        assertThat(callable.call()).isEqualTo(ret1);
 
         verifyCheckedRethrow(runnable, MyException.class);
 
@@ -103,9 +105,9 @@ public class ThrowingIntSupplierTest
         final Runnable runnable = runnableFrom(instance);
         final Callable<Integer> callable = callableFrom(instance);
 
-        assertThat(callable.call()).isSameAs(ret1);
+        assertThat(callable.call()).isEqualTo(ret1);
 
-        assertThat(callable.call()).isSameAs(ret2);
+        assertThat(callable.call()).isEqualTo(ret2);
 
         verifyUncheckedThrow(runnable);
 
@@ -125,8 +127,8 @@ public class ThrowingIntSupplierTest
         final Runnable runnable = runnableFrom(instance);
         final Callable<Integer> callable = callableFrom(instance);
 
-        assertThat(callable.call()).isSameAs(ret1);
-        assertThat(callable.call()).isSameAs(ret2);
+        assertThat(callable.call()).isEqualTo(ret1);
+        assertThat(callable.call()).isEqualTo(ret2);
 
         verifyUncheckedThrow(runnable);
 
@@ -143,8 +145,8 @@ public class ThrowingIntSupplierTest
         final Runnable runnable = runnableFrom(instance);
         final Callable<Integer> callable = callableFrom(instance);
 
-        assertThat(callable.call()).isSameAs(ret1);
-        assertThat(callable.call()).isSameAs(ret2);
+        assertThat(callable.call()).isEqualTo(ret1);
+        assertThat(callable.call()).isEqualTo(ret2);
 
         verifyUncheckedThrow(runnable);
 
