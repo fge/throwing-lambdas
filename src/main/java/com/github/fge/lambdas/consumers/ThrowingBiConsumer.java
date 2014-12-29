@@ -6,6 +6,12 @@ import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.BiConsumer;
 
+/**
+ * A throwing {@link BiConsumer}
+ *
+ * @param <T> parameter type of the first argument of the biconsumer
+ * @param <U> parameter type of the second argument of the biconsumer
+ */
 @FunctionalInterface
 public interface ThrowingBiConsumer<T, U>
     extends BiConsumer<T, U>,

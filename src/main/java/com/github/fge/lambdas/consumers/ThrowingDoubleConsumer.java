@@ -6,6 +6,9 @@ import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.DoubleConsumer;
 
+/**
+ * A throwing {@link DoubleConsumer}
+ */
 @FunctionalInterface
 public interface ThrowingDoubleConsumer
     extends DoubleConsumer,

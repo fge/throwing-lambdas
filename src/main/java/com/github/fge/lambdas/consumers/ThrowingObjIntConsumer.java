@@ -6,6 +6,11 @@ import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.ObjIntConsumer;
 
+/**
+ * A throwing {@link ObjIntConsumer}
+ *
+ * @param <T> parameter type of the first argument of this consumer
+ */
 @FunctionalInterface
 public interface ThrowingObjIntConsumer<T>
     extends ObjIntConsumer<T>,

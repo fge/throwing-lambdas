@@ -6,6 +6,11 @@ import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.ObjDoubleConsumer;
 
+/**
+ * A throwing {@link ObjDoubleConsumer}
+ *
+ * @param <T> parameter type of the first argument of this consumer
+ */
 @FunctionalInterface
 public interface ThrowingObjDoubleConsumer<T>
     extends ObjDoubleConsumer<T>,

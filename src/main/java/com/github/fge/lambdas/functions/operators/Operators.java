@@ -1,5 +1,29 @@
 package com.github.fge.lambdas.functions.operators;
 
+import com.github.fge.lambdas.ThrowingFunctionalInterface;
+
+import java.util.function.BinaryOperator;
+import java.util.function.UnaryOperator;
+
+/**
+ * Utility wrappers for throwing {@link UnaryOperator}s and
+ * {@link BinaryOperator}s
+ *
+ * <p>Note that all or {@code wrap()}, {@code tryWith()} or {@code rethrow()}
+ * methods are in fact different names for the same thing. They are simply here
+ * so that the intent is more obvious when you write. For instance:</p>
+ *
+ * <ul>
+ *     // wrap...
+ *     final ThrowingFoo f = wrap(someLambdaHere);
+ *     // tryWith...
+ *     final Foo f = tryWith(someLambdaHere).fallbackTo(someNonThrowingLambda);
+ *     // rethrow...
+ *     final Foo f = rethrow(someLambdaHere).as(MyCustomRuntimeException.class);
+ * </ul>
+ *
+ * @see ThrowingFunctionalInterface
+ */
 public final class Operators
 {
     private Operators()

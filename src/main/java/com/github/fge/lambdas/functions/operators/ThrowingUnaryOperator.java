@@ -6,6 +6,12 @@ import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.UnaryOperator;
 
+/**
+ * A throwing {@link UnaryOperator}
+ *
+ * @param <T> type parameter of the argument and returning type of this unary
+ *           operator
+ */
 @FunctionalInterface
 public interface ThrowingUnaryOperator<T>
     extends UnaryOperator<T>,

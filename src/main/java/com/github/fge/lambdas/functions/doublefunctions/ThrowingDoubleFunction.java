@@ -6,6 +6,11 @@ import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.DoubleFunction;
 
+/**
+ * A throwing {@link DoubleFunction}
+ *
+ * @param <R> parameter type of the return value of this function
+ */
 @FunctionalInterface
 public interface ThrowingDoubleFunction<R>
     extends DoubleFunction<R>,

@@ -6,6 +6,11 @@ import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.Comparator;
 
+/**
+ * A throwing {@link Comparator}
+ *
+ * @param <T> the type argument of the comparator
+ */
 @FunctionalInterface
 public interface ThrowingComparator<T>
     extends Comparator<T>,

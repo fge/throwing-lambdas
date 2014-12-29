@@ -6,6 +6,9 @@ import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.IntConsumer;
 
+/**
+ * A throwing {@link IntConsumer}
+ */
 @FunctionalInterface
 public interface ThrowingIntConsumer
     extends IntConsumer,

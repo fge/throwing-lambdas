@@ -6,6 +6,9 @@ import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.IntToDoubleFunction;
 
+/**
+ * A throwing {@link IntToDoubleFunction}
+ */
 @FunctionalInterface
 public interface ThrowingIntToDoubleFunction
     extends IntToDoubleFunction,

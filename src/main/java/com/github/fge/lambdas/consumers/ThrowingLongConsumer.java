@@ -6,6 +6,9 @@ import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.LongConsumer;
 
+/**
+ * A throwing {@link LongConsumer}
+ */
 @FunctionalInterface
 public interface ThrowingLongConsumer
     extends LongConsumer,

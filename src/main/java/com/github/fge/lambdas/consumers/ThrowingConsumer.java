@@ -6,6 +6,11 @@ import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.Consumer;
 
+/**
+ * A throwing {@link Consumer}
+ *
+ * @param <T> parameter type of the argument of the consumer
+ */
 @FunctionalInterface
 public interface ThrowingConsumer<T>
     extends Consumer<T>,

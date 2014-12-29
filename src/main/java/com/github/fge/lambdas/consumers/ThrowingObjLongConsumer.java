@@ -6,6 +6,11 @@ import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.ObjLongConsumer;
 
+/**
+ * A throwing {@link ObjLongConsumer}
+ *
+ * @param <T> parameter type of the first argument of this consumer
+ */
 @FunctionalInterface
 public interface ThrowingObjLongConsumer<T>
     extends ObjLongConsumer<T>,

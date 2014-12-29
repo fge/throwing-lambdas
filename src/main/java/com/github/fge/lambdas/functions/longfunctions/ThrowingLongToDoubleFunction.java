@@ -6,6 +6,9 @@ import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.LongToDoubleFunction;
 
+/**
+ * A throwing {@link LongToDoubleFunction}
+ */
 @FunctionalInterface
 public interface ThrowingLongToDoubleFunction
     extends LongToDoubleFunction,

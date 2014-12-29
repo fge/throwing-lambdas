@@ -6,6 +6,11 @@ import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.LongFunction;
 
+/**
+ * A throwing {@link LongFunction}
+ *
+ * @param <R> parameter type of the return value of this function
+ */
 @FunctionalInterface
 public interface ThrowingLongFunction<R>
     extends LongFunction<R>,

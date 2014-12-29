@@ -6,6 +6,9 @@ import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.DoubleUnaryOperator;
 
+/**
+ * A throwing {@link DoubleUnaryOperator}
+ */
 @FunctionalInterface
 public interface ThrowingDoubleUnaryOperator
     extends DoubleUnaryOperator,

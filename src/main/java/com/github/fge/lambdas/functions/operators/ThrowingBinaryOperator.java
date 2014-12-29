@@ -6,6 +6,12 @@ import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.BinaryOperator;
 
+/**
+ * A throwing {@link BinaryOperator}
+ *
+ * @param <T> parameter type of the two arguments, and return type, of this
+ *            binary operator
+ */
 @FunctionalInterface
 public interface ThrowingBinaryOperator<T>
     extends BinaryOperator<T>,

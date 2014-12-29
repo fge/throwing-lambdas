@@ -6,6 +6,9 @@ import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.DoubleBinaryOperator;
 
+/**
+ * A throwing {@link DoubleBinaryOperator}
+ */
 @FunctionalInterface
 public interface ThrowingDoubleBinaryOperator
     extends DoubleBinaryOperator,
