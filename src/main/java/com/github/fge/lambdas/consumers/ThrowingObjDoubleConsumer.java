@@ -42,7 +42,7 @@ public interface ThrowingObjDoubleConsumer<T>
     }
 
     @Override
-    default ObjDoubleConsumer<T> or(ObjDoubleConsumer<T> byDefault)
+    default ObjDoubleConsumer<T> fallbackTo(ObjDoubleConsumer<T> byDefault)
     {
         return (t, value) -> {
             try {

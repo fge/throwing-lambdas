@@ -126,7 +126,7 @@ public final class ThrowingBiFunctionTest
     }
 
     @Override
-    public void testChainedWithOr()
+    public void testChainedWithFallbackTo()
         throws Throwable
     {
         final ThrowingBiFunction<Type1, Type2, Type3> first
@@ -134,7 +134,8 @@ public final class ThrowingBiFunctionTest
         final BiFunction<Type1, Type2, Type3> second = getNonThrowingInstance();
         when(second.apply(arg1, arg2)).thenReturn(ret2);
 
-        final BiFunction<Type1, Type2, Type3> instance = first.or(second);
+        final BiFunction<Type1, Type2, Type3> instance = first.fallbackTo(
+            second);
 
         final Runnable runnable = runnableFrom(instance);
         final Callable<Type3> callable = callableFrom(instance);

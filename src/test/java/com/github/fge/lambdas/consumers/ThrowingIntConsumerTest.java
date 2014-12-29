@@ -125,13 +125,13 @@ public final class ThrowingIntConsumerTest
     }
 
     @Override
-    public void testChainedWithOr()
+    public void testChainedWithFallbackTo()
         throws Throwable
     {
         final ThrowingIntConsumer first = getPreparedInstance();
         final IntConsumer second = getNonThrowingInstance();
 
-        final IntConsumer instance = first.or(second);
+        final IntConsumer instance = first.fallbackTo(second);
 
         final Runnable runnable = runnableFrom(instance);
 

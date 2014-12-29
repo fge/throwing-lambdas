@@ -42,7 +42,7 @@ public interface ThrowingIntBinaryOperator
     }
 
     @Override
-    default IntBinaryOperator or(IntBinaryOperator byDefault)
+    default IntBinaryOperator fallbackTo(IntBinaryOperator byDefault)
     {
         return (left, right) -> {
             try {

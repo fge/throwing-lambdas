@@ -117,14 +117,14 @@ public final class ThrowingBinaryOperatorTest
     }
 
     @Override
-    public void testChainedWithOr()
+    public void testChainedWithFallbackTo()
         throws Throwable
     {
         final ThrowingBinaryOperator<Type1> first = getPreparedInstance();
         final BinaryOperator<Type1> second = getNonThrowingInstance();
         when(second.apply(left, right)).thenReturn(ret2);
 
-        final BinaryOperator<Type1> instance = first.or(second);
+        final BinaryOperator<Type1> instance = first.fallbackTo(second);
 
         final Runnable runnable = runnableFrom(instance);
         final Callable<Type1> callable = callableFrom(instance);

@@ -42,7 +42,7 @@ public interface ThrowingBinaryOperator<T>
     }
 
     @Override
-    default BinaryOperator<T> or(BinaryOperator<T> byDefault)
+    default BinaryOperator<T> fallbackTo(BinaryOperator<T> byDefault)
     {
         return (t, u) -> {
             try {

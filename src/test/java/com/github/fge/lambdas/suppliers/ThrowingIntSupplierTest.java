@@ -115,14 +115,14 @@ public final class ThrowingIntSupplierTest
     }
 
     @Override
-    public void testChainedWithOr()
+    public void testChainedWithFallbackTo()
             throws Throwable
     {
         final ThrowingIntSupplier first = getPreparedInstance();
         final IntSupplier second = getNonThrowingInstance();
         when(second.getAsInt()).thenReturn(ret2);
 
-        final IntSupplier instance = first.or(second);
+        final IntSupplier instance = first.fallbackTo(second);
 
         final Runnable runnable = runnableFrom(instance);
         final Callable<Integer> callable = callableFrom(instance);

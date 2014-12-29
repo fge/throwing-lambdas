@@ -41,7 +41,7 @@ public interface ThrowingIntSupplier
     }
 
     @Override
-    default IntSupplier or(IntSupplier byDefault)
+    default IntSupplier fallbackTo(IntSupplier byDefault)
     {
         return () -> {
             try {

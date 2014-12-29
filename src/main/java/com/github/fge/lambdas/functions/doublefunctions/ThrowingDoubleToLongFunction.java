@@ -42,7 +42,7 @@ public interface ThrowingDoubleToLongFunction
     }
 
     @Override
-    default DoubleToLongFunction or(DoubleToLongFunction byDefault)
+    default DoubleToLongFunction fallbackTo(DoubleToLongFunction byDefault)
     {
         return value -> {
             try {

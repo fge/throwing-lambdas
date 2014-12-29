@@ -103,7 +103,7 @@ public abstract class ThrowingInterfaceBaseTest<T extends N, N, R>
      * Test a fully prepared instance chained with .or()
      */
     @Test
-    public abstract void testChainedWithOr()
+    public abstract void testChainedWithFallbackTo()
         throws Throwable;
 
     /*

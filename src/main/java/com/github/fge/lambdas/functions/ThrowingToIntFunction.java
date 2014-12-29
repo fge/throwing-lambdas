@@ -41,7 +41,7 @@ public interface ThrowingToIntFunction<T>
     }
 
     @Override
-    default ToIntFunction<T> or(ToIntFunction<T> byDefault)
+    default ToIntFunction<T> fallbackTo(ToIntFunction<T> byDefault)
     {
         return value -> {
             try {

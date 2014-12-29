@@ -117,14 +117,14 @@ public final class ThrowingIntFunctionTest
     }
 
     @Override
-    public void testChainedWithOr()
+    public void testChainedWithFallbackTo()
         throws Throwable
     {
         final ThrowingIntFunction<Type1> first = getPreparedInstance();
         final IntFunction<Type1> second = getNonThrowingInstance();
         when(second.apply(arg)).thenReturn(ret2);
 
-        final IntFunction<Type1> instance = first.or(second);
+        final IntFunction<Type1> instance = first.fallbackTo(second);
 
         final Runnable runnable = runnableFrom(instance);
         final Callable<Type1> callable = callableFrom(instance);

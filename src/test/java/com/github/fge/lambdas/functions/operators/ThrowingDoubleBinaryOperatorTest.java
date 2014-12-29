@@ -116,14 +116,14 @@ public final class ThrowingDoubleBinaryOperatorTest
     }
 
     @Override
-    public void testChainedWithOr()
+    public void testChainedWithFallbackTo()
         throws Throwable
     {
         final ThrowingDoubleBinaryOperator first = getPreparedInstance();
         final DoubleBinaryOperator second = getNonThrowingInstance();
         when(second.applyAsDouble(left, right)).thenReturn(ret2);
 
-        final DoubleBinaryOperator instance = first.or(second);
+        final DoubleBinaryOperator instance = first.fallbackTo(second);
 
         final Runnable runnable = runnableFrom(instance);
         final Callable<Double> callable = callableFrom(instance);

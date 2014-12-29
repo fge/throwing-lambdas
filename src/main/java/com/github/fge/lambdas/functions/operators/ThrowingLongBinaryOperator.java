@@ -42,7 +42,7 @@ public interface ThrowingLongBinaryOperator
     }
 
     @Override
-    default LongBinaryOperator or(LongBinaryOperator byDefault)
+    default LongBinaryOperator fallbackTo(LongBinaryOperator byDefault)
     {
         return (left, right) -> {
             try {

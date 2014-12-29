@@ -41,7 +41,7 @@ public interface ThrowingConsumer<T>
     }
 
     @Override
-    default Consumer<T> or(Consumer<T> byDefault)
+    default Consumer<T> fallbackTo(Consumer<T> byDefault)
     {
         return t -> {
             try {

@@ -9,7 +9,7 @@ public interface ThrowingFunctionalInterface<T extends N, N>
 {
     T orTryWith(T other);
 
-    N or(N byDefault);
+    N fallbackTo(N byDefault);
 
     <E extends RuntimeException> N orThrow(Class<E> exceptionClass);
 

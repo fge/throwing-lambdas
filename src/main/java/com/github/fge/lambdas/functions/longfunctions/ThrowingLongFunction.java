@@ -42,7 +42,7 @@ public interface ThrowingLongFunction<R>
     }
 
     @Override
-    default LongFunction<R> or(LongFunction<R> byDefault)
+    default LongFunction<R> fallbackTo(LongFunction<R> byDefault)
     {
         return value -> {
             try {

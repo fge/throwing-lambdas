@@ -41,7 +41,7 @@ public interface ThrowingDoubleFunction<R>
     }
 
     @Override
-    default DoubleFunction<R> or(DoubleFunction<R> byDefault)
+    default DoubleFunction<R> fallbackTo(DoubleFunction<R> byDefault)
     {
         return value -> {
             try {

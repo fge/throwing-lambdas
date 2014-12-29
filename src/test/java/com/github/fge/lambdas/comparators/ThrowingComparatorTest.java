@@ -121,7 +121,7 @@ public final class ThrowingComparatorTest
     }
 
     @Override
-    public void testChainedWithOr()
+    public void testChainedWithFallbackTo()
         throws Throwable
     {
         final ThrowingComparator<Type1> first = getPreparedInstance();
@@ -129,7 +129,7 @@ public final class ThrowingComparatorTest
         final Comparator<Type1> second = getNonThrowingInstance();
         when(second.compare(arg1, arg2)).thenReturn(ret2);
 
-        final Comparator<Type1> instance = first.or(second);
+        final Comparator<Type1> instance = first.fallbackTo(second);
 
         final Runnable runnable = runnableFrom(instance);
         final Callable<Integer> callable = callableFrom(instance);

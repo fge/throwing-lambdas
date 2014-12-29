@@ -42,7 +42,7 @@ public interface ThrowingIntFunction<R>
     }
 
     @Override
-    default IntFunction<R> or(IntFunction<R> byDefault)
+    default IntFunction<R> fallbackTo(IntFunction<R> byDefault)
     {
         return value -> {
             try {

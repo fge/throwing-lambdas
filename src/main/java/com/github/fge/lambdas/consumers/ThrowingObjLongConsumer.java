@@ -42,7 +42,7 @@ public interface ThrowingObjLongConsumer<T>
     }
 
     @Override
-    default ObjLongConsumer<T> or(ObjLongConsumer<T> byDefault)
+    default ObjLongConsumer<T> fallbackTo(ObjLongConsumer<T> byDefault)
     {
         return (t, value) -> {
             try {

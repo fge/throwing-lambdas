@@ -131,13 +131,13 @@ public final class ThrowingBiConsumerTest
     }
 
     @Override
-    public void testChainedWithOr()
+    public void testChainedWithFallbackTo()
         throws Throwable
     {
         final ThrowingBiConsumer<Type1, Type2> first = getPreparedInstance();
         final BiConsumer<Type1, Type2> second = getNonThrowingInstance();
 
-        final BiConsumer<Type1, Type2> instance = first.or(second);
+        final BiConsumer<Type1, Type2> instance = first.fallbackTo(second);
 
         final Runnable runnable = runnableFrom(instance);
 

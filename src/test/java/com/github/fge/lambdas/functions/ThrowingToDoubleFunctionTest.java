@@ -2,8 +2,6 @@ package com.github.fge.lambdas.functions;
 
 import com.github.fge.lambdas.ThrowingInterfaceBaseTest;
 import com.github.fge.lambdas.ThrownByLambdaException;
-import com.github.fge.lambdas.functions.SpiedThrowingToDoubleFunction;
-import com.github.fge.lambdas.functions.ThrowingToDoubleFunction;
 import com.github.fge.lambdas.helpers.MyException;
 import com.github.fge.lambdas.helpers.Type1;
 
@@ -120,14 +118,14 @@ public final class ThrowingToDoubleFunctionTest
     }
 
     @Override
-    public void testChainedWithOr()
+    public void testChainedWithFallbackTo()
         throws Throwable
     {
         final ThrowingToDoubleFunction<Type1> first = getPreparedInstance();
         final ToDoubleFunction<Type1> second = getNonThrowingInstance();
         when(second.applyAsDouble(arg)).thenReturn(ret2);
 
-        final ToDoubleFunction<Type1> instance = first.or(second);
+        final ToDoubleFunction<Type1> instance = first.fallbackTo(second);
 
         final Runnable runnable = runnableFrom(instance);
         final Callable<Double> callable = callableFrom(instance);

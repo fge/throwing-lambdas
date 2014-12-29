@@ -42,7 +42,7 @@ public interface ThrowingDoubleSupplier
     }
 
     @Override
-    default DoubleSupplier or(DoubleSupplier byDefault)
+    default DoubleSupplier fallbackTo(DoubleSupplier byDefault)
     {
         return () -> {
             try {

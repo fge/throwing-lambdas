@@ -113,14 +113,14 @@ public final class ThrowingDoubleSupplierTest
     }
 
     @Override
-    public void testChainedWithOr()
+    public void testChainedWithFallbackTo()
         throws Throwable
     {
         final ThrowingDoubleSupplier first = getPreparedInstance();
         final DoubleSupplier second = getNonThrowingInstance();
         when(second.getAsDouble()).thenReturn(ret2);
 
-        final DoubleSupplier instance = first.or(second);
+        final DoubleSupplier instance = first.fallbackTo(second);
 
         final Runnable runnable = runnableFrom(instance);
         final Callable<Double> callable = callableFrom(instance);

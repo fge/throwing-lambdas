@@ -41,7 +41,7 @@ public interface ThrowingLongConsumer
     }
 
     @Override
-    default LongConsumer or(LongConsumer byDefault)
+    default LongConsumer fallbackTo(LongConsumer byDefault)
     {
         return value -> {
             try {

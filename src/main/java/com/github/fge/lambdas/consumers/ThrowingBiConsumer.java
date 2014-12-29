@@ -41,7 +41,7 @@ public interface ThrowingBiConsumer<T, U>
     }
 
     @Override
-    default BiConsumer<T, U> or(BiConsumer<T, U> byDefault)
+    default BiConsumer<T, U> fallbackTo(BiConsumer<T, U> byDefault)
     {
         return (t, u) -> {
             try {

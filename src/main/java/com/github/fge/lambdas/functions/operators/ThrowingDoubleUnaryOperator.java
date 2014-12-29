@@ -42,7 +42,7 @@ public interface ThrowingDoubleUnaryOperator
     }
 
     @Override
-    default DoubleUnaryOperator or(DoubleUnaryOperator byDefault)
+    default DoubleUnaryOperator fallbackTo(DoubleUnaryOperator byDefault)
     {
         return operand -> {
             try {

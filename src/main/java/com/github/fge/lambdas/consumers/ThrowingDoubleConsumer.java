@@ -56,7 +56,7 @@ public interface ThrowingDoubleConsumer
     }
 
     @Override
-    default DoubleConsumer or(DoubleConsumer byDefault)
+    default DoubleConsumer fallbackTo(DoubleConsumer byDefault)
     {
         return value -> {
             try {

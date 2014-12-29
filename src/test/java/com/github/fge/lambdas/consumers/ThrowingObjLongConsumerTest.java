@@ -129,13 +129,13 @@ public final class ThrowingObjLongConsumerTest
     }
 
     @Override
-    public void testChainedWithOr()
+    public void testChainedWithFallbackTo()
         throws Throwable
     {
         final ThrowingObjLongConsumer<Type1> first = getPreparedInstance();
         final ObjLongConsumer<Type1> second = getNonThrowingInstance();
 
-        final ObjLongConsumer<Type1> instance = first.or(second);
+        final ObjLongConsumer<Type1> instance = first.fallbackTo(second);
 
         final Runnable runnable = runnableFrom(instance);
 

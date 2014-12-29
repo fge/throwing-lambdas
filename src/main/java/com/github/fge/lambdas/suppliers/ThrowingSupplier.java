@@ -41,7 +41,7 @@ public interface ThrowingSupplier<T>
     }
 
     @Override
-    default Supplier<T> or(Supplier<T> byDefault)
+    default Supplier<T> fallbackTo(Supplier<T> byDefault)
     {
         return () -> {
             try {

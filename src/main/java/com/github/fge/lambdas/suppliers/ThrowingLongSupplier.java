@@ -41,7 +41,7 @@ public interface ThrowingLongSupplier
     }
 
     @Override
-    default LongSupplier or(LongSupplier byDefault)
+    default LongSupplier fallbackTo(LongSupplier byDefault)
     {
         return () -> {
             try {

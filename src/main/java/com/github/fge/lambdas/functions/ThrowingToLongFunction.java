@@ -41,7 +41,7 @@ public interface ThrowingToLongFunction<T>
     }
 
     @Override
-    default ToLongFunction<T> or(ToLongFunction<T> byDefault)
+    default ToLongFunction<T> fallbackTo(ToLongFunction<T> byDefault)
     {
         return value -> {
             try {

@@ -41,7 +41,7 @@ public interface ThrowingFunction<T, R>
     }
 
     @Override
-    default Function<T, R> or(Function<T, R> byDefault)
+    default Function<T, R> fallbackTo(Function<T, R> byDefault)
     {
         return t -> {
             try {

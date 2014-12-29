@@ -42,7 +42,7 @@ public interface ThrowingBiFunction<T, U, R>
     }
 
     @Override
-    default BiFunction<T, U, R> or(BiFunction<T, U, R> byDefault)
+    default BiFunction<T, U, R> fallbackTo(BiFunction<T, U, R> byDefault)
     {
         return (t, u) -> {
             try {

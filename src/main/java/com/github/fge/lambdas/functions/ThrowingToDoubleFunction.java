@@ -42,7 +42,7 @@ public interface ThrowingToDoubleFunction<T>
     }
 
     @Override
-    default ToDoubleFunction<T> or(ToDoubleFunction<T> byDefault)
+    default ToDoubleFunction<T> fallbackTo(ToDoubleFunction<T> byDefault)
     {
         return value -> {
             try {

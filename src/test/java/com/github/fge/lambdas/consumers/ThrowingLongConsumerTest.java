@@ -125,13 +125,13 @@ public final class ThrowingLongConsumerTest
     }
 
     @Override
-    public void testChainedWithOr()
+    public void testChainedWithFallbackTo()
         throws Throwable
     {
         final ThrowingLongConsumer first = getPreparedInstance();
         final LongConsumer second = getNonThrowingInstance();
 
-        final LongConsumer instance = first.or(second);
+        final LongConsumer instance = first.fallbackTo(second);
 
         final Runnable runnable = runnableFrom(instance);
 

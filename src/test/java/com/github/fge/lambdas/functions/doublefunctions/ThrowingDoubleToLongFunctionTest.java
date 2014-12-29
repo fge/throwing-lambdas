@@ -5,7 +5,6 @@ import com.github.fge.lambdas.ThrownByLambdaException;
 import com.github.fge.lambdas.helpers.MyException;
 
 import java.util.concurrent.Callable;
-import java.util.function.DoubleToIntFunction;
 import java.util.function.DoubleToLongFunction;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -116,14 +115,14 @@ public final class ThrowingDoubleToLongFunctionTest
     }
 
     @Override
-    public void testChainedWithOr()
+    public void testChainedWithFallbackTo()
         throws Throwable
     {
         final ThrowingDoubleToLongFunction first = getPreparedInstance();
         final DoubleToLongFunction second = getNonThrowingInstance();
         when(second.applyAsLong(arg)).thenReturn(ret2);
 
-        final DoubleToLongFunction instance = first.or(second);
+        final DoubleToLongFunction instance = first.fallbackTo(second);
 
         final Runnable runnable = runnableFrom(instance);
         final Callable<Long> callable = callableFrom(instance);

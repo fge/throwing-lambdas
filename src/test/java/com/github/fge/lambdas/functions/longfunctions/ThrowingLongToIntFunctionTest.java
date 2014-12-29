@@ -115,14 +115,14 @@ public final class ThrowingLongToIntFunctionTest
     }
 
     @Override
-    public void testChainedWithOr()
+    public void testChainedWithFallbackTo()
         throws Throwable
     {
         final ThrowingLongToIntFunction first = getPreparedInstance();
         final LongToIntFunction second = getNonThrowingInstance();
         when(second.applyAsInt(arg)).thenReturn(ret2);
 
-        final LongToIntFunction instance = first.or(second);
+        final LongToIntFunction instance = first.fallbackTo(second);
 
         final Runnable runnable = runnableFrom(instance);
         final Callable<Integer> callable = callableFrom(instance);

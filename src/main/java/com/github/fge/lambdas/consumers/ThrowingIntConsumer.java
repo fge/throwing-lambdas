@@ -41,7 +41,7 @@ public interface ThrowingIntConsumer
     }
 
     @Override
-    default IntConsumer or(IntConsumer byDefault)
+    default IntConsumer fallbackTo(IntConsumer byDefault)
     {
         return value -> {
             try {

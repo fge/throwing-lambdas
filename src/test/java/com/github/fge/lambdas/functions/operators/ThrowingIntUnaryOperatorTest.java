@@ -115,14 +115,14 @@ public final class ThrowingIntUnaryOperatorTest
     }
 
     @Override
-    public void testChainedWithOr()
+    public void testChainedWithFallbackTo()
         throws Throwable
     {
         final ThrowingIntUnaryOperator first = getPreparedInstance();
         final IntUnaryOperator second = getNonThrowingInstance();
         when(second.applyAsInt(arg)).thenReturn(ret2);
 
-        final IntUnaryOperator instance = first.or(second);
+        final IntUnaryOperator instance = first.fallbackTo(second);
 
         final Runnable runnable = runnableFrom(instance);
         final Callable<Integer> callable = callableFrom(instance);

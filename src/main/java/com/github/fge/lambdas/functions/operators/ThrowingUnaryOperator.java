@@ -42,7 +42,7 @@ public interface ThrowingUnaryOperator<T>
     }
 
     @Override
-    default UnaryOperator<T> or(UnaryOperator<T> byDefault)
+    default UnaryOperator<T> fallbackTo(UnaryOperator<T> byDefault)
     {
         return t -> {
             try {

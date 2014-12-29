@@ -41,7 +41,7 @@ public interface ThrowingComparator<T>
     }
 
     @Override
-    default Comparator<T> or(Comparator<T> byDefault)
+    default Comparator<T> fallbackTo(Comparator<T> byDefault)
     {
         return (o1, o2) -> {
             try {

@@ -42,7 +42,7 @@ public interface ThrowingLongUnaryOperator
     }
 
     @Override
-    default LongUnaryOperator or(LongUnaryOperator byDefault)
+    default LongUnaryOperator fallbackTo(LongUnaryOperator byDefault)
     {
         return operand -> {
             try {

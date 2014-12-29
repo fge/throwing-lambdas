@@ -115,14 +115,14 @@ public final class ThrowingDoubleUnaryOperatorTest
     }
 
     @Override
-    public void testChainedWithOr()
+    public void testChainedWithFallbackTo()
         throws Throwable
     {
         final ThrowingDoubleUnaryOperator first = getPreparedInstance();
         final DoubleUnaryOperator second = getNonThrowingInstance();
         when(second.applyAsDouble(arg)).thenReturn(ret2);
 
-        final DoubleUnaryOperator instance = first.or(second);
+        final DoubleUnaryOperator instance = first.fallbackTo(second);
 
         final Runnable runnable = runnableFrom(instance);
         final Callable<Double> callable = callableFrom(instance);

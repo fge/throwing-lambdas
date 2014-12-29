@@ -115,14 +115,14 @@ public final class ThrowingIntToDoubleFunctionTest
     }
 
     @Override
-    public void testChainedWithOr()
+    public void testChainedWithFallbackTo()
         throws Throwable
     {
         final ThrowingIntToDoubleFunction first = getPreparedInstance();
         final IntToDoubleFunction second = getNonThrowingInstance();
         when(second.applyAsDouble(arg)).thenReturn(ret2);
 
-        final IntToDoubleFunction instance = first.or(second);
+        final IntToDoubleFunction instance = first.fallbackTo(second);
 
         final Runnable runnable = runnableFrom(instance);
         final Callable<Double> callable = callableFrom(instance);

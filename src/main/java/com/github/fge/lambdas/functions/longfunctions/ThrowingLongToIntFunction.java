@@ -42,7 +42,7 @@ public interface ThrowingLongToIntFunction
     }
 
     @Override
-    default LongToIntFunction or(LongToIntFunction byDefault)
+    default LongToIntFunction fallbackTo(LongToIntFunction byDefault)
     {
         return value -> {
             try {

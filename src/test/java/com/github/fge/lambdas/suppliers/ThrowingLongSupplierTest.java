@@ -114,14 +114,14 @@ public final class ThrowingLongSupplierTest
     }
 
     @Override
-    public void testChainedWithOr()
+    public void testChainedWithFallbackTo()
         throws Throwable
     {
         final ThrowingLongSupplier first = getPreparedInstance();
         final LongSupplier second = getNonThrowingInstance();
         when(second.getAsLong()).thenReturn(ret2);
 
-        final LongSupplier instance = first.or(second);
+        final LongSupplier instance = first.fallbackTo(second);
 
         final Runnable runnable = runnableFrom(instance);
         final Callable<Long> callable = callableFrom(instance);

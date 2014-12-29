@@ -116,14 +116,14 @@ public final class ThrowingLongBinaryOperatorTest
     }
 
     @Override
-    public void testChainedWithOr()
+    public void testChainedWithFallbackTo()
         throws Throwable
     {
         final ThrowingLongBinaryOperator first = getPreparedInstance();
         final LongBinaryOperator second = getNonThrowingInstance();
         when(second.applyAsLong(left, right)).thenReturn(ret2);
 
-        final LongBinaryOperator instance = first.or(second);
+        final LongBinaryOperator instance = first.fallbackTo(second);
 
         final Runnable runnable = runnableFrom(instance);
         final Callable<Long> callable = callableFrom(instance);

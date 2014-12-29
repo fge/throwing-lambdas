@@ -42,7 +42,7 @@ public interface ThrowingDoubleToIntFunction
     }
 
     @Override
-    default DoubleToIntFunction or(DoubleToIntFunction byDefault)
+    default DoubleToIntFunction fallbackTo(DoubleToIntFunction byDefault)
     {
         return value -> {
             try {

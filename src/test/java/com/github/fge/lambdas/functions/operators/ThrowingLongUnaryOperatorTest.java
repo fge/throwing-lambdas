@@ -115,14 +115,14 @@ public final class ThrowingLongUnaryOperatorTest
     }
 
     @Override
-    public void testChainedWithOr()
+    public void testChainedWithFallbackTo()
         throws Throwable
     {
         final ThrowingLongUnaryOperator first = getPreparedInstance();
         final LongUnaryOperator second = getNonThrowingInstance();
         when(second.applyAsLong(arg)).thenReturn(ret2);
 
-        final LongUnaryOperator instance = first.or(second);
+        final LongUnaryOperator instance = first.fallbackTo(second);
 
         final Runnable runnable = runnableFrom(instance);
         final Callable<Long> callable = callableFrom(instance);
