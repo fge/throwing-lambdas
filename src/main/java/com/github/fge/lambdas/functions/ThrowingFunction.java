@@ -6,6 +6,12 @@ import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.Function;
 
+/**
+ * A throwing {@link Function}
+ *
+ * @param <T> type parameter for the argument to this function
+ * @param <R> type parameter for the return value of that function
+ */
 @FunctionalInterface
 public interface ThrowingFunction<T, R>
     extends Function<T, R>,

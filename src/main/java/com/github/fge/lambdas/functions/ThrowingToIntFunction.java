@@ -6,6 +6,11 @@ import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.ToIntFunction;
 
+/**
+ * A throwing {@link ToIntFunction}
+ *
+ * @param <T> type parameter of the argument to this function
+ */
 @FunctionalInterface
 public interface ThrowingToIntFunction<T>
     extends ToIntFunction<T>,

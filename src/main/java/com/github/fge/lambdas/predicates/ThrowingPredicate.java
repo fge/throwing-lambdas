@@ -6,7 +6,11 @@ import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.Predicate;
 
-// TODO: or() from ThrowingFunctionalInterface conflicts with Predicate's
+/**
+ * A throwing {@link Predicate}
+ *
+ * @param <T> type parameter of the argument to this predicate
+ */
 @FunctionalInterface
 public interface ThrowingPredicate<T>
     extends Predicate<T>,

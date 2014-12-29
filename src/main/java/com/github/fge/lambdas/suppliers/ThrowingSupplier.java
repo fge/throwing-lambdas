@@ -6,6 +6,11 @@ import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.Supplier;
 
+/**
+ * A throwing {@link Supplier}
+ *
+ * @param <T> type parameter of the return value of this supplier
+ */
 @FunctionalInterface
 public interface ThrowingSupplier<T>
     extends Supplier<T>,

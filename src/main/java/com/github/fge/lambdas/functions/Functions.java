@@ -1,5 +1,6 @@
 package com.github.fge.lambdas.functions;
 
+import com.github.fge.lambdas.ThrowingFunctionalInterface;
 import com.github.fge.lambdas.functions.doublefunctions.ThrowingDoubleFunction;
 import com.github.fge.lambdas.functions.doublefunctions
     .ThrowingDoubleToIntFunction;
@@ -14,6 +15,28 @@ import com.github.fge.lambdas.functions.longfunctions
     .ThrowingLongToDoubleFunction;
 import com.github.fge.lambdas.functions.longfunctions.ThrowingLongToIntFunction;
 
+import java.util.function.BiFunction;
+import java.util.function.Function;
+
+/**
+ * Utility wrappers for throwing {@link Function}s and
+ * {@link BiFunction}s
+ *
+ * <p>Note that all or {@code wrap()}, {@code tryWith()} or {@code rethrow()}
+ * methods are in fact different names for the same thing. They are simply here
+ * so that the intent is more obvious when you write. For instance:</p>
+ *
+ * <ul>
+ *     // wrap...
+ *     final ThrowingFoo f = wrap(someLambdaHere);
+ *     // tryWith...
+ *     final Foo f = tryWith(someLambdaHere).fallbackTo(someNonThrowingLambda);
+ *     // rethrow...
+ *     final Foo f = rethrow(someLambdaHere).as(MyCustomRuntimeException.class);
+ * </ul>
+ *
+ * @see ThrowingFunctionalInterface
+ */
 public final class Functions
 {
     private Functions()

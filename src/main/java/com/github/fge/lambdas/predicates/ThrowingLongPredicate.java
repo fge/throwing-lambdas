@@ -6,6 +6,9 @@ import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.LongPredicate;
 
+/**
+ * A throwing {@link LongPredicate}
+ */
 @FunctionalInterface
 public interface ThrowingLongPredicate
     extends LongPredicate,

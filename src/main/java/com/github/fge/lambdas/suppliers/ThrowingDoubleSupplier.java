@@ -7,6 +7,9 @@ import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.DoubleSupplier;
 
+/**
+ * A throwing {@link DoubleSupplier}
+ */
 @FunctionalInterface
 public interface ThrowingDoubleSupplier
     extends DoubleSupplier,

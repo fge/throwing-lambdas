@@ -6,6 +6,9 @@ import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.IntPredicate;
 
+/**
+ * A throwing {@link IntPredicate}
+ */
 @FunctionalInterface
 public interface ThrowingIntPredicate
     extends IntPredicate,

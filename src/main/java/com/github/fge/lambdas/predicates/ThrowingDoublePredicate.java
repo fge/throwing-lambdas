@@ -6,6 +6,9 @@ import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.DoublePredicate;
 
+/**
+ * A throwing {@link DoublePredicate}
+ */
 @FunctionalInterface
 public interface ThrowingDoublePredicate
     extends DoublePredicate,
