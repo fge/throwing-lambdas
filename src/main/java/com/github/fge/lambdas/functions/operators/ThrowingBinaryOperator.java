@@ -1,13 +1,15 @@
 package com.github.fge.lambdas.functions.operators;
 
 import com.github.fge.lambdas.ThrowablesFactory;
+import com.github.fge.lambdas.ThrowingFunctionalInterface;
 import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.BinaryOperator;
 
 @FunctionalInterface
 public interface ThrowingBinaryOperator<T>
-    extends BinaryOperator<T>
+    extends BinaryOperator<T>,
+    ThrowingFunctionalInterface<ThrowingBinaryOperator<T>, BinaryOperator<T>>
 {
     T doApply(T t, T u)
         throws Throwable;
@@ -22,6 +24,50 @@ public interface ThrowingBinaryOperator<T>
         } catch (Throwable tooBad) {
             throw new ThrownByLambdaException(tooBad);
         }
+    }
+
+    @Override
+    default ThrowingBinaryOperator<T> orTryWith(
+        ThrowingBinaryOperator<T> other)
+    {
+        return (t, u) -> {
+            try {
+                return doApply(t, u);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable ignored) {
+                return other.apply(t, u);
+            }
+        };
+    }
+
+    @Override
+    default BinaryOperator<T> or(BinaryOperator<T> byDefault)
+    {
+        return (t, u) -> {
+            try {
+                return doApply(t, u);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable ignored) {
+                return byDefault.apply(t, u);
+            }
+        };
+    }
+
+    @Override
+    default <E extends RuntimeException> BinaryOperator<T> orThrow(
+        Class<E> exceptionClass)
+    {
+        return (t, u) -> {
+            try {
+                return doApply(t, u);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable tooBad) {
+                throw ThrowablesFactory.INSTANCE.get(exceptionClass, tooBad);
+            }
+        };
     }
 
     default BinaryOperator<T> orReturn(T defaultValue)
@@ -59,20 +105,6 @@ public interface ThrowingBinaryOperator<T>
                 throw e;
             } catch (Throwable ignored) {
                 return u;
-            }
-        };
-    }
-
-    default <E extends RuntimeException> BinaryOperator<T> orThrow(
-        Class<E> exceptionClass)
-    {
-        return (t, u) -> {
-            try {
-                return doApply(t, u);
-            } catch (Error | RuntimeException e) {
-                throw e;
-            } catch (Throwable tooBad) {
-                throw ThrowablesFactory.INSTANCE.get(exceptionClass, tooBad);
             }
         };
     }
