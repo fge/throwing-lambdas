@@ -67,6 +67,7 @@ public interface ThrowingLongSupplier
         };
     }
 
+    @Override
     default <E extends RuntimeException> LongSupplier orThrow(
         Class<E> exceptionClass)
     {

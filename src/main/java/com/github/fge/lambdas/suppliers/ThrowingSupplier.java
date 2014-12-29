@@ -67,6 +67,7 @@ public interface ThrowingSupplier<T>
         };
     }
 
+    @Override
     default <E extends RuntimeException> Supplier<T> orThrow(
         Class<E> exceptionClass)
     {

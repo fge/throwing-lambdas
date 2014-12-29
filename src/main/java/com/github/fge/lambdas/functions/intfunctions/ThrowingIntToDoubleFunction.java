@@ -24,7 +24,7 @@ public interface ThrowingIntToDoubleFunction
         } catch (Throwable tooBad) {
             throw new ThrownByLambdaException(tooBad);
         }
-    };
+    }
 
     @Override
     default ThrowingIntToDoubleFunction orTryWith(
@@ -35,7 +35,7 @@ public interface ThrowingIntToDoubleFunction
                 return doApplyAsDouble(value);
             } catch (Error | RuntimeException e) {
                 throw e;
-            } catch (Throwable tooBad) {
+            } catch (Throwable ignored) {
                 return other.applyAsDouble(value);
             }
         };
@@ -49,7 +49,7 @@ public interface ThrowingIntToDoubleFunction
                 return doApplyAsDouble(value);
             } catch (Error | RuntimeException e) {
                 throw e;
-            } catch (Throwable tooBad) {
+            } catch (Throwable ignored) {
                 return byDefault.applyAsDouble(value);
             }
         };

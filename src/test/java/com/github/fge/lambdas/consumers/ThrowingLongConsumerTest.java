@@ -18,7 +18,7 @@ import static org.mockito.Mockito.verify;
 public final class ThrowingLongConsumerTest
     extends ThrowingInterfaceBaseTest<ThrowingLongConsumer, LongConsumer, Void>
 {
-    private final long arg = 42;
+    private final long arg = 42L;
 
     @Override
     protected ThrowingLongConsumer getBaseInstance()

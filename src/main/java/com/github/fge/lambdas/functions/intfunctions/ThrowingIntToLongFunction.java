@@ -35,7 +35,7 @@ public interface ThrowingIntToLongFunction
                 return doApplyAsLong(value);
             } catch (Error | RuntimeException e) {
                 throw e;
-            } catch (Throwable tooBad) {
+            } catch (Throwable ignored) {
                 return other.applyAsLong(value);
             }
         };
@@ -49,7 +49,7 @@ public interface ThrowingIntToLongFunction
                 return doApplyAsLong(value);
             } catch (Error | RuntimeException e) {
                 throw e;
-            } catch (Throwable tooBad) {
+            } catch (Throwable ignored) {
                 return byDefault.applyAsLong(value);
             }
         };

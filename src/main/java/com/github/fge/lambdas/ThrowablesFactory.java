@@ -31,6 +31,7 @@ public enum ThrowablesFactory
         });
     }
 
+    @SuppressWarnings("unchecked")
     public <E extends RuntimeException> E get(final Class<E> c,
         final Throwable t)
     {

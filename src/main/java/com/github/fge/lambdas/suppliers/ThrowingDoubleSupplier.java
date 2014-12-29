@@ -68,6 +68,7 @@ public interface ThrowingDoubleSupplier
         };
     }
 
+    @Override
     default <E extends RuntimeException> DoubleSupplier orThrow(
         Class<E> exceptionClass)
     {

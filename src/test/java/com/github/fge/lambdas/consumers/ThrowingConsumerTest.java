@@ -43,6 +43,7 @@ public final class ThrowingConsumerTest
     @Override
     protected Consumer<Type1> getNonThrowingInstance()
     {
+        //noinspection unchecked
         return mock(Consumer.class);
     }
 

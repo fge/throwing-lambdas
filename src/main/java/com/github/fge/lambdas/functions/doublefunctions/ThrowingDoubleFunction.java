@@ -34,7 +34,7 @@ public interface ThrowingDoubleFunction<R>
                 return doApply(value);
             } catch (Error | RuntimeException e) {
                 throw e;
-            } catch (Throwable tooBad) {
+            } catch (Throwable ignored) {
                 return other.apply(value);
             }
         };
@@ -48,7 +48,7 @@ public interface ThrowingDoubleFunction<R>
                 return doApply(value);
             } catch (Error | RuntimeException e) {
                 throw e;
-            } catch (Throwable tooBad) {
+            } catch (Throwable ignored) {
                 return byDefault.apply(value);
             }
         };

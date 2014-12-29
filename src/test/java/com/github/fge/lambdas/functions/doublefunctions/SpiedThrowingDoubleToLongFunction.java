@@ -9,12 +9,12 @@ public class SpiedThrowingDoubleToLongFunction
     public static ThrowingDoubleToLongFunction newSpy()
     {
         return Mockito.spy(new SpiedThrowingDoubleToLongFunction());
-    };
+    }
 
     @Override
     public long doApplyAsLong(final double value)
         throws Throwable
     {
-        return 0;
+        return 0L;
     }
 }

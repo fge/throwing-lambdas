@@ -67,6 +67,7 @@ public interface ThrowingIntSupplier
         };
     }
 
+    @Override
     default <E extends RuntimeException> IntSupplier orThrow(
         Class<E> exceptionClass)
     {

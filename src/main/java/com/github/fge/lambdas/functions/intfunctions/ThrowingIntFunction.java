@@ -24,7 +24,7 @@ public interface ThrowingIntFunction<R>
         } catch (Throwable tooBad) {
             throw new ThrownByLambdaException(tooBad);
         }
-    };
+    }
 
     @Override
     default ThrowingIntFunction<R> orTryWith(

@@ -45,6 +45,7 @@ public final class ThrowingBiConsumerTest
     @Override
     protected BiConsumer<Type1, Type2> getNonThrowingInstance()
     {
+        //noinspection unchecked
         return mock(BiConsumer.class);
     }
 

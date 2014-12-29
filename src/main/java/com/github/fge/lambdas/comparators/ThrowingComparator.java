@@ -48,7 +48,7 @@ public interface ThrowingComparator<T>
                 return doCompare(o1, o2);
             } catch (Error | RuntimeException e) {
                 throw e;
-            } catch (Throwable tooBad) {
+            } catch (Throwable ignored) {
                 return byDefault.compare(o1, o2);
             }
         };

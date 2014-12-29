@@ -18,7 +18,7 @@ public final class ThrowingDoubleToLongFunctionTest
 {
     private final double arg = 2.0;
     private final long ret1 = 42L;
-    private final long ret2 = 387297;
+    private final long ret2 = 387297L;
 
     @Override
     protected ThrowingDoubleToLongFunction getBaseInstance()

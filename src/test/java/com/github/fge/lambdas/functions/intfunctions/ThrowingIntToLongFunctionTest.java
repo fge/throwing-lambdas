@@ -18,7 +18,7 @@ public final class ThrowingIntToLongFunctionTest
 {
     private final int arg = 2;
     private final long ret1 = 42L;
-    private final long ret2 = 387297;
+    private final long ret2 = 387297L;
 
     @Override
     protected ThrowingIntToLongFunction getBaseInstance()

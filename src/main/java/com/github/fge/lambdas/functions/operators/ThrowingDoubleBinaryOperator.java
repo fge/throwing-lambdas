@@ -35,7 +35,7 @@ public interface ThrowingDoubleBinaryOperator
                 return doApplyAsDouble(left, right);
             } catch (Error | RuntimeException e) {
                 throw e;
-            } catch (Throwable tooBad) {
+            } catch (Throwable ignored) {
                 return other.applyAsDouble(left, right);
             }
         };
@@ -49,7 +49,7 @@ public interface ThrowingDoubleBinaryOperator
                 return doApplyAsDouble(left, right);
             } catch (Error | RuntimeException e) {
                 throw e;
-            } catch (Throwable tooBad) {
+            } catch (Throwable ignored) {
                 return byDefault.applyAsDouble(left, right);
             }
         };

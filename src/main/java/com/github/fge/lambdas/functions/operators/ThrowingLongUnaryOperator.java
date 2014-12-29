@@ -35,7 +35,7 @@ public interface ThrowingLongUnaryOperator
                 return doApplyAsLong(operand);
             } catch (Error | RuntimeException e) {
                 throw e;
-            } catch (Throwable tooBad) {
+            } catch (Throwable ignored) {
                 return other.applyAsLong(operand);
             }
         };
@@ -49,7 +49,7 @@ public interface ThrowingLongUnaryOperator
                 return doApplyAsLong(operand);
             } catch (Error | RuntimeException e) {
                 throw e;
-            } catch (Throwable tooBad) {
+            } catch (Throwable ignored) {
                 return byDefault.applyAsLong(operand);
             }
         };
