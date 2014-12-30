@@ -53,7 +53,7 @@ public abstract class ThrowingInterfaceBaseTest<T extends N, N, R>
      *
      * @return a mock
      */
-    protected abstract T getPreparedInstance()
+    protected abstract T getTestInstance()
         throws Throwable;
 
     /**
@@ -65,7 +65,7 @@ public abstract class ThrowingInterfaceBaseTest<T extends N, N, R>
      *
      * @return a mock
      */
-    protected abstract N getFallbackInstance();
+    protected abstract N getFallback();
 
     /**
      * Return a runnable from running an instance
@@ -85,7 +85,7 @@ public abstract class ThrowingInterfaceBaseTest<T extends N, N, R>
      * @param instance the instance
      * @return a callable
      */
-    protected abstract Callable<R> callableFrom(N instance);
+    protected abstract Callable<R> asCallable(N instance);
 
     /**
      * Test a fully prepared, unchained instance

@@ -36,7 +36,7 @@ public final class ThrowingIntToLongFunctionTest
     }
 
     @Override
-    protected ThrowingIntToLongFunction getPreparedInstance()
+    protected ThrowingIntToLongFunction getTestInstance()
         throws Throwable
     {
         final ThrowingIntToLongFunction spy
@@ -49,7 +49,7 @@ public final class ThrowingIntToLongFunctionTest
     }
 
     @Override
-    protected IntToLongFunction getFallbackInstance()
+    protected IntToLongFunction getFallback()
     {
         final IntToLongFunction mock = mock(IntToLongFunction.class);
 
@@ -65,7 +65,7 @@ public final class ThrowingIntToLongFunctionTest
     }
 
     @Override
-    protected Callable<Long> callableFrom(final IntToLongFunction instance)
+    protected Callable<Long> asCallable(final IntToLongFunction instance)
     {
         return () -> instance.applyAsLong(arg);
     }
@@ -74,10 +74,10 @@ public final class ThrowingIntToLongFunctionTest
     public void testUnchained()
         throws Throwable
     {
-        final ThrowingIntToLongFunction instance = getPreparedInstance();
+        final ThrowingIntToLongFunction instance = getTestInstance();
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Long> callable = callableFrom(instance);
+        final Callable<Long> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
 
@@ -93,10 +93,10 @@ public final class ThrowingIntToLongFunctionTest
         throws Throwable
     {
         final IntToLongFunction instance
-            = getPreparedInstance().orThrow(MyException.class);
+            = getTestInstance().orThrow(MyException.class);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Long> callable = callableFrom(instance);
+        final Callable<Long> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
 
@@ -111,13 +111,13 @@ public final class ThrowingIntToLongFunctionTest
     public void testChainedWithOrTryWith()
         throws Throwable
     {
-        final ThrowingIntToLongFunction first = getPreparedInstance();
+        final ThrowingIntToLongFunction first = getTestInstance();
         final ThrowingIntToLongFunction second = getAlternate();
 
         final IntToLongFunction instance = first.orTryWith(second);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Long> callable = callableFrom(instance);
+        final Callable<Long> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
@@ -131,13 +131,13 @@ public final class ThrowingIntToLongFunctionTest
     public void testChainedWithFallbackTo()
         throws Throwable
     {
-        final ThrowingIntToLongFunction first = getPreparedInstance();
-        final IntToLongFunction second = getFallbackInstance();
+        final ThrowingIntToLongFunction first = getTestInstance();
+        final IntToLongFunction second = getFallback();
 
         final IntToLongFunction instance = first.fallbackTo(second);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Long> callable = callableFrom(instance);
+        final Callable<Long> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
@@ -151,10 +151,10 @@ public final class ThrowingIntToLongFunctionTest
         throws Throwable
     {
         final IntToLongFunction instance
-            = getPreparedInstance().orReturn(ret2);
+            = getTestInstance().orReturn(ret2);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Long> callable = callableFrom(instance);
+        final Callable<Long> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);

@@ -37,7 +37,7 @@ public final class ThrowingToIntFunctionTest
     }
 
     @Override
-    protected ThrowingToIntFunction<Type1> getPreparedInstance()
+    protected ThrowingToIntFunction<Type1> getTestInstance()
         throws Throwable
     {
         final ThrowingToIntFunction<Type1> spy
@@ -50,7 +50,7 @@ public final class ThrowingToIntFunctionTest
     }
 
     @Override
-    protected ToIntFunction<Type1> getFallbackInstance()
+    protected ToIntFunction<Type1> getFallback()
     {
         @SuppressWarnings("unchecked")
         final ToIntFunction<Type1> mock = mock(ToIntFunction.class);
@@ -67,7 +67,7 @@ public final class ThrowingToIntFunctionTest
     }
 
     @Override
-    protected Callable<Integer> callableFrom(
+    protected Callable<Integer> asCallable(
         final ToIntFunction<Type1> instance)
     {
         return () -> instance.applyAsInt(arg);
@@ -77,10 +77,10 @@ public final class ThrowingToIntFunctionTest
     public void testUnchained()
         throws Throwable
     {
-        final ThrowingToIntFunction<Type1> instance = getPreparedInstance();
+        final ThrowingToIntFunction<Type1> instance = getTestInstance();
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Integer> callable = callableFrom(instance);
+        final Callable<Integer> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
 
@@ -96,10 +96,10 @@ public final class ThrowingToIntFunctionTest
         throws Throwable
     {
         final ToIntFunction<Type1> instance
-            = getPreparedInstance().orThrow(MyException.class);
+            = getTestInstance().orThrow(MyException.class);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Integer> callable = callableFrom(instance);
+        final Callable<Integer> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
 
@@ -114,13 +114,13 @@ public final class ThrowingToIntFunctionTest
     public void testChainedWithOrTryWith()
         throws Throwable
     {
-        final ThrowingToIntFunction<Type1> first = getPreparedInstance();
+        final ThrowingToIntFunction<Type1> first = getTestInstance();
         final ThrowingToIntFunction<Type1> second = getAlternate();
 
         final ToIntFunction<Type1> instance = first.orTryWith(second);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Integer> callable = callableFrom(instance);
+        final Callable<Integer> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
@@ -134,13 +134,13 @@ public final class ThrowingToIntFunctionTest
     public void testChainedWithFallbackTo()
         throws Throwable
     {
-        final ThrowingToIntFunction<Type1> first = getPreparedInstance();
-        final ToIntFunction<Type1> second = getFallbackInstance();
+        final ThrowingToIntFunction<Type1> first = getTestInstance();
+        final ToIntFunction<Type1> second = getFallback();
 
         final ToIntFunction<Type1> instance = first.fallbackTo(second);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Integer> callable = callableFrom(instance);
+        final Callable<Integer> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
@@ -153,12 +153,12 @@ public final class ThrowingToIntFunctionTest
     public void testChainedWithOrReturn()
         throws Throwable
     {
-        final ThrowingToIntFunction<Type1> first = getPreparedInstance();
+        final ThrowingToIntFunction<Type1> first = getTestInstance();
 
         final ToIntFunction<Type1> instance = first.orReturn(ret2);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Integer> callable = callableFrom(instance);
+        final Callable<Integer> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);

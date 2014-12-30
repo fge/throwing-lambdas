@@ -36,7 +36,7 @@ public final class ThrowingLongPredicateTest
     }
 
     @Override
-    protected ThrowingLongPredicate getPreparedInstance()
+    protected ThrowingLongPredicate getTestInstance()
         throws Throwable
     {
         final ThrowingLongPredicate spy
@@ -49,7 +49,7 @@ public final class ThrowingLongPredicateTest
     }
 
     @Override
-    protected LongPredicate getFallbackInstance()
+    protected LongPredicate getFallback()
     {
         final LongPredicate mock = mock(LongPredicate.class);
 
@@ -65,7 +65,7 @@ public final class ThrowingLongPredicateTest
     }
 
     @Override
-    protected Callable<Boolean> callableFrom(final LongPredicate instance)
+    protected Callable<Boolean> asCallable(final LongPredicate instance)
     {
         return () -> instance.test(arg);
     }
@@ -74,10 +74,10 @@ public final class ThrowingLongPredicateTest
     public void testUnchained()
         throws Throwable
     {
-        final ThrowingLongPredicate instance = getPreparedInstance();
+        final ThrowingLongPredicate instance = getTestInstance();
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Boolean> callable = callableFrom(instance);
+        final Callable<Boolean> callable = asCallable(instance);
 
         assertThat(callable.call()).isTrue();
 
@@ -93,10 +93,10 @@ public final class ThrowingLongPredicateTest
         throws Throwable
     {
         final LongPredicate instance
-            = getPreparedInstance().orThrow(MyException.class);
+            = getTestInstance().orThrow(MyException.class);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Boolean> callable = callableFrom(instance);
+        final Callable<Boolean> callable = asCallable(instance);
 
         assertThat(callable.call()).isTrue();
 
@@ -111,13 +111,13 @@ public final class ThrowingLongPredicateTest
     public void testChainedWithOrTryWith()
         throws Throwable
     {
-        final ThrowingLongPredicate first = getPreparedInstance();
+        final ThrowingLongPredicate first = getTestInstance();
         final ThrowingLongPredicate second = getAlternate();
 
         final LongPredicate instance = first.orTryWith(second);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Boolean> callable = callableFrom(instance);
+        final Callable<Boolean> callable = asCallable(instance);
 
         assertThat(callable.call()).isTrue();
         assertThat(callable.call()).isFalse();
@@ -131,13 +131,13 @@ public final class ThrowingLongPredicateTest
     public void testChainedWithFallbackTo()
         throws Throwable
     {
-        final ThrowingLongPredicate first = getPreparedInstance();
-        final LongPredicate second = getFallbackInstance();
+        final ThrowingLongPredicate first = getTestInstance();
+        final LongPredicate second = getFallback();
 
         final LongPredicate instance = first.fallbackTo(second);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Boolean> callable = callableFrom(instance);
+        final Callable<Boolean> callable = asCallable(instance);
 
         assertThat(callable.call()).isTrue();
         assertThat(callable.call()).isFalse();
@@ -150,10 +150,10 @@ public final class ThrowingLongPredicateTest
     public void testChainedWithOrReturn()
         throws Throwable
     {
-        final LongPredicate instance = getPreparedInstance().orReturn(false);
+        final LongPredicate instance = getTestInstance().orReturn(false);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Boolean> callable = callableFrom(instance);
+        final Callable<Boolean> callable = asCallable(instance);
 
         assertThat(callable.call()).isTrue();
         assertThat(callable.call()).isFalse();

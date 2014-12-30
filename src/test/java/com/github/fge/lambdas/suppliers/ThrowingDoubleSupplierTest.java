@@ -34,7 +34,7 @@ public final class ThrowingDoubleSupplierTest
     }
 
     @Override
-    protected ThrowingDoubleSupplier getPreparedInstance()
+    protected ThrowingDoubleSupplier getTestInstance()
         throws Throwable
     {
         final ThrowingDoubleSupplier spy
@@ -47,7 +47,7 @@ public final class ThrowingDoubleSupplierTest
     }
 
     @Override
-    protected DoubleSupplier getFallbackInstance()
+    protected DoubleSupplier getFallback()
     {
         final DoubleSupplier mock = mock(DoubleSupplier.class);
 
@@ -63,7 +63,7 @@ public final class ThrowingDoubleSupplierTest
     }
 
     @Override
-    protected Callable<Double> callableFrom(final DoubleSupplier instance)
+    protected Callable<Double> asCallable(final DoubleSupplier instance)
     {
         return instance::getAsDouble;
     }
@@ -72,10 +72,10 @@ public final class ThrowingDoubleSupplierTest
     public void testUnchained()
         throws Throwable
     {
-        final ThrowingDoubleSupplier instance = getPreparedInstance();
+        final ThrowingDoubleSupplier instance = getTestInstance();
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Double> callable = callableFrom(instance);
+        final Callable<Double> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
 
@@ -91,10 +91,10 @@ public final class ThrowingDoubleSupplierTest
         throws Throwable
     {
         final DoubleSupplier instance
-            = getPreparedInstance().orThrow(MyException.class);
+            = getTestInstance().orThrow(MyException.class);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Double> callable = callableFrom(instance);
+        final Callable<Double> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
 
@@ -109,13 +109,13 @@ public final class ThrowingDoubleSupplierTest
     public void testChainedWithOrTryWith()
         throws Throwable
     {
-        final ThrowingDoubleSupplier first = getPreparedInstance();
+        final ThrowingDoubleSupplier first = getTestInstance();
         final ThrowingDoubleSupplier second = getAlternate();
 
         final DoubleSupplier instance = first.orTryWith(second);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Double> callable = callableFrom(instance);
+        final Callable<Double> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
@@ -129,13 +129,13 @@ public final class ThrowingDoubleSupplierTest
     public void testChainedWithFallbackTo()
         throws Throwable
     {
-        final ThrowingDoubleSupplier first = getPreparedInstance();
-        final DoubleSupplier second = getFallbackInstance();
+        final ThrowingDoubleSupplier first = getTestInstance();
+        final DoubleSupplier second = getFallback();
 
         final DoubleSupplier instance = first.fallbackTo(second);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Double> callable = callableFrom(instance);
+        final Callable<Double> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
@@ -148,12 +148,12 @@ public final class ThrowingDoubleSupplierTest
     public void testChainedWithOrReturn()
         throws Throwable
     {
-        final ThrowingDoubleSupplier first = getPreparedInstance();
+        final ThrowingDoubleSupplier first = getTestInstance();
 
         final DoubleSupplier instance = first.orReturn(ret2);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Double> callable = callableFrom(instance);
+        final Callable<Double> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);

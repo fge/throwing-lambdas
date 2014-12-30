@@ -36,7 +36,7 @@ public final class ThrowingLongFunctionTest
     }
 
     @Override
-    protected ThrowingLongFunction<Type1> getPreparedInstance()
+    protected ThrowingLongFunction<Type1> getTestInstance()
         throws Throwable
     {
         final ThrowingLongFunction<Type1> spy
@@ -49,7 +49,7 @@ public final class ThrowingLongFunctionTest
     }
 
     @Override
-    protected LongFunction<Type1> getFallbackInstance()
+    protected LongFunction<Type1> getFallback()
     {
         @SuppressWarnings("unchecked")
         final LongFunction<Type1> mock = mock(LongFunction.class);
@@ -66,7 +66,7 @@ public final class ThrowingLongFunctionTest
     }
 
     @Override
-    protected Callable<Type1> callableFrom(final LongFunction<Type1> instance)
+    protected Callable<Type1> asCallable(final LongFunction<Type1> instance)
     {
         return () -> instance.apply(arg);
     }
@@ -75,10 +75,10 @@ public final class ThrowingLongFunctionTest
     public void testUnchained()
         throws Throwable
     {
-        final ThrowingLongFunction<Type1> instance = getPreparedInstance();
+        final ThrowingLongFunction<Type1> instance = getTestInstance();
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Type1> callable = callableFrom(instance);
+        final Callable<Type1> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
 
@@ -93,12 +93,12 @@ public final class ThrowingLongFunctionTest
     public void testChainedWithOrThrow()
         throws Throwable
     {
-        final ThrowingLongFunction<Type1> first = getPreparedInstance();
+        final ThrowingLongFunction<Type1> first = getTestInstance();
 
         final LongFunction<Type1> instance = first.orThrow(MyException.class);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Type1> callable = callableFrom(instance);
+        final Callable<Type1> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
 
@@ -113,13 +113,13 @@ public final class ThrowingLongFunctionTest
     public void testChainedWithOrTryWith()
         throws Throwable
     {
-        final ThrowingLongFunction<Type1> first = getPreparedInstance();
+        final ThrowingLongFunction<Type1> first = getTestInstance();
         final ThrowingLongFunction<Type1> second = getAlternate();
 
         final LongFunction<Type1> instance = first.orTryWith(second);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Type1> callable = callableFrom(instance);
+        final Callable<Type1> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
@@ -133,13 +133,13 @@ public final class ThrowingLongFunctionTest
     public void testChainedWithFallbackTo()
         throws Throwable
     {
-        final ThrowingLongFunction<Type1> first = getPreparedInstance();
-        final LongFunction<Type1> second = getFallbackInstance();
+        final ThrowingLongFunction<Type1> first = getTestInstance();
+        final LongFunction<Type1> second = getFallback();
 
         final LongFunction<Type1> instance = first.fallbackTo(second);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Type1> callable = callableFrom(instance);
+        final Callable<Type1> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
@@ -152,12 +152,12 @@ public final class ThrowingLongFunctionTest
     public void testChainedWithOrReturn()
         throws Throwable
     {
-        final ThrowingLongFunction<Type1> first = getPreparedInstance();
+        final ThrowingLongFunction<Type1> first = getTestInstance();
 
         final LongFunction<Type1> instance = first.orReturn(ret2);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Type1> callable = callableFrom(instance);
+        final Callable<Type1> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);

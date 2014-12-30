@@ -36,7 +36,7 @@ public final class ThrowingIntPredicateTest
     }
 
     @Override
-    protected ThrowingIntPredicate getPreparedInstance()
+    protected ThrowingIntPredicate getTestInstance()
         throws Throwable
     {
         final ThrowingIntPredicate spy
@@ -49,7 +49,7 @@ public final class ThrowingIntPredicateTest
     }
 
     @Override
-    protected IntPredicate getFallbackInstance()
+    protected IntPredicate getFallback()
     {
         final IntPredicate mock = mock(IntPredicate.class);
 
@@ -65,7 +65,7 @@ public final class ThrowingIntPredicateTest
     }
 
     @Override
-    protected Callable<Boolean> callableFrom(final IntPredicate instance)
+    protected Callable<Boolean> asCallable(final IntPredicate instance)
     {
         return () -> instance.test(arg);
     }
@@ -74,10 +74,10 @@ public final class ThrowingIntPredicateTest
     public void testUnchained()
         throws Throwable
     {
-        final ThrowingIntPredicate instance = getPreparedInstance();
+        final ThrowingIntPredicate instance = getTestInstance();
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Boolean> callable = callableFrom(instance);
+        final Callable<Boolean> callable = asCallable(instance);
 
         assertThat(callable.call()).isTrue();
 
@@ -93,10 +93,10 @@ public final class ThrowingIntPredicateTest
         throws Throwable
     {
         final IntPredicate instance
-            = getPreparedInstance().orThrow(MyException.class);
+            = getTestInstance().orThrow(MyException.class);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Boolean> callable = callableFrom(instance);
+        final Callable<Boolean> callable = asCallable(instance);
 
         assertThat(callable.call()).isTrue();
 
@@ -111,13 +111,13 @@ public final class ThrowingIntPredicateTest
     public void testChainedWithOrTryWith()
         throws Throwable
     {
-        final ThrowingIntPredicate first = getPreparedInstance();
+        final ThrowingIntPredicate first = getTestInstance();
         final ThrowingIntPredicate second = getAlternate();
 
         final IntPredicate instance = first.orTryWith(second);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Boolean> callable = callableFrom(instance);
+        final Callable<Boolean> callable = asCallable(instance);
 
         assertThat(callable.call()).isTrue();
         assertThat(callable.call()).isFalse();
@@ -131,13 +131,13 @@ public final class ThrowingIntPredicateTest
     public void testChainedWithFallbackTo()
         throws Throwable
     {
-        final ThrowingIntPredicate first = getPreparedInstance();
-        final IntPredicate second = getFallbackInstance();
+        final ThrowingIntPredicate first = getTestInstance();
+        final IntPredicate second = getFallback();
 
         final IntPredicate instance = first.fallbackTo(second);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Boolean> callable = callableFrom(instance);
+        final Callable<Boolean> callable = asCallable(instance);
 
         assertThat(callable.call()).isTrue();
         assertThat(callable.call()).isFalse();
@@ -150,10 +150,10 @@ public final class ThrowingIntPredicateTest
     public void testChainedWithOrReturn()
         throws Throwable
     {
-        final IntPredicate instance = getPreparedInstance().orReturn(false);
+        final IntPredicate instance = getTestInstance().orReturn(false);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Boolean> callable = callableFrom(instance);
+        final Callable<Boolean> callable = asCallable(instance);
 
         assertThat(callable.call()).isTrue();
         assertThat(callable.call()).isFalse();

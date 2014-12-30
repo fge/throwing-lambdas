@@ -37,7 +37,7 @@ public final class ThrowingPredicateTest
     }
 
     @Override
-    protected ThrowingPredicate<Type1> getPreparedInstance()
+    protected ThrowingPredicate<Type1> getTestInstance()
         throws Throwable
     {
         final ThrowingPredicate<Type1> spy
@@ -50,7 +50,7 @@ public final class ThrowingPredicateTest
     }
 
     @Override
-    protected Predicate<Type1> getFallbackInstance()
+    protected Predicate<Type1> getFallback()
     {
         @SuppressWarnings("unchecked")
         final Predicate<Type1> mock = mock(Predicate.class);
@@ -67,7 +67,7 @@ public final class ThrowingPredicateTest
     }
 
     @Override
-    protected Callable<Boolean> callableFrom(final Predicate<Type1> instance)
+    protected Callable<Boolean> asCallable(final Predicate<Type1> instance)
     {
         return () -> instance.test(arg);
     }
@@ -76,10 +76,10 @@ public final class ThrowingPredicateTest
     public void testUnchained()
         throws Throwable
     {
-        final ThrowingPredicate<Type1> instance = getPreparedInstance();
+        final ThrowingPredicate<Type1> instance = getTestInstance();
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Boolean> callable = callableFrom(instance);
+        final Callable<Boolean> callable = asCallable(instance);
 
         assertThat(callable.call()).isTrue();
 
@@ -95,10 +95,10 @@ public final class ThrowingPredicateTest
         throws Throwable
     {
         final Predicate<Type1> instance
-            = getPreparedInstance().orThrow(MyException.class);
+            = getTestInstance().orThrow(MyException.class);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Boolean> callable = callableFrom(instance);
+        final Callable<Boolean> callable = asCallable(instance);
 
         assertThat(callable.call()).isTrue();
 
@@ -114,13 +114,13 @@ public final class ThrowingPredicateTest
     public void testChainedWithOrTryWith()
         throws Throwable
     {
-        final ThrowingPredicate<Type1> first = getPreparedInstance();
+        final ThrowingPredicate<Type1> first = getTestInstance();
         final ThrowingPredicate<Type1> second = getAlternate();
 
         final Predicate<Type1> instance = first.orTryWith(second);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Boolean> callable = callableFrom(instance);
+        final Callable<Boolean> callable = asCallable(instance);
 
         assertThat(callable.call()).isTrue();
         assertThat(callable.call()).isFalse();
@@ -134,13 +134,13 @@ public final class ThrowingPredicateTest
     public void testChainedWithFallbackTo()
         throws Throwable
     {
-        final ThrowingPredicate<Type1> first = getPreparedInstance();
-        final Predicate<Type1> second = getFallbackInstance();
+        final ThrowingPredicate<Type1> first = getTestInstance();
+        final Predicate<Type1> second = getFallback();
 
         final Predicate<Type1> instance = first.fallbackTo(second);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Boolean> callable = callableFrom(instance);
+        final Callable<Boolean> callable = asCallable(instance);
 
         assertThat(callable.call()).isTrue();
         assertThat(callable.call()).isFalse();
@@ -153,10 +153,10 @@ public final class ThrowingPredicateTest
     public void testChainedWithOrReturn()
         throws Throwable
     {
-        final Predicate<Type1> instance = getPreparedInstance().orReturn(false);
+        final Predicate<Type1> instance = getTestInstance().orReturn(false);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Boolean> callable = callableFrom(instance);
+        final Callable<Boolean> callable = asCallable(instance);
 
         assertThat(callable.call()).isTrue();
         assertThat(callable.call()).isFalse();

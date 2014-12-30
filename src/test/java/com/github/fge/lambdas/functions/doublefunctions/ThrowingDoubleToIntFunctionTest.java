@@ -36,7 +36,7 @@ public final class ThrowingDoubleToIntFunctionTest
     }
 
     @Override
-    protected ThrowingDoubleToIntFunction getPreparedInstance()
+    protected ThrowingDoubleToIntFunction getTestInstance()
         throws Throwable
     {
         final ThrowingDoubleToIntFunction spy
@@ -49,7 +49,7 @@ public final class ThrowingDoubleToIntFunctionTest
     }
 
     @Override
-    protected DoubleToIntFunction getFallbackInstance()
+    protected DoubleToIntFunction getFallback()
     {
         final DoubleToIntFunction mock = mock(DoubleToIntFunction.class);
 
@@ -65,7 +65,7 @@ public final class ThrowingDoubleToIntFunctionTest
     }
 
     @Override
-    protected Callable<Integer> callableFrom(final DoubleToIntFunction instance)
+    protected Callable<Integer> asCallable(final DoubleToIntFunction instance)
     {
         return () -> instance.applyAsInt(arg);
     }
@@ -74,10 +74,10 @@ public final class ThrowingDoubleToIntFunctionTest
     public void testUnchained()
         throws Throwable
     {
-        final ThrowingDoubleToIntFunction instance = getPreparedInstance();
+        final ThrowingDoubleToIntFunction instance = getTestInstance();
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Integer> callable = callableFrom(instance);
+        final Callable<Integer> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
 
@@ -93,10 +93,10 @@ public final class ThrowingDoubleToIntFunctionTest
         throws Throwable
     {
         final DoubleToIntFunction instance
-            = getPreparedInstance().orThrow(MyException.class);
+            = getTestInstance().orThrow(MyException.class);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Integer> callable = callableFrom(instance);
+        final Callable<Integer> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
 
@@ -111,13 +111,13 @@ public final class ThrowingDoubleToIntFunctionTest
     public void testChainedWithOrTryWith()
         throws Throwable
     {
-        final ThrowingDoubleToIntFunction first = getPreparedInstance();
+        final ThrowingDoubleToIntFunction first = getTestInstance();
         final ThrowingDoubleToIntFunction second = getAlternate();
 
         final DoubleToIntFunction instance = first.orTryWith(second);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Integer> callable = callableFrom(instance);
+        final Callable<Integer> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
@@ -131,13 +131,13 @@ public final class ThrowingDoubleToIntFunctionTest
     public void testChainedWithFallbackTo()
         throws Throwable
     {
-        final ThrowingDoubleToIntFunction first = getPreparedInstance();
-        final DoubleToIntFunction second = getFallbackInstance();
+        final ThrowingDoubleToIntFunction first = getTestInstance();
+        final DoubleToIntFunction second = getFallback();
 
         final DoubleToIntFunction instance = first.fallbackTo(second);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Integer> callable = callableFrom(instance);
+        final Callable<Integer> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
@@ -151,10 +151,10 @@ public final class ThrowingDoubleToIntFunctionTest
         throws Throwable
     {
         final DoubleToIntFunction instance
-            = getPreparedInstance().orReturn(ret2);
+            = getTestInstance().orReturn(ret2);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Integer> callable = callableFrom(instance);
+        final Callable<Integer> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);

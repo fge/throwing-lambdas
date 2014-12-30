@@ -47,7 +47,7 @@ public final class ThrowingConsumerTest
     }
 
     @Override
-    protected ThrowingConsumer<Type1> getPreparedInstance()
+    protected ThrowingConsumer<Type1> getTestInstance()
         throws Throwable
     {
         final ThrowingConsumer<Type1> spy = SpiedThrowingConsumer.newSpy();
@@ -60,7 +60,7 @@ public final class ThrowingConsumerTest
     }
 
     @Override
-    protected Consumer<Type1> getFallbackInstance()
+    protected Consumer<Type1> getFallback()
     {
         @SuppressWarnings("unchecked")
         final Consumer<Type1> mock = mock(Consumer.class);
@@ -78,7 +78,7 @@ public final class ThrowingConsumerTest
     }
 
     @Override
-    protected Callable<Integer> callableFrom(final Consumer<Type1> instance)
+    protected Callable<Integer> asCallable(final Consumer<Type1> instance)
     {
         return () -> { instance.accept(arg); return sentinel.get(); };
     }
@@ -87,9 +87,9 @@ public final class ThrowingConsumerTest
     public void testUnchained()
         throws Throwable
     {
-        final ThrowingConsumer<Type1> instance = getPreparedInstance();
+        final ThrowingConsumer<Type1> instance = getTestInstance();
 
-        final Callable<Integer> callable = callableFrom(instance);
+        final Callable<Integer> callable = asCallable(instance);
         final Runnable runnable = runnableFrom(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
@@ -105,11 +105,11 @@ public final class ThrowingConsumerTest
     public void testChainedWithOrThrow()
         throws Throwable
     {
-        final ThrowingConsumer<Type1> spy = getPreparedInstance();
+        final ThrowingConsumer<Type1> spy = getTestInstance();
 
         final Consumer<Type1> instance = spy.orThrow(MyException.class);
 
-        final Callable<Integer> callable = callableFrom(instance);
+        final Callable<Integer> callable = asCallable(instance);
         final Runnable runnable = runnableFrom(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
@@ -125,12 +125,12 @@ public final class ThrowingConsumerTest
     public void testChainedWithOrTryWith()
         throws Throwable
     {
-        final ThrowingConsumer<Type1> first = getPreparedInstance();
+        final ThrowingConsumer<Type1> first = getTestInstance();
         final ThrowingConsumer<Type1> second = getAlternate();
 
         final Consumer<Type1> instance = first.orTryWith(second);
 
-        final Callable<Integer> callable = callableFrom(instance);
+        final Callable<Integer> callable = asCallable(instance);
         final Runnable runnable = runnableFrom(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
@@ -145,12 +145,12 @@ public final class ThrowingConsumerTest
     public void testChainedWithFallbackTo()
         throws Throwable
     {
-        final ThrowingConsumer<Type1> first = getPreparedInstance();
-        final Consumer<Type1> second = getFallbackInstance();
+        final ThrowingConsumer<Type1> first = getTestInstance();
+        final Consumer<Type1> second = getFallback();
 
         final Consumer<Type1> instance = first.fallbackTo(second);
 
-        final Callable<Integer> callable = callableFrom(instance);
+        final Callable<Integer> callable = asCallable(instance);
         final Runnable runnable = runnableFrom(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
@@ -164,11 +164,11 @@ public final class ThrowingConsumerTest
     public void testChainedWithDoNothing()
         throws Throwable
     {
-        final ThrowingConsumer<Type1> first = getPreparedInstance();
+        final ThrowingConsumer<Type1> first = getTestInstance();
 
         final Consumer<Type1> instance = first.orDoNothing();
 
-        final Callable<Integer> callable = callableFrom(instance);
+        final Callable<Integer> callable = asCallable(instance);
         final Runnable runnable = runnableFrom(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);

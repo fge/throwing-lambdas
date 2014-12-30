@@ -37,7 +37,7 @@ public final class ThrowingFunctionTest
     }
 
     @Override
-    protected ThrowingFunction<Type1, Type2> getPreparedInstance()
+    protected ThrowingFunction<Type1, Type2> getTestInstance()
         throws Throwable
     {
         final ThrowingFunction<Type1, Type2> spy
@@ -50,7 +50,7 @@ public final class ThrowingFunctionTest
     }
 
     @Override
-    protected Function<Type1, Type2> getFallbackInstance()
+    protected Function<Type1, Type2> getFallback()
     {
         @SuppressWarnings("unchecked")
         final Function<Type1, Type2> mock = mock(Function.class);
@@ -67,7 +67,7 @@ public final class ThrowingFunctionTest
     }
 
     @Override
-    protected Callable<Type2> callableFrom(
+    protected Callable<Type2> asCallable(
         final Function<Type1, Type2> instance)
     {
         return () -> instance.apply(arg);
@@ -77,10 +77,10 @@ public final class ThrowingFunctionTest
     public void testUnchained()
         throws Throwable
     {
-        final ThrowingFunction<Type1, Type2> instance = getPreparedInstance();
+        final ThrowingFunction<Type1, Type2> instance = getTestInstance();
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Type2> callable = callableFrom(instance);
+        final Callable<Type2> callable = asCallable(instance);
 
         assertThat(callable.call()).isSameAs(ret1);
 
@@ -96,10 +96,10 @@ public final class ThrowingFunctionTest
         throws Throwable
     {
         final Function<Type1, Type2> instance
-            = getPreparedInstance().orThrow(MyException.class);
+            = getTestInstance().orThrow(MyException.class);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Type2> callable = callableFrom(instance);
+        final Callable<Type2> callable = asCallable(instance);
 
         assertThat(callable.call()).isSameAs(ret1);
 
@@ -114,13 +114,13 @@ public final class ThrowingFunctionTest
     public void testChainedWithOrTryWith()
         throws Throwable
     {
-        final ThrowingFunction<Type1, Type2> first = getPreparedInstance();
+        final ThrowingFunction<Type1, Type2> first = getTestInstance();
         final ThrowingFunction<Type1, Type2> second = getAlternate();
 
         final Function<Type1, Type2> instance = first.orTryWith(second);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Type2> callable = callableFrom(instance);
+        final Callable<Type2> callable = asCallable(instance);
 
         assertThat(callable.call()).isSameAs(ret1);
 
@@ -135,13 +135,13 @@ public final class ThrowingFunctionTest
     public void testChainedWithFallbackTo()
         throws Throwable
     {
-        final ThrowingFunction<Type1, Type2> first = getPreparedInstance();
-        final Function<Type1, Type2> second = getFallbackInstance();
+        final ThrowingFunction<Type1, Type2> first = getTestInstance();
+        final Function<Type1, Type2> second = getFallback();
 
         final Function<Type1, Type2> instance = first.fallbackTo(second);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Type2> callable = callableFrom(instance);
+        final Callable<Type2> callable = asCallable(instance);
 
         assertThat(callable.call()).isSameAs(ret1);
         assertThat(callable.call()).isSameAs(ret2);
@@ -154,12 +154,12 @@ public final class ThrowingFunctionTest
     public void testChainedWithOrReturn()
         throws Throwable
     {
-        final ThrowingFunction<Type1, Type2> first = getPreparedInstance();
+        final ThrowingFunction<Type1, Type2> first = getTestInstance();
 
         final Function<Type1, Type2> instance = first.orReturn(ret2);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Type2> callable = callableFrom(instance);
+        final Callable<Type2> callable = asCallable(instance);
 
         assertThat(callable.call()).isSameAs(ret1);
         assertThat(callable.call()).isSameAs(ret2);

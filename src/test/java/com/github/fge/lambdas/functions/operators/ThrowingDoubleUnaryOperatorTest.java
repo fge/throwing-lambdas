@@ -36,7 +36,7 @@ public final class ThrowingDoubleUnaryOperatorTest
     }
 
     @Override
-    protected ThrowingDoubleUnaryOperator getPreparedInstance()
+    protected ThrowingDoubleUnaryOperator getTestInstance()
         throws Throwable
     {
         final ThrowingDoubleUnaryOperator spy
@@ -49,7 +49,7 @@ public final class ThrowingDoubleUnaryOperatorTest
     }
 
     @Override
-    protected DoubleUnaryOperator getFallbackInstance()
+    protected DoubleUnaryOperator getFallback()
     {
         final DoubleUnaryOperator mock = mock(DoubleUnaryOperator.class);
 
@@ -65,7 +65,7 @@ public final class ThrowingDoubleUnaryOperatorTest
     }
 
     @Override
-    protected Callable<Double> callableFrom(final DoubleUnaryOperator instance)
+    protected Callable<Double> asCallable(final DoubleUnaryOperator instance)
     {
         return () -> instance.applyAsDouble(arg);
     }
@@ -74,10 +74,10 @@ public final class ThrowingDoubleUnaryOperatorTest
     public void testUnchained()
         throws Throwable
     {
-        final DoubleUnaryOperator instance = getPreparedInstance();
+        final DoubleUnaryOperator instance = getTestInstance();
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Double> callable = callableFrom(instance);
+        final Callable<Double> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
 
@@ -93,10 +93,10 @@ public final class ThrowingDoubleUnaryOperatorTest
         throws Throwable
     {
         final DoubleUnaryOperator instance
-            = getPreparedInstance().orThrow(MyException.class);
+            = getTestInstance().orThrow(MyException.class);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Double> callable = callableFrom(instance);
+        final Callable<Double> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
 
@@ -111,13 +111,13 @@ public final class ThrowingDoubleUnaryOperatorTest
     public void testChainedWithOrTryWith()
         throws Throwable
     {
-        final ThrowingDoubleUnaryOperator first = getPreparedInstance();
+        final ThrowingDoubleUnaryOperator first = getTestInstance();
         final ThrowingDoubleUnaryOperator second = getAlternate();
 
         final DoubleUnaryOperator instance = first.orTryWith(second);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Double> callable = callableFrom(instance);
+        final Callable<Double> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
@@ -131,13 +131,13 @@ public final class ThrowingDoubleUnaryOperatorTest
     public void testChainedWithFallbackTo()
         throws Throwable
     {
-        final ThrowingDoubleUnaryOperator first = getPreparedInstance();
-        final DoubleUnaryOperator second = getFallbackInstance();
+        final ThrowingDoubleUnaryOperator first = getTestInstance();
+        final DoubleUnaryOperator second = getFallback();
 
         final DoubleUnaryOperator instance = first.fallbackTo(second);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Double> callable = callableFrom(instance);
+        final Callable<Double> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
@@ -151,10 +151,10 @@ public final class ThrowingDoubleUnaryOperatorTest
         throws Throwable
     {
         final DoubleUnaryOperator instance
-            = getPreparedInstance().orReturn(ret2);
+            = getTestInstance().orReturn(ret2);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Double> callable = callableFrom(instance);
+        final Callable<Double> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
@@ -168,10 +168,10 @@ public final class ThrowingDoubleUnaryOperatorTest
         throws Throwable
     {
         final DoubleUnaryOperator instance
-            = getPreparedInstance().orReturnSelf();
+            = getTestInstance().orReturnSelf();
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Double> callable = callableFrom(instance);
+        final Callable<Double> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(arg);

@@ -37,7 +37,7 @@ public final class ThrowingBinaryOperatorTest
     }
 
     @Override
-    protected ThrowingBinaryOperator<Type1> getPreparedInstance()
+    protected ThrowingBinaryOperator<Type1> getTestInstance()
         throws Throwable
     {
         final ThrowingBinaryOperator<Type1> spy
@@ -50,7 +50,7 @@ public final class ThrowingBinaryOperatorTest
     }
 
     @Override
-    protected BinaryOperator<Type1> getFallbackInstance()
+    protected BinaryOperator<Type1> getFallback()
     {
         @SuppressWarnings("unchecked")
         final BinaryOperator<Type1> mock = mock(BinaryOperator.class);
@@ -67,7 +67,7 @@ public final class ThrowingBinaryOperatorTest
     }
 
     @Override
-    protected Callable<Type1> callableFrom(final BinaryOperator<Type1> instance)
+    protected Callable<Type1> asCallable(final BinaryOperator<Type1> instance)
     {
         return () -> instance.apply(left, right);
     }
@@ -76,10 +76,10 @@ public final class ThrowingBinaryOperatorTest
     public void testUnchained()
         throws Throwable
     {
-        final ThrowingBinaryOperator<Type1> instance = getPreparedInstance();
+        final ThrowingBinaryOperator<Type1> instance = getTestInstance();
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Type1> callable = callableFrom(instance);
+        final Callable<Type1> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
 
@@ -95,10 +95,10 @@ public final class ThrowingBinaryOperatorTest
         throws Throwable
     {
         final BinaryOperator<Type1> instance
-            = getPreparedInstance().orThrow(MyException.class);
+            = getTestInstance().orThrow(MyException.class);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Type1> callable = callableFrom(instance);
+        final Callable<Type1> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
 
@@ -113,13 +113,13 @@ public final class ThrowingBinaryOperatorTest
     public void testChainedWithOrTryWith()
         throws Throwable
     {
-        final ThrowingBinaryOperator<Type1> first = getPreparedInstance();
+        final ThrowingBinaryOperator<Type1> first = getTestInstance();
         final ThrowingBinaryOperator<Type1> second = getAlternate();
 
         final BinaryOperator<Type1> instance = first.orTryWith(second);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Type1> callable = callableFrom(instance);
+        final Callable<Type1> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
@@ -133,13 +133,13 @@ public final class ThrowingBinaryOperatorTest
     public void testChainedWithFallbackTo()
         throws Throwable
     {
-        final ThrowingBinaryOperator<Type1> first = getPreparedInstance();
-        final BinaryOperator<Type1> second = getFallbackInstance();
+        final ThrowingBinaryOperator<Type1> first = getTestInstance();
+        final BinaryOperator<Type1> second = getFallback();
 
         final BinaryOperator<Type1> instance = first.fallbackTo(second);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Type1> callable = callableFrom(instance);
+        final Callable<Type1> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
@@ -153,10 +153,10 @@ public final class ThrowingBinaryOperatorTest
         throws Throwable
     {
         final BinaryOperator<Type1> instance
-            = getPreparedInstance().orReturn(ret2);
+            = getTestInstance().orReturn(ret2);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Type1> callable = callableFrom(instance);
+        final Callable<Type1> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
@@ -170,10 +170,10 @@ public final class ThrowingBinaryOperatorTest
         throws Throwable
     {
         final BinaryOperator<Type1> instance
-            = getPreparedInstance().orReturnLeft();
+            = getTestInstance().orReturnLeft();
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Type1> callable = callableFrom(instance);
+        final Callable<Type1> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(left);
@@ -187,10 +187,10 @@ public final class ThrowingBinaryOperatorTest
         throws Throwable
     {
         final BinaryOperator<Type1> instance
-            = getPreparedInstance().orReturnRight();
+            = getTestInstance().orReturnRight();
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Type1> callable = callableFrom(instance);
+        final Callable<Type1> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(right);

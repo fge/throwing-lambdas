@@ -36,7 +36,7 @@ public final class ThrowingDoublePredicateTest
     }
 
     @Override
-    protected ThrowingDoublePredicate getPreparedInstance()
+    protected ThrowingDoublePredicate getTestInstance()
         throws Throwable
     {
         final ThrowingDoublePredicate spy
@@ -49,7 +49,7 @@ public final class ThrowingDoublePredicateTest
     }
 
     @Override
-    protected DoublePredicate getFallbackInstance()
+    protected DoublePredicate getFallback()
     {
         final DoublePredicate mock = mock(DoublePredicate.class);
 
@@ -65,7 +65,7 @@ public final class ThrowingDoublePredicateTest
     }
 
     @Override
-    protected Callable<Boolean> callableFrom(final DoublePredicate instance)
+    protected Callable<Boolean> asCallable(final DoublePredicate instance)
     {
         return () -> instance.test(arg);
     }
@@ -74,10 +74,10 @@ public final class ThrowingDoublePredicateTest
     public void testUnchained()
         throws Throwable
     {
-        final ThrowingDoublePredicate instance = getPreparedInstance();
+        final ThrowingDoublePredicate instance = getTestInstance();
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Boolean> callable = callableFrom(instance);
+        final Callable<Boolean> callable = asCallable(instance);
 
         assertThat(callable.call()).isTrue();
 
@@ -93,10 +93,10 @@ public final class ThrowingDoublePredicateTest
         throws Throwable
     {
         final DoublePredicate instance
-            = getPreparedInstance().orThrow(MyException.class);
+            = getTestInstance().orThrow(MyException.class);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Boolean> callable = callableFrom(instance);
+        final Callable<Boolean> callable = asCallable(instance);
 
         assertThat(callable.call()).isTrue();
 
@@ -111,13 +111,13 @@ public final class ThrowingDoublePredicateTest
     public void testChainedWithOrTryWith()
         throws Throwable
     {
-        final ThrowingDoublePredicate first = getPreparedInstance();
+        final ThrowingDoublePredicate first = getTestInstance();
         final ThrowingDoublePredicate second = getAlternate();
 
         final DoublePredicate instance = first.orTryWith(second);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Boolean> callable = callableFrom(instance);
+        final Callable<Boolean> callable = asCallable(instance);
 
         assertThat(callable.call()).isTrue();
         assertThat(callable.call()).isFalse();
@@ -131,13 +131,13 @@ public final class ThrowingDoublePredicateTest
     public void testChainedWithFallbackTo()
         throws Throwable
     {
-        final ThrowingDoublePredicate first = getPreparedInstance();
-        final DoublePredicate second = getFallbackInstance();
+        final ThrowingDoublePredicate first = getTestInstance();
+        final DoublePredicate second = getFallback();
 
         final DoublePredicate instance = first.fallbackTo(second);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Boolean> callable = callableFrom(instance);
+        final Callable<Boolean> callable = asCallable(instance);
 
         assertThat(callable.call()).isTrue();
         assertThat(callable.call()).isFalse();
@@ -150,10 +150,10 @@ public final class ThrowingDoublePredicateTest
     public void testChainedWithOrReturn()
         throws Throwable
     {
-        final DoublePredicate instance = getPreparedInstance().orReturn(false);
+        final DoublePredicate instance = getTestInstance().orReturn(false);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Boolean> callable = callableFrom(instance);
+        final Callable<Boolean> callable = asCallable(instance);
 
         assertThat(callable.call()).isTrue();
         assertThat(callable.call()).isFalse();

@@ -38,7 +38,7 @@ public final class ThrowingBiFunctionTest
     }
 
     @Override
-    protected ThrowingBiFunction<Type1, Type2, Type3> getPreparedInstance()
+    protected ThrowingBiFunction<Type1, Type2, Type3> getTestInstance()
         throws Throwable
     {
         final ThrowingBiFunction<Type1, Type2, Type3> spy
@@ -51,7 +51,7 @@ public final class ThrowingBiFunctionTest
     }
 
     @Override
-    protected BiFunction<Type1, Type2, Type3> getFallbackInstance()
+    protected BiFunction<Type1, Type2, Type3> getFallback()
     {
         @SuppressWarnings("unchecked")
         final BiFunction<Type1, Type2, Type3> mock = mock(BiFunction.class);
@@ -69,7 +69,7 @@ public final class ThrowingBiFunctionTest
     }
 
     @Override
-    protected Callable<Type3> callableFrom(
+    protected Callable<Type3> asCallable(
         final BiFunction<Type1, Type2, Type3> instance)
     {
         return () -> instance.apply(arg1, arg2);
@@ -80,10 +80,10 @@ public final class ThrowingBiFunctionTest
         throws Throwable
     {
         final ThrowingBiFunction<Type1, Type2, Type3> instance
-            = getPreparedInstance();
+            = getTestInstance();
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Type3> callable = callableFrom(instance);
+        final Callable<Type3> callable = asCallable(instance);
 
         assertThat(callable.call()).isSameAs(ret1);
 
@@ -99,10 +99,10 @@ public final class ThrowingBiFunctionTest
         throws Throwable
     {
         final BiFunction<Type1, Type2, Type3> instance
-            = getPreparedInstance().orThrow(MyException.class);
+            = getTestInstance().orThrow(MyException.class);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Type3> callable = callableFrom(instance);
+        final Callable<Type3> callable = asCallable(instance);
 
         assertThat(callable.call()).isSameAs(ret1);
 
@@ -118,7 +118,7 @@ public final class ThrowingBiFunctionTest
         throws Throwable
     {
         final ThrowingBiFunction<Type1, Type2, Type3> first
-            = getPreparedInstance();
+            = getTestInstance();
         final ThrowingBiFunction<Type1, Type2, Type3> second
             = getAlternate();
 
@@ -126,7 +126,7 @@ public final class ThrowingBiFunctionTest
             = first.orTryWith(second);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Type3> callable = callableFrom(instance);
+        final Callable<Type3> callable = asCallable(instance);
 
         assertThat(callable.call()).isSameAs(ret1);
 
@@ -142,14 +142,14 @@ public final class ThrowingBiFunctionTest
         throws Throwable
     {
         final ThrowingBiFunction<Type1, Type2, Type3> first
-            = getPreparedInstance();
-        final BiFunction<Type1, Type2, Type3> second = getFallbackInstance();
+            = getTestInstance();
+        final BiFunction<Type1, Type2, Type3> second = getFallback();
 
         final BiFunction<Type1, Type2, Type3> instance = first.fallbackTo(
             second);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Type3> callable = callableFrom(instance);
+        final Callable<Type3> callable = asCallable(instance);
 
         assertThat(callable.call()).isSameAs(ret1);
         assertThat(callable.call()).isSameAs(ret2);
@@ -163,12 +163,12 @@ public final class ThrowingBiFunctionTest
         throws Throwable
     {
         final ThrowingBiFunction<Type1, Type2, Type3> first
-            = getPreparedInstance();
+            = getTestInstance();
 
         final BiFunction<Type1, Type2, Type3> instance = first.orReturn(ret2);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Type3> callable = callableFrom(instance);
+        final Callable<Type3> callable = asCallable(instance);
 
         assertThat(callable.call()).isSameAs(ret1);
         assertThat(callable.call()).isSameAs(ret2);

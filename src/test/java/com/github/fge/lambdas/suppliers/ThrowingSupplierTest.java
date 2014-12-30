@@ -33,7 +33,7 @@ public final class ThrowingSupplierTest
     }
 
     @Override
-    protected ThrowingSupplier<Type1> getPreparedInstance()
+    protected ThrowingSupplier<Type1> getTestInstance()
         throws Throwable
     {
         final ThrowingSupplier<Type1> spy = SpiedThrowingSupplier.newSpy();
@@ -45,7 +45,7 @@ public final class ThrowingSupplierTest
     }
 
     @Override
-    protected Supplier<Type1> getFallbackInstance()
+    protected Supplier<Type1> getFallback()
     {
         @SuppressWarnings("unchecked")
         final Supplier<Type1> mock = mock(Supplier.class);
@@ -62,7 +62,7 @@ public final class ThrowingSupplierTest
     }
 
     @Override
-    protected Callable<Type1> callableFrom(final Supplier<Type1> instance)
+    protected Callable<Type1> asCallable(final Supplier<Type1> instance)
     {
         return instance::get;
     }
@@ -71,10 +71,10 @@ public final class ThrowingSupplierTest
     public void testUnchained()
         throws Throwable
     {
-        final ThrowingSupplier<Type1> instance = getPreparedInstance();
+        final ThrowingSupplier<Type1> instance = getTestInstance();
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Type1> callable = callableFrom(instance);
+        final Callable<Type1> callable = asCallable(instance);
 
         assertThat(callable.call()).isSameAs(ret1);
 
@@ -90,10 +90,10 @@ public final class ThrowingSupplierTest
         throws Throwable
     {
         final Supplier<Type1> instance
-            = getPreparedInstance().orThrow(MyException.class);
+            = getTestInstance().orThrow(MyException.class);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Type1> callable = callableFrom(instance);
+        final Callable<Type1> callable = asCallable(instance);
 
         assertThat(callable.call()).isSameAs(ret1);
 
@@ -108,13 +108,13 @@ public final class ThrowingSupplierTest
     public void testChainedWithOrTryWith()
         throws Throwable
     {
-        final ThrowingSupplier<Type1> first = getPreparedInstance();
+        final ThrowingSupplier<Type1> first = getTestInstance();
         final ThrowingSupplier<Type1> second = getAlternate();
 
         final Supplier<Type1> instance = first.orTryWith(second);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Type1> callable = callableFrom(instance);
+        final Callable<Type1> callable = asCallable(instance);
 
         assertThat(callable.call()).isSameAs(ret1);
 
@@ -129,13 +129,13 @@ public final class ThrowingSupplierTest
     public void testChainedWithFallbackTo()
         throws Throwable
     {
-        final ThrowingSupplier<Type1> first = getPreparedInstance();
-        final Supplier<Type1> second = getFallbackInstance();
+        final ThrowingSupplier<Type1> first = getTestInstance();
+        final Supplier<Type1> second = getFallback();
 
         final Supplier<Type1> instance = first.fallbackTo(second);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Type1> callable = callableFrom(instance);
+        final Callable<Type1> callable = asCallable(instance);
 
         assertThat(callable.call()).isSameAs(ret1);
         assertThat(callable.call()).isSameAs(ret2);
@@ -148,12 +148,12 @@ public final class ThrowingSupplierTest
     public void testChainedWithOrReturn()
         throws Throwable
     {
-        final ThrowingSupplier<Type1> first = getPreparedInstance();
+        final ThrowingSupplier<Type1> first = getTestInstance();
 
         final Supplier<Type1> instance = first.orReturn(ret2);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Type1> callable = callableFrom(instance);
+        final Callable<Type1> callable = asCallable(instance);
 
         assertThat(callable.call()).isSameAs(ret1);
         assertThat(callable.call()).isSameAs(ret2);

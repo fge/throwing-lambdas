@@ -36,7 +36,7 @@ public final class ThrowingLongUnaryOperatorTest
     }
 
     @Override
-    protected ThrowingLongUnaryOperator getPreparedInstance()
+    protected ThrowingLongUnaryOperator getTestInstance()
         throws Throwable
     {
         final ThrowingLongUnaryOperator spy
@@ -49,7 +49,7 @@ public final class ThrowingLongUnaryOperatorTest
     }
 
     @Override
-    protected LongUnaryOperator getFallbackInstance()
+    protected LongUnaryOperator getFallback()
     {
         final LongUnaryOperator mock = mock(LongUnaryOperator.class);
 
@@ -65,7 +65,7 @@ public final class ThrowingLongUnaryOperatorTest
     }
 
     @Override
-    protected Callable<Long> callableFrom(final LongUnaryOperator instance)
+    protected Callable<Long> asCallable(final LongUnaryOperator instance)
     {
         return () -> instance.applyAsLong(arg);
     }
@@ -74,10 +74,10 @@ public final class ThrowingLongUnaryOperatorTest
     public void testUnchained()
         throws Throwable
     {
-        final LongUnaryOperator instance = getPreparedInstance();
+        final LongUnaryOperator instance = getTestInstance();
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Long> callable = callableFrom(instance);
+        final Callable<Long> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
 
@@ -93,10 +93,10 @@ public final class ThrowingLongUnaryOperatorTest
         throws Throwable
     {
         final LongUnaryOperator instance
-            = getPreparedInstance().orThrow(MyException.class);
+            = getTestInstance().orThrow(MyException.class);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Long> callable = callableFrom(instance);
+        final Callable<Long> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
 
@@ -111,13 +111,13 @@ public final class ThrowingLongUnaryOperatorTest
     public void testChainedWithOrTryWith()
         throws Throwable
     {
-        final ThrowingLongUnaryOperator first = getPreparedInstance();
+        final ThrowingLongUnaryOperator first = getTestInstance();
         final ThrowingLongUnaryOperator second = getAlternate();
 
         final LongUnaryOperator instance = first.orTryWith(second);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Long> callable = callableFrom(instance);
+        final Callable<Long> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
@@ -131,13 +131,13 @@ public final class ThrowingLongUnaryOperatorTest
     public void testChainedWithFallbackTo()
         throws Throwable
     {
-        final ThrowingLongUnaryOperator first = getPreparedInstance();
-        final LongUnaryOperator second = getFallbackInstance();
+        final ThrowingLongUnaryOperator first = getTestInstance();
+        final LongUnaryOperator second = getFallback();
 
         final LongUnaryOperator instance = first.fallbackTo(second);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Long> callable = callableFrom(instance);
+        final Callable<Long> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
@@ -151,10 +151,10 @@ public final class ThrowingLongUnaryOperatorTest
         throws Throwable
     {
         final LongUnaryOperator instance
-            = getPreparedInstance().orReturn(ret2);
+            = getTestInstance().orReturn(ret2);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Long> callable = callableFrom(instance);
+        final Callable<Long> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
@@ -168,10 +168,10 @@ public final class ThrowingLongUnaryOperatorTest
         throws Throwable
     {
         final LongUnaryOperator instance
-            = getPreparedInstance().orReturnSelf();
+            = getTestInstance().orReturnSelf();
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Long> callable = callableFrom(instance);
+        final Callable<Long> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(arg);

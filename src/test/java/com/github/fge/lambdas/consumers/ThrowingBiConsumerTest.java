@@ -51,7 +51,7 @@ public final class ThrowingBiConsumerTest
     }
 
     @Override
-    protected ThrowingBiConsumer<Type1, Type2> getPreparedInstance()
+    protected ThrowingBiConsumer<Type1, Type2> getTestInstance()
         throws Throwable
     {
         final ThrowingBiConsumer<Type1, Type2> spy
@@ -65,7 +65,7 @@ public final class ThrowingBiConsumerTest
     }
 
     @Override
-    protected BiConsumer<Type1, Type2> getFallbackInstance()
+    protected BiConsumer<Type1, Type2> getFallback()
     {
         @SuppressWarnings("unchecked")
         final BiConsumer<Type1, Type2> mock = mock(BiConsumer.class);
@@ -83,7 +83,7 @@ public final class ThrowingBiConsumerTest
     }
 
     @Override
-    protected Callable<Integer> callableFrom(
+    protected Callable<Integer> asCallable(
         final BiConsumer<Type1, Type2> instance)
     {
         return () -> { instance.accept(arg1, arg2); return sentinel.get(); };
@@ -93,9 +93,9 @@ public final class ThrowingBiConsumerTest
     public void testUnchained()
         throws Throwable
     {
-        final ThrowingBiConsumer<Type1, Type2> instance = getPreparedInstance();
+        final ThrowingBiConsumer<Type1, Type2> instance = getTestInstance();
 
-        final Callable<Integer> callable = callableFrom(instance);
+        final Callable<Integer> callable = asCallable(instance);
         final Runnable runnable = runnableFrom(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
@@ -111,12 +111,12 @@ public final class ThrowingBiConsumerTest
     public void testChainedWithOrThrow()
         throws Throwable
     {
-        final ThrowingBiConsumer<Type1, Type2> spy = getPreparedInstance();
+        final ThrowingBiConsumer<Type1, Type2> spy = getTestInstance();
 
         final BiConsumer<Type1, Type2> instance
             = spy.orThrow(MyException.class);
 
-        final Callable<Integer> callable = callableFrom(instance);
+        final Callable<Integer> callable = asCallable(instance);
         final Runnable runnable = runnableFrom(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
@@ -132,12 +132,12 @@ public final class ThrowingBiConsumerTest
     public void testChainedWithOrTryWith()
         throws Throwable
     {
-        final ThrowingBiConsumer<Type1, Type2> first = getPreparedInstance();
+        final ThrowingBiConsumer<Type1, Type2> first = getTestInstance();
         final ThrowingBiConsumer<Type1, Type2> second = getAlternate();
 
         final BiConsumer<Type1, Type2> instance = first.orTryWith(second);
 
-        final Callable<Integer> callable = callableFrom(instance);
+        final Callable<Integer> callable = asCallable(instance);
         final Runnable runnable = runnableFrom(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
@@ -152,12 +152,12 @@ public final class ThrowingBiConsumerTest
     public void testChainedWithFallbackTo()
         throws Throwable
     {
-        final ThrowingBiConsumer<Type1, Type2> first = getPreparedInstance();
-        final BiConsumer<Type1, Type2> second = getFallbackInstance();
+        final ThrowingBiConsumer<Type1, Type2> first = getTestInstance();
+        final BiConsumer<Type1, Type2> second = getFallback();
 
         final BiConsumer<Type1, Type2> instance = first.fallbackTo(second);
 
-        final Callable<Integer> callable = callableFrom(instance);
+        final Callable<Integer> callable = asCallable(instance);
         final Runnable runnable = runnableFrom(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
@@ -171,11 +171,11 @@ public final class ThrowingBiConsumerTest
     public void testChainedWithDoNothing()
         throws Throwable
     {
-        final ThrowingBiConsumer<Type1, Type2> first = getPreparedInstance();
+        final ThrowingBiConsumer<Type1, Type2> first = getTestInstance();
 
         final BiConsumer<Type1, Type2> instance = first.orDoNothing();
 
-        final Callable<Integer> callable = callableFrom(instance);
+        final Callable<Integer> callable = asCallable(instance);
         final Runnable runnable = runnableFrom(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);

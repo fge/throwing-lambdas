@@ -37,7 +37,7 @@ public final class ThrowingLongBinaryOperatorTest
     }
 
     @Override
-    protected ThrowingLongBinaryOperator getPreparedInstance()
+    protected ThrowingLongBinaryOperator getTestInstance()
         throws Throwable
     {
         final ThrowingLongBinaryOperator spy
@@ -50,7 +50,7 @@ public final class ThrowingLongBinaryOperatorTest
     }
 
     @Override
-    protected LongBinaryOperator getFallbackInstance()
+    protected LongBinaryOperator getFallback()
     {
         final LongBinaryOperator mock = mock(LongBinaryOperator.class);
 
@@ -66,7 +66,7 @@ public final class ThrowingLongBinaryOperatorTest
     }
 
     @Override
-    protected Callable<Long> callableFrom(final LongBinaryOperator instance)
+    protected Callable<Long> asCallable(final LongBinaryOperator instance)
     {
         return () -> instance.applyAsLong(left, right);
     }
@@ -75,10 +75,10 @@ public final class ThrowingLongBinaryOperatorTest
     public void testUnchained()
         throws Throwable
     {
-        final LongBinaryOperator instance = getPreparedInstance();
+        final LongBinaryOperator instance = getTestInstance();
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Long> callable = callableFrom(instance);
+        final Callable<Long> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
 
@@ -94,10 +94,10 @@ public final class ThrowingLongBinaryOperatorTest
         throws Throwable
     {
         final LongBinaryOperator instance
-            = getPreparedInstance().orThrow(MyException.class);
+            = getTestInstance().orThrow(MyException.class);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Long> callable = callableFrom(instance);
+        final Callable<Long> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
 
@@ -112,13 +112,13 @@ public final class ThrowingLongBinaryOperatorTest
     public void testChainedWithOrTryWith()
         throws Throwable
     {
-        final ThrowingLongBinaryOperator first = getPreparedInstance();
+        final ThrowingLongBinaryOperator first = getTestInstance();
         final ThrowingLongBinaryOperator second = getAlternate();
 
         final LongBinaryOperator instance = first.orTryWith(second);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Long> callable = callableFrom(instance);
+        final Callable<Long> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
@@ -132,13 +132,13 @@ public final class ThrowingLongBinaryOperatorTest
     public void testChainedWithFallbackTo()
         throws Throwable
     {
-        final ThrowingLongBinaryOperator first = getPreparedInstance();
-        final LongBinaryOperator second = getFallbackInstance();
+        final ThrowingLongBinaryOperator first = getTestInstance();
+        final LongBinaryOperator second = getFallback();
 
         final LongBinaryOperator instance = first.fallbackTo(second);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Long> callable = callableFrom(instance);
+        final Callable<Long> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
@@ -152,10 +152,10 @@ public final class ThrowingLongBinaryOperatorTest
         throws Throwable
     {
         final LongBinaryOperator instance
-            = getPreparedInstance().orReturn(ret2);
+            = getTestInstance().orReturn(ret2);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Long> callable = callableFrom(instance);
+        final Callable<Long> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
@@ -169,10 +169,10 @@ public final class ThrowingLongBinaryOperatorTest
         throws Throwable
     {
         final LongBinaryOperator instance
-            = getPreparedInstance().orReturnLeft();
+            = getTestInstance().orReturnLeft();
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Long> callable = callableFrom(instance);
+        final Callable<Long> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(left);
@@ -186,10 +186,10 @@ public final class ThrowingLongBinaryOperatorTest
         throws Throwable
     {
         final LongBinaryOperator instance
-            = getPreparedInstance().orReturnRight();
+            = getTestInstance().orReturnRight();
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Long> callable = callableFrom(instance);
+        final Callable<Long> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(right);

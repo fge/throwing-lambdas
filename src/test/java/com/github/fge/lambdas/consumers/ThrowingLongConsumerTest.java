@@ -46,7 +46,7 @@ public final class ThrowingLongConsumerTest
     }
 
     @Override
-    protected ThrowingLongConsumer getPreparedInstance()
+    protected ThrowingLongConsumer getTestInstance()
         throws Throwable
     {
         final ThrowingLongConsumer spy = SpiedThrowingLongConsumer.newSpy();
@@ -59,7 +59,7 @@ public final class ThrowingLongConsumerTest
     }
 
     @Override
-    protected LongConsumer getFallbackInstance()
+    protected LongConsumer getFallback()
     {
         final LongConsumer mock = mock(LongConsumer.class);
 
@@ -76,7 +76,7 @@ public final class ThrowingLongConsumerTest
     }
 
     @Override
-    protected Callable<Integer> callableFrom(final LongConsumer instance)
+    protected Callable<Integer> asCallable(final LongConsumer instance)
     {
         return () -> { instance.accept(arg); return sentinel.get(); };
     }
@@ -85,9 +85,9 @@ public final class ThrowingLongConsumerTest
     public void testUnchained()
         throws Throwable
     {
-        final ThrowingLongConsumer instance = getPreparedInstance();
+        final ThrowingLongConsumer instance = getTestInstance();
 
-        final Callable<Integer> callable = callableFrom(instance);
+        final Callable<Integer> callable = asCallable(instance);
         final Runnable runnable = runnableFrom(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
@@ -103,11 +103,11 @@ public final class ThrowingLongConsumerTest
     public void testChainedWithOrThrow()
         throws Throwable
     {
-        final ThrowingLongConsumer spy = getPreparedInstance();
+        final ThrowingLongConsumer spy = getTestInstance();
 
         final LongConsumer instance = spy.orThrow(MyException.class);
 
-        final Callable<Integer> callable = callableFrom(instance);
+        final Callable<Integer> callable = asCallable(instance);
         final Runnable runnable = runnableFrom(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
@@ -123,12 +123,12 @@ public final class ThrowingLongConsumerTest
     public void testChainedWithOrTryWith()
         throws Throwable
     {
-        final ThrowingLongConsumer first = getPreparedInstance();
+        final ThrowingLongConsumer first = getTestInstance();
         final ThrowingLongConsumer second = getAlternate();
 
         final LongConsumer instance = first.orTryWith(second);
 
-        final Callable<Integer> callable = callableFrom(instance);
+        final Callable<Integer> callable = asCallable(instance);
         final Runnable runnable = runnableFrom(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
@@ -143,12 +143,12 @@ public final class ThrowingLongConsumerTest
     public void testChainedWithFallbackTo()
         throws Throwable
     {
-        final ThrowingLongConsumer first = getPreparedInstance();
-        final LongConsumer second = getFallbackInstance();
+        final ThrowingLongConsumer first = getTestInstance();
+        final LongConsumer second = getFallback();
 
         final LongConsumer instance = first.fallbackTo(second);
 
-        final Callable<Integer> callable = callableFrom(instance);
+        final Callable<Integer> callable = asCallable(instance);
         final Runnable runnable = runnableFrom(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
@@ -162,11 +162,11 @@ public final class ThrowingLongConsumerTest
     public void testChainedWithDoNothing()
         throws Throwable
     {
-        final ThrowingLongConsumer first = getPreparedInstance();
+        final ThrowingLongConsumer first = getTestInstance();
 
         final LongConsumer instance = first.orDoNothing();
 
-        final Callable<Integer> callable = callableFrom(instance);
+        final Callable<Integer> callable = asCallable(instance);
         final Runnable runnable = runnableFrom(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);

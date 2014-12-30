@@ -33,7 +33,7 @@ public final class ThrowingLongSupplierTest
     }
 
     @Override
-    protected ThrowingLongSupplier getPreparedInstance()
+    protected ThrowingLongSupplier getTestInstance()
         throws Throwable
     {
         final ThrowingLongSupplier spy
@@ -46,7 +46,7 @@ public final class ThrowingLongSupplierTest
     }
 
     @Override
-    protected LongSupplier getFallbackInstance()
+    protected LongSupplier getFallback()
     {
         final LongSupplier mock = mock(LongSupplier.class);
 
@@ -62,7 +62,7 @@ public final class ThrowingLongSupplierTest
     }
 
     @Override
-    protected Callable<Long> callableFrom(final LongSupplier instance)
+    protected Callable<Long> asCallable(final LongSupplier instance)
     {
         return instance::getAsLong;
     }
@@ -71,10 +71,10 @@ public final class ThrowingLongSupplierTest
     public void testUnchained()
         throws Throwable
     {
-        final ThrowingLongSupplier instance = getPreparedInstance();
+        final ThrowingLongSupplier instance = getTestInstance();
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Long> callable = callableFrom(instance);
+        final Callable<Long> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
 
@@ -90,10 +90,10 @@ public final class ThrowingLongSupplierTest
         throws Throwable
     {
         final LongSupplier instance
-            = getPreparedInstance().orThrow(MyException.class);
+            = getTestInstance().orThrow(MyException.class);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Long> callable = callableFrom(instance);
+        final Callable<Long> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
 
@@ -108,13 +108,13 @@ public final class ThrowingLongSupplierTest
     public void testChainedWithOrTryWith()
         throws Throwable
     {
-        final ThrowingLongSupplier first = getPreparedInstance();
+        final ThrowingLongSupplier first = getTestInstance();
         final ThrowingLongSupplier second = getAlternate();
 
         final LongSupplier instance = first.orTryWith(second);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Long> callable = callableFrom(instance);
+        final Callable<Long> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
@@ -128,13 +128,13 @@ public final class ThrowingLongSupplierTest
     public void testChainedWithFallbackTo()
         throws Throwable
     {
-        final ThrowingLongSupplier first = getPreparedInstance();
-        final LongSupplier second = getFallbackInstance();
+        final ThrowingLongSupplier first = getTestInstance();
+        final LongSupplier second = getFallback();
 
         final LongSupplier instance = first.fallbackTo(second);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Long> callable = callableFrom(instance);
+        final Callable<Long> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
@@ -147,12 +147,12 @@ public final class ThrowingLongSupplierTest
     public void testChainedWithOrReturn()
         throws Throwable
     {
-        final ThrowingLongSupplier first = getPreparedInstance();
+        final ThrowingLongSupplier first = getTestInstance();
 
         final LongSupplier instance = first.orReturn(ret2);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Long> callable = callableFrom(instance);
+        final Callable<Long> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);

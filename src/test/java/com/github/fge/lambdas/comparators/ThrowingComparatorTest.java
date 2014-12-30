@@ -38,7 +38,7 @@ public final class ThrowingComparatorTest
     }
 
     @Override
-    protected ThrowingComparator<Type1> getPreparedInstance()
+    protected ThrowingComparator<Type1> getTestInstance()
         throws Throwable
     {
         final ThrowingComparator<Type1> spy
@@ -51,7 +51,7 @@ public final class ThrowingComparatorTest
     }
 
     @Override
-    protected Comparator<Type1> getFallbackInstance()
+    protected Comparator<Type1> getFallback()
     {
         @SuppressWarnings("unchecked")
         final Comparator<Type1> mock = mock(Comparator.class);
@@ -68,7 +68,7 @@ public final class ThrowingComparatorTest
     }
 
     @Override
-    protected Callable<Integer> callableFrom(final Comparator<Type1> instance)
+    protected Callable<Integer> asCallable(final Comparator<Type1> instance)
     {
         return () -> instance.compare(arg1, arg2);
     }
@@ -77,10 +77,10 @@ public final class ThrowingComparatorTest
     public void testUnchained()
         throws Throwable
     {
-        final Comparator<Type1> instance = getPreparedInstance();
+        final Comparator<Type1> instance = getTestInstance();
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Integer> callable = callableFrom(instance);
+        final Callable<Integer> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
 
@@ -96,10 +96,10 @@ public final class ThrowingComparatorTest
         throws Throwable
     {
         final Comparator<Type1> instance
-            = getPreparedInstance().orThrow(MyException.class);
+            = getTestInstance().orThrow(MyException.class);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Integer> callable = callableFrom(instance);
+        final Callable<Integer> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
 
@@ -114,13 +114,13 @@ public final class ThrowingComparatorTest
     public void testChainedWithOrTryWith()
         throws Throwable
     {
-        final ThrowingComparator<Type1> first = getPreparedInstance();
+        final ThrowingComparator<Type1> first = getTestInstance();
         final ThrowingComparator<Type1> second = getAlternate();
 
         final Comparator<Type1> instance = first.orTryWith(second);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Integer> callable = callableFrom(instance);
+        final Callable<Integer> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
@@ -134,14 +134,14 @@ public final class ThrowingComparatorTest
     public void testChainedWithFallbackTo()
         throws Throwable
     {
-        final ThrowingComparator<Type1> first = getPreparedInstance();
+        final ThrowingComparator<Type1> first = getTestInstance();
 
-        final Comparator<Type1> second = getFallbackInstance();
+        final Comparator<Type1> second = getFallback();
 
         final Comparator<Type1> instance = first.fallbackTo(second);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Integer> callable = callableFrom(instance);
+        final Callable<Integer> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
@@ -154,12 +154,12 @@ public final class ThrowingComparatorTest
     public void testChainedWithOrReturn()
         throws Throwable
     {
-        final ThrowingComparator<Type1> first = getPreparedInstance();
+        final ThrowingComparator<Type1> first = getTestInstance();
 
         final Comparator<Type1> instance = first.orReturn(ret2);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Integer> callable = callableFrom(instance);
+        final Callable<Integer> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);

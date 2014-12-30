@@ -36,7 +36,7 @@ public final class ThrowingIntUnaryOperatorTest
     }
 
     @Override
-    protected ThrowingIntUnaryOperator getPreparedInstance()
+    protected ThrowingIntUnaryOperator getTestInstance()
         throws Throwable
     {
         final ThrowingIntUnaryOperator spy
@@ -49,7 +49,7 @@ public final class ThrowingIntUnaryOperatorTest
     }
 
     @Override
-    protected IntUnaryOperator getFallbackInstance()
+    protected IntUnaryOperator getFallback()
     {
         final IntUnaryOperator mock = mock(IntUnaryOperator.class);
 
@@ -65,7 +65,7 @@ public final class ThrowingIntUnaryOperatorTest
     }
 
     @Override
-    protected Callable<Integer> callableFrom(final IntUnaryOperator instance)
+    protected Callable<Integer> asCallable(final IntUnaryOperator instance)
     {
         return () -> instance.applyAsInt(arg);
     }
@@ -74,10 +74,10 @@ public final class ThrowingIntUnaryOperatorTest
     public void testUnchained()
         throws Throwable
     {
-        final IntUnaryOperator instance = getPreparedInstance();
+        final IntUnaryOperator instance = getTestInstance();
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Integer> callable = callableFrom(instance);
+        final Callable<Integer> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
 
@@ -93,10 +93,10 @@ public final class ThrowingIntUnaryOperatorTest
         throws Throwable
     {
         final IntUnaryOperator instance
-            = getPreparedInstance().orThrow(MyException.class);
+            = getTestInstance().orThrow(MyException.class);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Integer> callable = callableFrom(instance);
+        final Callable<Integer> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
 
@@ -111,13 +111,13 @@ public final class ThrowingIntUnaryOperatorTest
     public void testChainedWithOrTryWith()
         throws Throwable
     {
-        final ThrowingIntUnaryOperator first = getPreparedInstance();
+        final ThrowingIntUnaryOperator first = getTestInstance();
         final ThrowingIntUnaryOperator second = getAlternate();
 
         final IntUnaryOperator instance = first.orTryWith(second);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Integer> callable = callableFrom(instance);
+        final Callable<Integer> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
@@ -131,13 +131,13 @@ public final class ThrowingIntUnaryOperatorTest
     public void testChainedWithFallbackTo()
         throws Throwable
     {
-        final ThrowingIntUnaryOperator first = getPreparedInstance();
-        final IntUnaryOperator second = getFallbackInstance();
+        final ThrowingIntUnaryOperator first = getTestInstance();
+        final IntUnaryOperator second = getFallback();
 
         final IntUnaryOperator instance = first.fallbackTo(second);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Integer> callable = callableFrom(instance);
+        final Callable<Integer> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
@@ -151,10 +151,10 @@ public final class ThrowingIntUnaryOperatorTest
         throws Throwable
     {
         final IntUnaryOperator instance
-            = getPreparedInstance().orReturn(ret2);
+            = getTestInstance().orReturn(ret2);
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Integer> callable = callableFrom(instance);
+        final Callable<Integer> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
@@ -168,10 +168,10 @@ public final class ThrowingIntUnaryOperatorTest
         throws Throwable
     {
         final IntUnaryOperator instance
-            = getPreparedInstance().orReturnSelf();
+            = getTestInstance().orReturnSelf();
 
         final Runnable runnable = runnableFrom(instance);
-        final Callable<Integer> callable = callableFrom(instance);
+        final Callable<Integer> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(arg);
