@@ -13,14 +13,14 @@ import java.util.function.UnaryOperator;
  * methods are in fact different names for the same thing. They are simply here
  * so that the intent is more obvious when you write. For instance:</p>
  *
- * <ul>
+ * <pre>
  *     // wrap...
  *     final ThrowingFoo f = wrap(someLambdaHere);
  *     // tryWith...
  *     final Foo f = tryWith(someLambdaHere).fallbackTo(someNonThrowingLambda);
  *     // rethrow...
  *     final Foo f = rethrow(someLambdaHere).as(MyCustomRuntimeException.class);
- * </ul>
+ * </pre>
  *
  * @see ThrowingFunctionalInterface
  */

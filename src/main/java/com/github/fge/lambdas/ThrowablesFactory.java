@@ -105,8 +105,8 @@ public enum ThrowablesFactory
     }
 
     /**
-     * Exception thrown by {@link ThrowablesFactory#INSTANCE#get(Class,
-     * Throwable)} when an instance of an exception class cannot be built
+     * Exception thrown by {@link #get(Class, Throwable)} when an instance of an
+     * exception class cannot be built
      */
     public static final class InstantiationException
         extends RuntimeException
