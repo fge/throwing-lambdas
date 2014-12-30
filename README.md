@@ -16,6 +16,11 @@ that they throw one or more exception(s).
 All functional interfaces used in
 [`Stream`](http://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html)s are covered.
 
+The current version is **0.3.0**. It is available on Maven central:
+
+* group: `com.github.fge`;
+* artifact: `throwing-lambdas`.
+
 ## Sample usage
 
 For instance, let's take
@@ -41,39 +46,51 @@ Files.list(someDirectory).map(path -> {
 With this package, instead, you can do this:
 
 ```java
-// Throw ThrownByLambdaException if Path::toRealPath fails
+// Declare it as a ThrowingFunction
+final ThrowingFunction<Path, Path> function = Path::toRealPath;
+
+// Since the argument type and return type are the same, this is also a unary operator:
+final ThrowingUnaryOperator<Path> operator = Path::toRealPath;
+```
+
+For all functional interfaces used in streams, this package defines a throwing equivalent which
+extends the base interface; therefore you can use the variables above directly in streams:
+
+```java
+// Since ThrowingFunction extends Function...
+Files.list(somedir).map(function).forEach(System.out::println);
+
+// Since ThrowingUnaryOperator extends Operator...
+Files.list(somedir).map(operator).forEach(System.out::println);
+```
+
+Wrapper also exist so that you don't even need to declare variables before using such methods:
+
+```java
+// Function...
 Files.list(someDirectory).map(Functions.wrap(Path::toRealPath)).etc().etc()
 
-// Throw a custom exception instead of ThrownByLambdaException
-Files.list(someDirectory)
-    .map(Functions.wrap(Path::toRealPath).orThrow(MyException.class))
-    .etc().etc()
-
-// Return self instead; Path::toRealPath is also a UnaryOperator<Path>
-Files.list(someDirectory).map(Operators.wrap(Path::toRealPath).orReturnSelf())
-    .etc().etc()
+// UnaryOperator...
+Files.list(someDirectory).map(Operators.wrap(Path::toRealPath)).etc().etc()
 ```
 
-You can see more about what you can do [here](https://github.com/fge/throwing-lambdas/wiki/How-to-use).
+But you can do more; for instance:
 
-## Versions
+```java
+// Throw a custom RuntimeException instead of the default ThrownByLambdaException:
+Functions.rethrow(Statement::executeQuery).as(MyException.class);
 
-The current version is **0.2.0**. It is available on Maven central. Using
-gradle:
+// Fall back to a non throwing version of the interface:
+Operators.wrap(Path::toRealPath).fallbackTo(Path::toAbsolutePath);
 
-```gradle
-compile(group: "com.github.fge", name: "throwing-lambdas", version: "0.2.0");
+// Try with another throwing lambda if the first throws an exception, and if both fail launch a
+// custom exception. Both methods below "are" BinaryOperator<Path>s:
+Operators.tryWith(Files::createLink).orTryWith(Files::copy)
+    .orThrow(UncheckedIOException.class);
 ```
 
-Using maven:
-
-```xml
-<dependency>
-    <groupId>com.github.fge</groupId>
-    <artifactId>throwing-lambdas</artifactId>
-    <version>0.2.0</version>
-</dependency>
-```
+And you can do even more than that. Read [this
+page](https://github.com/fge/throwing-lambdas/wiki/How-to-use) for more information.
 
 ## Further reading
 

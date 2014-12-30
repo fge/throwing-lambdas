@@ -1,4 +1,4 @@
-## 0.3.0 (IN PROGRESS)
+## 0.3.0
 
 * Add new .tryWith() methods.
 * Add new ThrowingFunctionalInterface interface; make all interfaces extend it.
