@@ -29,7 +29,8 @@ public abstract class ThrowingInterfaceBaseTest<T extends N, N, R>
      *
      * @return a mock
      */
-    protected abstract T getBaseInstance();
+    protected abstract T getBaseInstance()
+        throws Throwable;
 
     /**
      * Return a fully prepared mock
