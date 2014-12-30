@@ -17,7 +17,8 @@ import static org.mockito.Mockito.mock;
 
 @SuppressWarnings({"ProhibitedExceptionDeclared", "OverlyBroadThrowsClause"})
 public final class ThrowingBiConsumerTest
-    extends ThrowingInterfaceBaseTest<ThrowingBiConsumer<Type1, Type2>, BiConsumer<Type1, Type2>, Integer>
+    extends ThrowingInterfaceBaseTest<ThrowingBiConsumer<Type1, Type2>,
+    BiConsumer<Type1, Type2>, Integer>
 {
     private final Type1 arg1 = Type1.mock();
     private final Type2 arg2 = Type2.mock();

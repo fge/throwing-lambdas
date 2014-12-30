@@ -4,29 +4,45 @@ import com.github.fge.lambdas.ThrowingInterfaceBaseTest;
 import com.github.fge.lambdas.ThrownByLambdaException;
 import com.github.fge.lambdas.helpers.MyException;
 import com.github.fge.lambdas.helpers.Type1;
-import org.mockito.InOrder;
+import org.testng.annotations.BeforeMethod;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.ObjIntConsumer;
 
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
 @SuppressWarnings("ProhibitedExceptionDeclared")
 public final class ThrowingObjIntConsumerTest
-    extends ThrowingInterfaceBaseTest<ThrowingObjIntConsumer<Type1>, ObjIntConsumer<Type1>, Void>
+    extends ThrowingInterfaceBaseTest<ThrowingObjIntConsumer<Type1>,
+    ObjIntConsumer<Type1>, Integer>
 {
     private final Type1 arg1 = Type1.mock();
-    private final int arg2 = 42;
+    private final int arg2 = 042;
+
+    private final AtomicInteger sentinel = new AtomicInteger(0);
+
+    private final int ret1 = 42;
+    private final int ret2 = 0x42;
+
+    @BeforeMethod
+    public void resetSentinel()
+    {
+        sentinel.set(0);
+    }
 
     @Override
     protected ThrowingObjIntConsumer<Type1> getBaseInstance()
+        throws Throwable
     {
-        return SpiedThrowingObjIntConsumer.newSpy();
+        final ThrowingObjIntConsumer<Type1> spy
+            = SpiedThrowingObjIntConsumer.newSpy();
+
+        doAnswer(invocation -> { sentinel.set(ret2); return null; })
+            .when(spy).doAccept(arg1, arg2);
+
+        return spy;
     }
 
     @Override
@@ -35,7 +51,11 @@ public final class ThrowingObjIntConsumerTest
     {
         final ThrowingObjIntConsumer<Type1> spy = getBaseInstance();
 
-        doNothing().doThrow(checked).doThrow(unchecked).doThrow(error)
+        doAnswer(invocation -> {
+            sentinel.set(ret1);
+            return null;
+        })
+            .doThrow(checked).doThrow(unchecked).doThrow(error)
             .when(spy).doAccept(arg1, arg2);
 
         return spy;
@@ -44,8 +64,12 @@ public final class ThrowingObjIntConsumerTest
     @Override
     protected ObjIntConsumer<Type1> getNonThrowingInstance()
     {
-        //noinspection unchecked
-        return mock(ObjIntConsumer.class);
+        final ObjIntConsumer<Type1> mock = mock(ObjIntConsumer.class);
+
+        doAnswer(invocation -> { sentinel.set(ret2); return null; })
+            .when(mock).accept(arg1, arg2);
+
+        return mock;
     }
 
     @Override
@@ -55,12 +79,12 @@ public final class ThrowingObjIntConsumerTest
     }
 
     @Override
-    protected Callable<Void> callableFrom(
+    protected Callable<Integer> callableFrom(
         final ObjIntConsumer<Type1> instance)
     {
         return () -> {
             instance.accept(arg1, arg2);
-            return null;
+            return sentinel.get();
         };
     }
 
@@ -68,13 +92,12 @@ public final class ThrowingObjIntConsumerTest
     public void testUnchained()
         throws Throwable
     {
-        final ThrowingObjIntConsumer<Type1> spy = getPreparedInstance();
+        final ThrowingObjIntConsumer<Type1> instance = getPreparedInstance();
 
-        final Runnable runnable = runnableFrom(spy);
+        final Callable<Integer> callable = callableFrom(instance);
+        final Runnable runnable = runnableFrom(instance);
 
-        runnable.run();
-
-        verify(spy).doAccept(arg1, arg2);
+        assertThat(callable.call()).isEqualTo(ret1);
 
         verifyCheckedRethrow(runnable, ThrownByLambdaException.class);
 
@@ -89,18 +112,19 @@ public final class ThrowingObjIntConsumerTest
     {
         final ThrowingObjIntConsumer<Type1> spy = getPreparedInstance();
 
-        final Runnable runnable = runnableFrom(spy.orThrow(MyException.class));
+        final ObjIntConsumer<Type1> instance
+            = spy.orThrow(MyException.class);
 
-        runnable.run();
+        final Callable<Integer> callable = callableFrom(instance);
+        final Runnable runnable = runnableFrom(instance);
 
-        verify(spy).doAccept(arg1, arg2);
+        assertThat(callable.call()).isEqualTo(ret1);
 
         verifyCheckedRethrow(runnable, MyException.class);
 
         verifyUncheckedThrow(runnable);
 
         verifyErrorThrow(runnable);
-
     }
 
     @Override
@@ -112,16 +136,11 @@ public final class ThrowingObjIntConsumerTest
 
         final ObjIntConsumer<Type1> instance = first.orTryWith(second);
 
+        final Callable<Integer> callable = callableFrom(instance);
         final Runnable runnable = runnableFrom(instance);
 
-        final InOrder inOrder = inOrder(first, second);
-
-        runnable.run();
-        runnable.run();
-
-        inOrder.verify(first, times(2)).doAccept(arg1, arg2);
-        inOrder.verify(second).doAccept(arg1, arg2);
-        inOrder.verifyNoMoreInteractions();
+        assertThat(callable.call()).isEqualTo(ret1);
+        assertThat(callable.call()).isEqualTo(ret2);
 
         verifyUncheckedThrow(runnable);
 
@@ -137,16 +156,11 @@ public final class ThrowingObjIntConsumerTest
 
         final ObjIntConsumer<Type1> instance = first.fallbackTo(second);
 
+        final Callable<Integer> callable = callableFrom(instance);
         final Runnable runnable = runnableFrom(instance);
 
-        final InOrder inOrder = inOrder(first, second);
-
-        runnable.run();
-        runnable.run();
-
-        inOrder.verify(first, times(2)).doAccept(arg1, arg2);
-        inOrder.verify(second).accept(arg1, arg2);
-        inOrder.verifyNoMoreInteractions();
+        assertThat(callable.call()).isEqualTo(ret1);
+        assertThat(callable.call()).isEqualTo(ret2);
 
         verifyUncheckedThrow(runnable);
 
@@ -160,14 +174,11 @@ public final class ThrowingObjIntConsumerTest
 
         final ObjIntConsumer<Type1> instance = first.orDoNothing();
 
+        final Callable<Integer> callable = callableFrom(instance);
         final Runnable runnable = runnableFrom(instance);
 
-        runnable.run();
-        runnable.run();
-
-        verify(first).orDoNothing();
-        verify(first, times(2)).doAccept(arg1, arg2);
-        verifyNoMoreInteractions(first);
+        assertThat(callable.call()).isEqualTo(ret1);
+        assertThat(callable.call()).isEqualTo(ret1);
 
         verifyUncheckedThrow(runnable);
 
