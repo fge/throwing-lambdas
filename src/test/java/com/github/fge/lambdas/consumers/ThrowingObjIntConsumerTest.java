@@ -15,8 +15,7 @@ import static org.mockito.Mockito.*;
 
 @SuppressWarnings("ProhibitedExceptionDeclared")
 public final class ThrowingObjIntConsumerTest
-    extends ThrowingInterfaceBaseTest<ThrowingObjIntConsumer<Type1>,
-    ObjIntConsumer<Type1>, Integer>
+    extends ThrowingInterfaceBaseTest<ThrowingObjIntConsumer<Type1>, ObjIntConsumer<Type1>, Integer>
 {
     private final Type1 arg1 = Type1.mock();
     private final int arg2 = 042;
@@ -49,12 +48,10 @@ public final class ThrowingObjIntConsumerTest
     protected ThrowingObjIntConsumer<Type1> getPreparedInstance()
         throws Throwable
     {
-        final ThrowingObjIntConsumer<Type1> spy = getBaseInstance();
+        final ThrowingObjIntConsumer<Type1> spy
+            = SpiedThrowingObjIntConsumer.newSpy();
 
-        doAnswer(invocation -> {
-            sentinel.set(ret1);
-            return null;
-        })
+        doAnswer(invocation -> { sentinel.set(ret1); return null; })
             .doThrow(checked).doThrow(unchecked).doThrow(error)
             .when(spy).doAccept(arg1, arg2);
 
@@ -64,6 +61,7 @@ public final class ThrowingObjIntConsumerTest
     @Override
     protected ObjIntConsumer<Type1> getNonThrowingInstance()
     {
+        @SuppressWarnings("unchecked")
         final ObjIntConsumer<Type1> mock = mock(ObjIntConsumer.class);
 
         doAnswer(invocation -> { sentinel.set(ret2); return null; })
@@ -82,10 +80,7 @@ public final class ThrowingObjIntConsumerTest
     protected Callable<Integer> callableFrom(
         final ObjIntConsumer<Type1> instance)
     {
-        return () -> {
-            instance.accept(arg1, arg2);
-            return sentinel.get();
-        };
+        return () -> { instance.accept(arg1, arg2); return sentinel.get(); };
     }
 
     @Override

@@ -13,7 +13,7 @@ import java.util.function.ObjLongConsumer;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-@SuppressWarnings("ProhibitedExceptionDeclared")
+@SuppressWarnings({"ProhibitedExceptionDeclared", "OverlyBroadThrowsClause"})
 public final class ThrowingObjLongConsumerTest
     extends ThrowingInterfaceBaseTest<ThrowingObjLongConsumer<Type1>,
     ObjLongConsumer<Type1>, Integer>
@@ -49,7 +49,8 @@ public final class ThrowingObjLongConsumerTest
     protected ThrowingObjLongConsumer<Type1> getPreparedInstance()
         throws Throwable
     {
-        final ThrowingObjLongConsumer<Type1> spy = getBaseInstance();
+        final ThrowingObjLongConsumer<Type1> spy
+            = SpiedThrowingObjLongConsumer.newSpy();
 
         doAnswer(invocation -> { sentinel.set(ret1); return null; })
             .doThrow(checked).doThrow(unchecked).doThrow(error)
@@ -61,6 +62,7 @@ public final class ThrowingObjLongConsumerTest
     @Override
     protected ObjLongConsumer<Type1> getNonThrowingInstance()
     {
+        @SuppressWarnings("unchecked")
         final ObjLongConsumer<Type1> mock = mock(ObjLongConsumer.class);
 
         doAnswer(invocation -> { sentinel.set(ret2); return null; })
@@ -79,10 +81,7 @@ public final class ThrowingObjLongConsumerTest
     protected Callable<Integer> callableFrom(
         final ObjLongConsumer<Type1> instance)
     {
-        return () -> {
-            instance.accept(arg1, arg2);
-            return sentinel.get();
-        };
+        return () -> { instance.accept(arg1, arg2); return sentinel.get(); };
     }
 
     @Override

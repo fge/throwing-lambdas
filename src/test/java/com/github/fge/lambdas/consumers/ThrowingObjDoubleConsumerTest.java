@@ -13,10 +13,9 @@ import java.util.function.ObjDoubleConsumer;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-@SuppressWarnings("ProhibitedExceptionDeclared")
+@SuppressWarnings({"ProhibitedExceptionDeclared", "OverlyBroadThrowsClause"})
 public final class ThrowingObjDoubleConsumerTest
-    extends ThrowingInterfaceBaseTest<ThrowingObjDoubleConsumer<Type1>,
-    ObjDoubleConsumer<Type1>, Integer>
+    extends ThrowingInterfaceBaseTest<ThrowingObjDoubleConsumer<Type1>, ObjDoubleConsumer<Type1>, Integer>
 {
     private final Type1 arg1 = Type1.mock();
     private final double arg2 = 0.125;
@@ -49,12 +48,10 @@ public final class ThrowingObjDoubleConsumerTest
     protected ThrowingObjDoubleConsumer<Type1> getPreparedInstance()
         throws Throwable
     {
-        final ThrowingObjDoubleConsumer<Type1> spy = getBaseInstance();
+        final ThrowingObjDoubleConsumer<Type1> spy
+            = SpiedThrowingObjDoubleConsumer.newSpy();
 
-        doAnswer(invocation -> {
-            sentinel.set(ret1);
-            return null;
-        })
+        doAnswer(invocation -> { sentinel.set(ret1); return null; })
             .doThrow(checked).doThrow(unchecked).doThrow(error)
             .when(spy).doAccept(arg1, arg2);
 
@@ -64,6 +61,7 @@ public final class ThrowingObjDoubleConsumerTest
     @Override
     protected ObjDoubleConsumer<Type1> getNonThrowingInstance()
     {
+        @SuppressWarnings("unchecked")
         final ObjDoubleConsumer<Type1> mock = mock(ObjDoubleConsumer.class);
 
         doAnswer(invocation -> { sentinel.set(ret2); return null; })
@@ -82,10 +80,7 @@ public final class ThrowingObjDoubleConsumerTest
     protected Callable<Integer> callableFrom(
         final ObjDoubleConsumer<Type1> instance)
     {
-        return () -> {
-            instance.accept(arg1, arg2);
-            return sentinel.get();
-        };
+        return () -> { instance.accept(arg1, arg2); return sentinel.get(); };
     }
 
     @Override

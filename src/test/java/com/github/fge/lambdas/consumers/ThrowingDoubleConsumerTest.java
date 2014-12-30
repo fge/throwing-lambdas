@@ -77,10 +77,7 @@ public final class ThrowingDoubleConsumerTest
     @Override
     protected Callable<Integer> callableFrom(final DoubleConsumer instance)
     {
-        return () -> {
-            instance.accept(arg);
-            return sentinel.get();
-        };
+        return () -> { instance.accept(arg); return sentinel.get(); };
     }
 
     @Override

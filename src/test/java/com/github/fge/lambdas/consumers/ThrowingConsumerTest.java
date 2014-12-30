@@ -75,10 +75,7 @@ public final class ThrowingConsumerTest
     @Override
     protected Callable<Integer> callableFrom(final Consumer<Type1> instance)
     {
-        return () -> {
-            instance.accept(arg);
-            return sentinel.get();
-        };
+        return () -> { instance.accept(arg); return sentinel.get(); };
     }
 
     @Override

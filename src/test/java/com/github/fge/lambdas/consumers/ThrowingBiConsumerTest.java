@@ -82,10 +82,7 @@ public final class ThrowingBiConsumerTest
     protected Callable<Integer> callableFrom(
         final BiConsumer<Type1, Type2> instance)
     {
-        return () -> {
-            instance.accept(arg1, arg2);
-            return sentinel.get();
-        };
+        return () -> { instance.accept(arg1, arg2); return sentinel.get(); };
     }
 
     @Override
