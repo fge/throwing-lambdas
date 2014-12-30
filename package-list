@@ -1,0 +1,10 @@
+com.github.fge.lambdas
+com.github.fge.lambdas.comparators
+com.github.fge.lambdas.consumers
+com.github.fge.lambdas.functions
+com.github.fge.lambdas.functions.doublefunctions
+com.github.fge.lambdas.functions.intfunctions
+com.github.fge.lambdas.functions.longfunctions
+com.github.fge.lambdas.functions.operators
+com.github.fge.lambdas.predicates
+com.github.fge.lambdas.suppliers
