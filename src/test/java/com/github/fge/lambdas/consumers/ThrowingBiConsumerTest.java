@@ -5,38 +5,56 @@ import com.github.fge.lambdas.ThrownByLambdaException;
 import com.github.fge.lambdas.helpers.MyException;
 import com.github.fge.lambdas.helpers.Type1;
 import com.github.fge.lambdas.helpers.Type2;
-import org.mockito.InOrder;
+import org.testng.annotations.BeforeMethod;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.inOrder;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 
-@SuppressWarnings("ProhibitedExceptionDeclared")
+@SuppressWarnings({"ProhibitedExceptionDeclared", "OverlyBroadThrowsClause"})
 public final class ThrowingBiConsumerTest
-    extends ThrowingInterfaceBaseTest<ThrowingBiConsumer<Type1, Type2>, BiConsumer<Type1, Type2>, Void>
+    extends ThrowingInterfaceBaseTest<ThrowingBiConsumer<Type1, Type2>, BiConsumer<Type1, Type2>, Integer>
 {
     private final Type1 arg1 = Type1.mock();
     private final Type2 arg2 = Type2.mock();
 
+    private final AtomicInteger sentinel = new AtomicInteger(0);
+
+    private final int ret1 = 42;
+    private final int ret2 = 24;
+
+    @BeforeMethod
+    public void resetSentinel()
+    {
+        sentinel.set(0);
+    }
+
     @Override
     protected ThrowingBiConsumer<Type1, Type2> getBaseInstance()
+        throws Throwable
     {
-        return SpiedThrowingBiConsumer.newSpy();
+        final ThrowingBiConsumer<Type1, Type2> spy
+            = SpiedThrowingBiConsumer.newSpy();
+
+        doAnswer(invocation -> { sentinel.set(ret2); return null; })
+            .when(spy).doAccept(arg1, arg2);
+
+        return spy;
     }
 
     @Override
     protected ThrowingBiConsumer<Type1, Type2> getPreparedInstance()
         throws Throwable
     {
-        final ThrowingBiConsumer<Type1, Type2> spy = getBaseInstance();
+        final ThrowingBiConsumer<Type1, Type2> spy
+            = SpiedThrowingBiConsumer.newSpy();
 
-        doNothing().doThrow(checked).doThrow(unchecked).doThrow(error)
+        doAnswer(invocation -> { sentinel.set(ret1); return null; })
+            .doThrow(checked).doThrow(unchecked).doThrow(error)
             .when(spy).doAccept(arg1, arg2);
 
         return spy;
@@ -45,8 +63,13 @@ public final class ThrowingBiConsumerTest
     @Override
     protected BiConsumer<Type1, Type2> getNonThrowingInstance()
     {
-        //noinspection unchecked
-        return mock(BiConsumer.class);
+        @SuppressWarnings("unchecked")
+        final BiConsumer<Type1, Type2> mock = mock(BiConsumer.class);
+
+        doAnswer(invocation -> { sentinel.set(ret2); return null; })
+            .when(mock).accept(arg1, arg2);
+
+        return mock;
     }
 
     @Override
@@ -56,12 +79,12 @@ public final class ThrowingBiConsumerTest
     }
 
     @Override
-    protected Callable<Void> callableFrom(
+    protected Callable<Integer> callableFrom(
         final BiConsumer<Type1, Type2> instance)
     {
         return () -> {
             instance.accept(arg1, arg2);
-            return null;
+            return sentinel.get();
         };
     }
 
@@ -71,11 +94,10 @@ public final class ThrowingBiConsumerTest
     {
         final ThrowingBiConsumer<Type1, Type2> instance = getPreparedInstance();
 
+        final Callable<Integer> callable = callableFrom(instance);
         final Runnable runnable = runnableFrom(instance);
 
-        runnable.run();
-
-        verify(instance).doAccept(arg1, arg2);
+        assertThat(callable.call()).isEqualTo(ret1);
 
         verifyCheckedRethrow(runnable, ThrownByLambdaException.class);
 
@@ -93,11 +115,10 @@ public final class ThrowingBiConsumerTest
         final BiConsumer<Type1, Type2> instance
             = spy.orThrow(MyException.class);
 
+        final Callable<Integer> callable = callableFrom(instance);
         final Runnable runnable = runnableFrom(instance);
 
-        runnable.run();
-
-        verify(spy).doAccept(arg1, arg2);
+        assertThat(callable.call()).isEqualTo(ret1);
 
         verifyCheckedRethrow(runnable, MyException.class);
 
@@ -115,16 +136,11 @@ public final class ThrowingBiConsumerTest
 
         final BiConsumer<Type1, Type2> instance = first.orTryWith(second);
 
+        final Callable<Integer> callable = callableFrom(instance);
         final Runnable runnable = runnableFrom(instance);
 
-        final InOrder inOrder = inOrder(first, second);
-
-        runnable.run();
-        runnable.run();
-
-        inOrder.verify(first, times(2)).doAccept(arg1, arg2);
-        inOrder.verify(second).doAccept(arg1, arg2);
-        inOrder.verifyNoMoreInteractions();
+        assertThat(callable.call()).isEqualTo(ret1);
+        assertThat(callable.call()).isEqualTo(ret2);
 
         verifyUncheckedThrow(runnable);
 
@@ -140,16 +156,11 @@ public final class ThrowingBiConsumerTest
 
         final BiConsumer<Type1, Type2> instance = first.fallbackTo(second);
 
+        final Callable<Integer> callable = callableFrom(instance);
         final Runnable runnable = runnableFrom(instance);
 
-        final InOrder inOrder = inOrder(first, second);
-
-        runnable.run();
-        runnable.run();
-
-        inOrder.verify(first, times(2)).doAccept(arg1, arg2);
-        inOrder.verify(second).accept(arg1, arg2);
-        inOrder.verifyNoMoreInteractions();
+        assertThat(callable.call()).isEqualTo(ret1);
+        assertThat(callable.call()).isEqualTo(ret2);
 
         verifyUncheckedThrow(runnable);
 
@@ -163,15 +174,11 @@ public final class ThrowingBiConsumerTest
 
         final BiConsumer<Type1, Type2> instance = first.orDoNothing();
 
+        final Callable<Integer> callable = callableFrom(instance);
         final Runnable runnable = runnableFrom(instance);
 
-        runnable.run();
-        runnable.run();
-
-        // We must do that...
-        verify(first).orDoNothing();
-        verify(first, times(2)).doAccept(arg1, arg2);
-        verifyNoMoreInteractions(first);
+        assertThat(callable.call()).isEqualTo(ret1);
+        assertThat(callable.call()).isEqualTo(ret1);
 
         verifyUncheckedThrow(runnable);
 
