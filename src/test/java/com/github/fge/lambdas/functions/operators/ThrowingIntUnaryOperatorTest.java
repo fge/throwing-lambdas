@@ -59,12 +59,6 @@ public final class ThrowingIntUnaryOperatorTest
     }
 
     @Override
-    protected Runnable runnableFrom(final IntUnaryOperator instance)
-    {
-        return () -> instance.applyAsInt(arg);
-    }
-
-    @Override
     protected Callable<Integer> asCallable(final IntUnaryOperator instance)
     {
         return () -> instance.applyAsInt(arg);
@@ -76,16 +70,15 @@ public final class ThrowingIntUnaryOperatorTest
     {
         final IntUnaryOperator instance = getTestInstance();
 
-        final Runnable runnable = runnableFrom(instance);
         final Callable<Integer> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
 
-        verifyCheckedRethrow(runnable, ThrownByLambdaException.class);
+        verifyCheckedRethrow(callable, ThrownByLambdaException.class);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 
     @Override
@@ -95,16 +88,15 @@ public final class ThrowingIntUnaryOperatorTest
         final IntUnaryOperator instance
             = getTestInstance().orThrow(MyException.class);
 
-        final Runnable runnable = runnableFrom(instance);
         final Callable<Integer> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
 
-        verifyCheckedRethrow(runnable, MyException.class);
+        verifyCheckedRethrow(callable, MyException.class);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 
     @Override
@@ -116,15 +108,14 @@ public final class ThrowingIntUnaryOperatorTest
 
         final IntUnaryOperator instance = first.orTryWith(second);
 
-        final Runnable runnable = runnableFrom(instance);
         final Callable<Integer> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 
     @Override
@@ -136,15 +127,14 @@ public final class ThrowingIntUnaryOperatorTest
 
         final IntUnaryOperator instance = first.fallbackTo(second);
 
-        final Runnable runnable = runnableFrom(instance);
         final Callable<Integer> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 
     public void testChainedWithOrReturn()
@@ -153,15 +143,14 @@ public final class ThrowingIntUnaryOperatorTest
         final IntUnaryOperator instance
             = getTestInstance().orReturn(ret2);
 
-        final Runnable runnable = runnableFrom(instance);
         final Callable<Integer> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 
     public void testChainedWithOrReturnSelf()
@@ -170,14 +159,13 @@ public final class ThrowingIntUnaryOperatorTest
         final IntUnaryOperator instance
             = getTestInstance().orReturnSelf();
 
-        final Runnable runnable = runnableFrom(instance);
         final Callable<Integer> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(arg);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 }

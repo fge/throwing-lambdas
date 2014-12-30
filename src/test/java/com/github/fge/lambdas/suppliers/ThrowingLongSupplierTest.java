@@ -56,12 +56,6 @@ public final class ThrowingLongSupplierTest
     }
 
     @Override
-    protected Runnable runnableFrom(final LongSupplier instance)
-    {
-        return instance::getAsLong;
-    }
-
-    @Override
     protected Callable<Long> asCallable(final LongSupplier instance)
     {
         return instance::getAsLong;
@@ -73,16 +67,15 @@ public final class ThrowingLongSupplierTest
     {
         final ThrowingLongSupplier instance = getTestInstance();
 
-        final Runnable runnable = runnableFrom(instance);
         final Callable<Long> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
 
-        verifyCheckedRethrow(runnable, ThrownByLambdaException.class);
+        verifyCheckedRethrow(callable, ThrownByLambdaException.class);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 
     @Override
@@ -92,16 +85,15 @@ public final class ThrowingLongSupplierTest
         final LongSupplier instance
             = getTestInstance().orThrow(MyException.class);
 
-        final Runnable runnable = runnableFrom(instance);
         final Callable<Long> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
 
-        verifyCheckedRethrow(runnable, MyException.class);
+        verifyCheckedRethrow(callable, MyException.class);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 
     @Override
@@ -113,15 +105,14 @@ public final class ThrowingLongSupplierTest
 
         final LongSupplier instance = first.orTryWith(second);
 
-        final Runnable runnable = runnableFrom(instance);
         final Callable<Long> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 
     @Override
@@ -133,15 +124,14 @@ public final class ThrowingLongSupplierTest
 
         final LongSupplier instance = first.fallbackTo(second);
 
-        final Runnable runnable = runnableFrom(instance);
         final Callable<Long> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 
     public void testChainedWithOrReturn()
@@ -151,14 +141,13 @@ public final class ThrowingLongSupplierTest
 
         final LongSupplier instance = first.orReturn(ret2);
 
-        final Runnable runnable = runnableFrom(instance);
         final Callable<Long> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 }

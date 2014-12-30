@@ -72,12 +72,6 @@ public final class ThrowingDoubleConsumerTest
     }
 
     @Override
-    protected Runnable runnableFrom(final DoubleConsumer instance)
-    {
-        return () -> instance.accept(arg);
-    }
-
-    @Override
     protected Callable<Integer> asCallable(final DoubleConsumer instance)
     {
         return () -> { instance.accept(arg); return sentinel.get(); };
@@ -90,15 +84,14 @@ public final class ThrowingDoubleConsumerTest
         final ThrowingDoubleConsumer instance = getTestInstance();
 
         final Callable<Integer> callable = asCallable(instance);
-        final Runnable runnable = runnableFrom(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
 
-        verifyCheckedRethrow(runnable, ThrownByLambdaException.class);
+        verifyCheckedRethrow(callable, ThrownByLambdaException.class);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 
     @Override
@@ -110,15 +103,14 @@ public final class ThrowingDoubleConsumerTest
         final DoubleConsumer instance = spy.orThrow(MyException.class);
 
         final Callable<Integer> callable = asCallable(instance);
-        final Runnable runnable = runnableFrom(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
 
-        verifyCheckedRethrow(runnable, MyException.class);
+        verifyCheckedRethrow(callable, MyException.class);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 
     @Override
@@ -131,14 +123,13 @@ public final class ThrowingDoubleConsumerTest
         final DoubleConsumer instance = first.orTryWith(second);
 
         final Callable<Integer> callable = asCallable(instance);
-        final Runnable runnable = runnableFrom(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 
     @Override
@@ -151,14 +142,13 @@ public final class ThrowingDoubleConsumerTest
         final DoubleConsumer instance = first.fallbackTo(second);
 
         final Callable<Integer> callable = asCallable(instance);
-        final Runnable runnable = runnableFrom(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 
     public void testChainedWithDoNothing()
@@ -169,13 +159,12 @@ public final class ThrowingDoubleConsumerTest
         final DoubleConsumer instance = first.orDoNothing();
 
         final Callable<Integer> callable = asCallable(instance);
-        final Runnable runnable = runnableFrom(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret1);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 }

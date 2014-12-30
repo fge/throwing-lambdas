@@ -61,12 +61,6 @@ public final class ThrowingToDoubleFunctionTest
     }
 
     @Override
-    protected Runnable runnableFrom(final ToDoubleFunction<Type1> instance)
-    {
-        return () -> instance.applyAsDouble(arg);
-    }
-
-    @Override
     protected Callable<Double> asCallable(
         final ToDoubleFunction<Type1> instance)
     {
@@ -79,16 +73,15 @@ public final class ThrowingToDoubleFunctionTest
     {
         final ThrowingToDoubleFunction<Type1> instance = getTestInstance();
 
-        final Runnable runnable = runnableFrom(instance);
         final Callable<Double> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
 
-        verifyCheckedRethrow(runnable, ThrownByLambdaException.class);
+        verifyCheckedRethrow(callable, ThrownByLambdaException.class);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 
     @Override
@@ -98,16 +91,15 @@ public final class ThrowingToDoubleFunctionTest
         final ToDoubleFunction<Type1> instance
             = getTestInstance().orThrow(MyException.class);
 
-        final Runnable runnable = runnableFrom(instance);
         final Callable<Double> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
 
-        verifyCheckedRethrow(runnable, MyException.class);
+        verifyCheckedRethrow(callable, MyException.class);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 
     @Override
@@ -119,15 +111,14 @@ public final class ThrowingToDoubleFunctionTest
 
         final ToDoubleFunction<Type1> instance = first.orTryWith(second);
 
-        final Runnable runnable = runnableFrom(instance);
         final Callable<Double> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 
     @Override
@@ -139,15 +130,14 @@ public final class ThrowingToDoubleFunctionTest
 
         final ToDoubleFunction<Type1> instance = first.fallbackTo(second);
 
-        final Runnable runnable = runnableFrom(instance);
         final Callable<Double> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 
     public void testChainedWithOrReturn()
@@ -157,14 +147,13 @@ public final class ThrowingToDoubleFunctionTest
 
         final ToDoubleFunction<Type1> instance = first.orReturn(ret2);
 
-        final Runnable runnable = runnableFrom(instance);
         final Callable<Double> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 }

@@ -55,12 +55,6 @@ public final class ThrowingIntSupplierTest
     }
 
     @Override
-    protected Runnable runnableFrom(final IntSupplier instance)
-    {
-        return instance::getAsInt;
-    }
-
-    @Override
     protected Callable<Integer> asCallable(final IntSupplier instance)
     {
         return instance::getAsInt;
@@ -72,16 +66,15 @@ public final class ThrowingIntSupplierTest
     {
         final ThrowingIntSupplier instance = getTestInstance();
 
-        final Runnable runnable = runnableFrom(instance);
         final Callable<Integer> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
 
-        verifyCheckedRethrow(runnable, ThrownByLambdaException.class);
+        verifyCheckedRethrow(callable, ThrownByLambdaException.class);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 
     @Override
@@ -91,16 +84,15 @@ public final class ThrowingIntSupplierTest
         final IntSupplier instance
                 = getTestInstance().orThrow(MyException.class);
 
-        final Runnable runnable = runnableFrom(instance);
         final Callable<Integer> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
 
-        verifyCheckedRethrow(runnable, MyException.class);
+        verifyCheckedRethrow(callable, MyException.class);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 
     @Override
@@ -112,16 +104,15 @@ public final class ThrowingIntSupplierTest
 
         final IntSupplier instance = first.orTryWith(second);
 
-        final Runnable runnable = runnableFrom(instance);
         final Callable<Integer> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
 
         assertThat(callable.call()).isEqualTo(ret2);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 
     @Override
@@ -133,15 +124,14 @@ public final class ThrowingIntSupplierTest
 
         final IntSupplier instance = first.fallbackTo(second);
 
-        final Runnable runnable = runnableFrom(instance);
         final Callable<Integer> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 
     public void testChainedWithOrReturn()
@@ -151,14 +141,13 @@ public final class ThrowingIntSupplierTest
 
         final IntSupplier instance = first.orReturn(ret2);
 
-        final Runnable runnable = runnableFrom(instance);
         final Callable<Integer> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 }

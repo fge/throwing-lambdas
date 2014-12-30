@@ -59,12 +59,6 @@ public final class ThrowingLongPredicateTest
     }
 
     @Override
-    protected Runnable runnableFrom(final LongPredicate instance)
-    {
-        return () -> instance.test(arg);
-    }
-
-    @Override
     protected Callable<Boolean> asCallable(final LongPredicate instance)
     {
         return () -> instance.test(arg);
@@ -76,16 +70,15 @@ public final class ThrowingLongPredicateTest
     {
         final ThrowingLongPredicate instance = getTestInstance();
 
-        final Runnable runnable = runnableFrom(instance);
         final Callable<Boolean> callable = asCallable(instance);
 
         assertThat(callable.call()).isTrue();
 
-        verifyCheckedRethrow(runnable, ThrownByLambdaException.class);
+        verifyCheckedRethrow(callable, ThrownByLambdaException.class);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 
     @Override
@@ -95,16 +88,15 @@ public final class ThrowingLongPredicateTest
         final LongPredicate instance
             = getTestInstance().orThrow(MyException.class);
 
-        final Runnable runnable = runnableFrom(instance);
         final Callable<Boolean> callable = asCallable(instance);
 
         assertThat(callable.call()).isTrue();
 
-        verifyCheckedRethrow(runnable, MyException.class);
+        verifyCheckedRethrow(callable, MyException.class);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 
     @Override
@@ -116,15 +108,14 @@ public final class ThrowingLongPredicateTest
 
         final LongPredicate instance = first.orTryWith(second);
 
-        final Runnable runnable = runnableFrom(instance);
         final Callable<Boolean> callable = asCallable(instance);
 
         assertThat(callable.call()).isTrue();
         assertThat(callable.call()).isFalse();
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 
     @Override
@@ -136,15 +127,14 @@ public final class ThrowingLongPredicateTest
 
         final LongPredicate instance = first.fallbackTo(second);
 
-        final Runnable runnable = runnableFrom(instance);
         final Callable<Boolean> callable = asCallable(instance);
 
         assertThat(callable.call()).isTrue();
         assertThat(callable.call()).isFalse();
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 
     public void testChainedWithOrReturn()
@@ -152,14 +142,13 @@ public final class ThrowingLongPredicateTest
     {
         final LongPredicate instance = getTestInstance().orReturn(false);
 
-        final Runnable runnable = runnableFrom(instance);
         final Callable<Boolean> callable = asCallable(instance);
 
         assertThat(callable.call()).isTrue();
         assertThat(callable.call()).isFalse();
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 }

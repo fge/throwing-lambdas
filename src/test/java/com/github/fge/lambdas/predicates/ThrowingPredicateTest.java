@@ -61,12 +61,6 @@ public final class ThrowingPredicateTest
     }
 
     @Override
-    protected Runnable runnableFrom(final Predicate<Type1> instance)
-    {
-        return () -> instance.test(arg);
-    }
-
-    @Override
     protected Callable<Boolean> asCallable(final Predicate<Type1> instance)
     {
         return () -> instance.test(arg);
@@ -78,16 +72,15 @@ public final class ThrowingPredicateTest
     {
         final ThrowingPredicate<Type1> instance = getTestInstance();
 
-        final Runnable runnable = runnableFrom(instance);
         final Callable<Boolean> callable = asCallable(instance);
 
         assertThat(callable.call()).isTrue();
 
-        verifyCheckedRethrow(runnable, ThrownByLambdaException.class);
+        verifyCheckedRethrow(callable, ThrownByLambdaException.class);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 
     @Override
@@ -97,16 +90,15 @@ public final class ThrowingPredicateTest
         final Predicate<Type1> instance
             = getTestInstance().orThrow(MyException.class);
 
-        final Runnable runnable = runnableFrom(instance);
         final Callable<Boolean> callable = asCallable(instance);
 
         assertThat(callable.call()).isTrue();
 
-        verifyCheckedRethrow(runnable, MyException.class);
+        verifyCheckedRethrow(callable, MyException.class);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
 
     }
 
@@ -119,15 +111,14 @@ public final class ThrowingPredicateTest
 
         final Predicate<Type1> instance = first.orTryWith(second);
 
-        final Runnable runnable = runnableFrom(instance);
         final Callable<Boolean> callable = asCallable(instance);
 
         assertThat(callable.call()).isTrue();
         assertThat(callable.call()).isFalse();
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 
     @Override
@@ -139,15 +130,14 @@ public final class ThrowingPredicateTest
 
         final Predicate<Type1> instance = first.fallbackTo(second);
 
-        final Runnable runnable = runnableFrom(instance);
         final Callable<Boolean> callable = asCallable(instance);
 
         assertThat(callable.call()).isTrue();
         assertThat(callable.call()).isFalse();
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 
     public void testChainedWithOrReturn()
@@ -155,14 +145,13 @@ public final class ThrowingPredicateTest
     {
         final Predicate<Type1> instance = getTestInstance().orReturn(false);
 
-        final Runnable runnable = runnableFrom(instance);
         final Callable<Boolean> callable = asCallable(instance);
 
         assertThat(callable.call()).isTrue();
         assertThat(callable.call()).isFalse();
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 }

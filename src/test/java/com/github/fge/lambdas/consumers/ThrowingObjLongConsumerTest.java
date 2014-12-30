@@ -75,12 +75,6 @@ public final class ThrowingObjLongConsumerTest
     }
 
     @Override
-    protected Runnable runnableFrom(final ObjLongConsumer<Type1> instance)
-    {
-        return () -> instance.accept(arg1, arg2);
-    }
-
-    @Override
     protected Callable<Integer> asCallable(
         final ObjLongConsumer<Type1> instance)
     {
@@ -94,15 +88,14 @@ public final class ThrowingObjLongConsumerTest
         final ThrowingObjLongConsumer<Type1> instance = getTestInstance();
 
         final Callable<Integer> callable = asCallable(instance);
-        final Runnable runnable = runnableFrom(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
 
-        verifyCheckedRethrow(runnable, ThrownByLambdaException.class);
+        verifyCheckedRethrow(callable, ThrownByLambdaException.class);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 
     @Override
@@ -115,15 +108,14 @@ public final class ThrowingObjLongConsumerTest
             = spy.orThrow(MyException.class);
 
         final Callable<Integer> callable = asCallable(instance);
-        final Runnable runnable = runnableFrom(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
 
-        verifyCheckedRethrow(runnable, MyException.class);
+        verifyCheckedRethrow(callable, MyException.class);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 
     @Override
@@ -136,14 +128,13 @@ public final class ThrowingObjLongConsumerTest
         final ObjLongConsumer<Type1> instance = first.orTryWith(second);
 
         final Callable<Integer> callable = asCallable(instance);
-        final Runnable runnable = runnableFrom(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 
     @Override
@@ -156,14 +147,13 @@ public final class ThrowingObjLongConsumerTest
         final ObjLongConsumer<Type1> instance = first.fallbackTo(second);
 
         final Callable<Integer> callable = asCallable(instance);
-        final Runnable runnable = runnableFrom(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 
     public void testChainedWithDoNothing()
@@ -174,13 +164,12 @@ public final class ThrowingObjLongConsumerTest
         final ObjLongConsumer<Type1> instance = first.orDoNothing();
 
         final Callable<Integer> callable = asCallable(instance);
-        final Runnable runnable = runnableFrom(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret1);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 }

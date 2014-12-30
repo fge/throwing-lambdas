@@ -60,12 +60,6 @@ public final class ThrowingDoubleBinaryOperatorTest
     }
 
     @Override
-    protected Runnable runnableFrom(final DoubleBinaryOperator instance)
-    {
-        return () -> instance.applyAsDouble(left, right);
-    }
-
-    @Override
     protected Callable<Double> asCallable(final DoubleBinaryOperator instance)
     {
         return () -> instance.applyAsDouble(left, right);
@@ -77,16 +71,15 @@ public final class ThrowingDoubleBinaryOperatorTest
     {
         final DoubleBinaryOperator instance = getTestInstance();
 
-        final Runnable runnable = runnableFrom(instance);
         final Callable<Double> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
 
-        verifyCheckedRethrow(runnable, ThrownByLambdaException.class);
+        verifyCheckedRethrow(callable, ThrownByLambdaException.class);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 
     @Override
@@ -96,16 +89,15 @@ public final class ThrowingDoubleBinaryOperatorTest
         final DoubleBinaryOperator instance
             = getTestInstance().orThrow(MyException.class);
 
-        final Runnable runnable = runnableFrom(instance);
         final Callable<Double> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
 
-        verifyCheckedRethrow(runnable, MyException.class);
+        verifyCheckedRethrow(callable, MyException.class);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 
     @Override
@@ -117,15 +109,14 @@ public final class ThrowingDoubleBinaryOperatorTest
 
         final DoubleBinaryOperator instance = first.orTryWith(second);
 
-        final Runnable runnable = runnableFrom(instance);
         final Callable<Double> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 
     @Override
@@ -137,15 +128,14 @@ public final class ThrowingDoubleBinaryOperatorTest
 
         final DoubleBinaryOperator instance = first.fallbackTo(second);
 
-        final Runnable runnable = runnableFrom(instance);
         final Callable<Double> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 
     public void testChainedWithOrReturn()
@@ -154,15 +144,14 @@ public final class ThrowingDoubleBinaryOperatorTest
         final DoubleBinaryOperator instance
             = getTestInstance().orReturn(ret2);
 
-        final Runnable runnable = runnableFrom(instance);
         final Callable<Double> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 
     public void testChainedWithOrReturnLeft()
@@ -171,15 +160,14 @@ public final class ThrowingDoubleBinaryOperatorTest
         final DoubleBinaryOperator instance
             = getTestInstance().orReturnLeft();
 
-        final Runnable runnable = runnableFrom(instance);
         final Callable<Double> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(left);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 
     public void testChainedWithOrReturnRight()
@@ -188,14 +176,13 @@ public final class ThrowingDoubleBinaryOperatorTest
         final DoubleBinaryOperator instance
             = getTestInstance().orReturnRight();
 
-        final Runnable runnable = runnableFrom(instance);
         final Callable<Double> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(right);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 }

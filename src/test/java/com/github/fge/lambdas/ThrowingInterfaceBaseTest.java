@@ -68,16 +68,6 @@ public abstract class ThrowingInterfaceBaseTest<T extends N, N, R>
     protected abstract N getFallback();
 
     /**
-     * Return a runnable from running an instance
-     *
-     * <p>Used to check for exceptions</p>
-     *
-     * @param instance the instance
-     * @return a runnable
-     */
-    protected abstract Runnable runnableFrom(N instance);
-
-    /**
      * Return a callable from running an instance
      *
      * <p>Used to check results.</p>
@@ -123,11 +113,12 @@ public abstract class ThrowingInterfaceBaseTest<T extends N, N, R>
     /*
      * Exception checking methods
      */
-    protected final void verifyCheckedRethrow(final Runnable runnable,
+    @SuppressWarnings("OverlyBroadCatchBlock")
+    protected final void verifyCheckedRethrow(final Callable<R> callable,
         final Class<? extends Throwable> exceptionClass)
     {
         try {
-            runnable.run();
+            callable.call();
             shouldHaveThrown(exceptionClass);
         } catch (Throwable e) {
             assertThat(e).isExactlyInstanceOf(exceptionClass);
@@ -135,20 +126,22 @@ public abstract class ThrowingInterfaceBaseTest<T extends N, N, R>
         }
     }
 
-    protected final void verifyUncheckedThrow(final Runnable runnable)
+    @SuppressWarnings("OverlyBroadCatchBlock")
+    protected final void verifyUncheckedThrow(final Callable<R> callable)
     {
         try {
-            runnable.run();
+            callable.call();
             shouldHaveThrown(RuntimeException.class);
         } catch (Throwable e) {
             assertThat(e).isSameAs(unchecked);
         }
     }
 
-    protected final void verifyErrorThrow(final Runnable runnable)
+    @SuppressWarnings("OverlyBroadCatchBlock")
+    protected final void verifyErrorThrow(final Callable<R> callable)
     {
         try {
-            runnable.run();
+            callable.call();
             shouldHaveThrown(Error.class);
         } catch (Throwable e) {
             assertThat(e).isSameAs(error);

@@ -61,12 +61,6 @@ public final class ThrowingToLongFunctionTest
     }
 
     @Override
-    protected Runnable runnableFrom(final ToLongFunction<Type1> instance)
-    {
-        return () -> instance.applyAsLong(arg);
-    }
-
-    @Override
     protected Callable<Long> asCallable(
         final ToLongFunction<Type1> instance)
     {
@@ -79,16 +73,15 @@ public final class ThrowingToLongFunctionTest
     {
         final ThrowingToLongFunction<Type1> instance = getTestInstance();
 
-        final Runnable runnable = runnableFrom(instance);
         final Callable<Long> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
 
-        verifyCheckedRethrow(runnable, ThrownByLambdaException.class);
+        verifyCheckedRethrow(callable, ThrownByLambdaException.class);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 
     @Override
@@ -98,16 +91,15 @@ public final class ThrowingToLongFunctionTest
         final ToLongFunction<Type1> instance
             = getTestInstance().orThrow(MyException.class);
 
-        final Runnable runnable = runnableFrom(instance);
         final Callable<Long> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
 
-        verifyCheckedRethrow(runnable, MyException.class);
+        verifyCheckedRethrow(callable, MyException.class);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 
     @Override
@@ -119,15 +111,14 @@ public final class ThrowingToLongFunctionTest
 
         final ToLongFunction<Type1> instance = first.orTryWith(second);
 
-        final Runnable runnable = runnableFrom(instance);
         final Callable<Long> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 
     @Override
@@ -139,15 +130,14 @@ public final class ThrowingToLongFunctionTest
 
         final ToLongFunction<Type1> instance = first.fallbackTo(second);
 
-        final Runnable runnable = runnableFrom(instance);
         final Callable<Long> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 
     public void testChainedWithOrReturn()
@@ -157,14 +147,13 @@ public final class ThrowingToLongFunctionTest
 
         final ToLongFunction<Type1> instance = first.orReturn(ret2);
 
-        final Runnable runnable = runnableFrom(instance);
         final Callable<Long> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
         assertThat(callable.call()).isEqualTo(ret2);
 
-        verifyUncheckedThrow(runnable);
+        verifyUncheckedThrow(callable);
 
-        verifyErrorThrow(runnable);
+        verifyErrorThrow(callable);
     }
 }
