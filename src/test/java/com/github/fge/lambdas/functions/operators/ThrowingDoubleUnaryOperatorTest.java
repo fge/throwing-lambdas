@@ -21,7 +21,7 @@ public final class ThrowingDoubleUnaryOperatorTest
     private final double ret2 = 2.0;
 
     @Override
-    protected ThrowingDoubleUnaryOperator getBaseInstance()
+    protected ThrowingDoubleUnaryOperator getAlternate()
     {
         return SpiedThrowingDoubleUnaryOperator.newSpy();
     }
@@ -30,7 +30,7 @@ public final class ThrowingDoubleUnaryOperatorTest
     protected ThrowingDoubleUnaryOperator getPreparedInstance()
         throws Throwable
     {
-        final ThrowingDoubleUnaryOperator spy = getBaseInstance();
+        final ThrowingDoubleUnaryOperator spy = getAlternate();
 
         when(spy.doApplyAsDouble(arg)).thenReturn(ret1).thenThrow(checked)
             .thenThrow(unchecked).thenThrow(error);
@@ -39,7 +39,7 @@ public final class ThrowingDoubleUnaryOperatorTest
     }
 
     @Override
-    protected DoubleUnaryOperator getNonThrowingInstance()
+    protected DoubleUnaryOperator getFallbackInstance()
     {
         return mock(ThrowingDoubleUnaryOperator.class);
     }
@@ -98,7 +98,7 @@ public final class ThrowingDoubleUnaryOperatorTest
         throws Throwable
     {
         final ThrowingDoubleUnaryOperator first = getPreparedInstance();
-        final ThrowingDoubleUnaryOperator second = getBaseInstance();
+        final ThrowingDoubleUnaryOperator second = getAlternate();
         when(second.doApplyAsDouble(arg)).thenReturn(ret2);
 
         final DoubleUnaryOperator instance = first.orTryWith(second);
@@ -119,7 +119,7 @@ public final class ThrowingDoubleUnaryOperatorTest
         throws Throwable
     {
         final ThrowingDoubleUnaryOperator first = getPreparedInstance();
-        final DoubleUnaryOperator second = getNonThrowingInstance();
+        final DoubleUnaryOperator second = getFallbackInstance();
         when(second.applyAsDouble(arg)).thenReturn(ret2);
 
         final DoubleUnaryOperator instance = first.fallbackTo(second);

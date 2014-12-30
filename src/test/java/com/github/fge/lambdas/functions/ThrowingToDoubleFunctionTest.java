@@ -22,7 +22,7 @@ public final class ThrowingToDoubleFunctionTest
     private final double ret2 = 0.25;
 
     @Override
-    protected ThrowingToDoubleFunction<Type1> getBaseInstance()
+    protected ThrowingToDoubleFunction<Type1> getAlternate()
     {
         return SpiedThrowingToDoubleFunction.newSpy();
     }
@@ -31,7 +31,7 @@ public final class ThrowingToDoubleFunctionTest
     protected ThrowingToDoubleFunction<Type1> getPreparedInstance()
         throws Throwable
     {
-        final ThrowingToDoubleFunction<Type1> spy = getBaseInstance();
+        final ThrowingToDoubleFunction<Type1> spy = getAlternate();
 
         when(spy.doApplyAsDouble(arg)).thenReturn(ret1).thenThrow(checked)
             .thenThrow(unchecked).thenThrow(error);
@@ -40,7 +40,7 @@ public final class ThrowingToDoubleFunctionTest
     }
 
     @Override
-    protected ToDoubleFunction<Type1> getNonThrowingInstance()
+    protected ToDoubleFunction<Type1> getFallbackInstance()
     {
         //noinspection unchecked
         return mock(ToDoubleFunction.class);
@@ -101,7 +101,7 @@ public final class ThrowingToDoubleFunctionTest
         throws Throwable
     {
         final ThrowingToDoubleFunction<Type1> first = getPreparedInstance();
-        final ThrowingToDoubleFunction<Type1> second = getBaseInstance();
+        final ThrowingToDoubleFunction<Type1> second = getAlternate();
         when(second.applyAsDouble(arg)).thenReturn(ret2);
 
         final ToDoubleFunction<Type1> instance = first.orTryWith(second);
@@ -122,7 +122,7 @@ public final class ThrowingToDoubleFunctionTest
         throws Throwable
     {
         final ThrowingToDoubleFunction<Type1> first = getPreparedInstance();
-        final ToDoubleFunction<Type1> second = getNonThrowingInstance();
+        final ToDoubleFunction<Type1> second = getFallbackInstance();
         when(second.applyAsDouble(arg)).thenReturn(ret2);
 
         final ToDoubleFunction<Type1> instance = first.fallbackTo(second);

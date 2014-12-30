@@ -31,7 +31,7 @@ public final class ThrowingDoubleConsumerTest
     }
 
     @Override
-    protected ThrowingDoubleConsumer getBaseInstance()
+    protected ThrowingDoubleConsumer getAlternate()
         throws Throwable
     {
         final ThrowingDoubleConsumer spy
@@ -58,7 +58,7 @@ public final class ThrowingDoubleConsumerTest
     }
 
     @Override
-    protected DoubleConsumer getNonThrowingInstance()
+    protected DoubleConsumer getFallbackInstance()
     {
         final DoubleConsumer mock = mock(DoubleConsumer.class);
 
@@ -123,7 +123,7 @@ public final class ThrowingDoubleConsumerTest
         throws Throwable
     {
         final ThrowingDoubleConsumer first = getPreparedInstance();
-        final ThrowingDoubleConsumer second = getBaseInstance();
+        final ThrowingDoubleConsumer second = getAlternate();
 
         final DoubleConsumer instance = first.orTryWith(second);
 
@@ -143,7 +143,7 @@ public final class ThrowingDoubleConsumerTest
         throws Throwable
     {
         final ThrowingDoubleConsumer first = getPreparedInstance();
-        final DoubleConsumer second = getNonThrowingInstance();
+        final DoubleConsumer second = getFallbackInstance();
 
         final DoubleConsumer instance = first.fallbackTo(second);
 

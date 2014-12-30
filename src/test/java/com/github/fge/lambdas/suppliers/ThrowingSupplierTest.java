@@ -21,7 +21,7 @@ public final class ThrowingSupplierTest
     private final Type1 ret2 = Type1.mock();
 
     @Override
-    protected ThrowingSupplier<Type1> getBaseInstance()
+    protected ThrowingSupplier<Type1> getAlternate()
     {
         return SpiedThrowingSupplier.newSpy();
     }
@@ -30,7 +30,7 @@ public final class ThrowingSupplierTest
     protected ThrowingSupplier<Type1> getPreparedInstance()
         throws Throwable
     {
-        final ThrowingSupplier<Type1> spy = getBaseInstance();
+        final ThrowingSupplier<Type1> spy = getAlternate();
 
         when(spy.doGet()).thenReturn(ret1).thenThrow(checked)
             .thenThrow(unchecked).thenThrow(error);
@@ -39,7 +39,7 @@ public final class ThrowingSupplierTest
     }
 
     @Override
-    protected Supplier<Type1> getNonThrowingInstance()
+    protected Supplier<Type1> getFallbackInstance()
     {
         return mock(Supplier.class);
     }
@@ -98,7 +98,7 @@ public final class ThrowingSupplierTest
         throws Throwable
     {
         final ThrowingSupplier<Type1> first = getPreparedInstance();
-        final ThrowingSupplier<Type1> second = getBaseInstance();
+        final ThrowingSupplier<Type1> second = getAlternate();
         when(second.doGet()).thenReturn(ret2);
 
         final Supplier<Type1> instance = first.orTryWith(second);
@@ -120,7 +120,7 @@ public final class ThrowingSupplierTest
         throws Throwable
     {
         final ThrowingSupplier<Type1> first = getPreparedInstance();
-        final Supplier<Type1> second = getNonThrowingInstance();
+        final Supplier<Type1> second = getFallbackInstance();
         when(second.get()).thenReturn(ret2);
 
         final Supplier<Type1> instance = first.fallbackTo(second);

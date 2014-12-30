@@ -33,7 +33,7 @@ public final class ThrowingObjLongConsumerTest
     }
 
     @Override
-    protected ThrowingObjLongConsumer<Type1> getBaseInstance()
+    protected ThrowingObjLongConsumer<Type1> getAlternate()
         throws Throwable
     {
         final ThrowingObjLongConsumer<Type1> spy
@@ -60,7 +60,7 @@ public final class ThrowingObjLongConsumerTest
     }
 
     @Override
-    protected ObjLongConsumer<Type1> getNonThrowingInstance()
+    protected ObjLongConsumer<Type1> getFallbackInstance()
     {
         @SuppressWarnings("unchecked")
         final ObjLongConsumer<Type1> mock = mock(ObjLongConsumer.class);
@@ -128,7 +128,7 @@ public final class ThrowingObjLongConsumerTest
         throws Throwable
     {
         final ThrowingObjLongConsumer<Type1> first = getPreparedInstance();
-        final ThrowingObjLongConsumer<Type1> second = getBaseInstance();
+        final ThrowingObjLongConsumer<Type1> second = getAlternate();
 
         final ObjLongConsumer<Type1> instance = first.orTryWith(second);
 
@@ -148,7 +148,7 @@ public final class ThrowingObjLongConsumerTest
         throws Throwable
     {
         final ThrowingObjLongConsumer<Type1> first = getPreparedInstance();
-        final ObjLongConsumer<Type1> second = getNonThrowingInstance();
+        final ObjLongConsumer<Type1> second = getFallbackInstance();
 
         final ObjLongConsumer<Type1> instance = first.fallbackTo(second);
 

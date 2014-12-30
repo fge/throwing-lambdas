@@ -19,7 +19,7 @@ public final class ThrowingLongPredicateTest
     private final long arg = 0x287981723987L;
 
     @Override
-    protected ThrowingLongPredicate getBaseInstance()
+    protected ThrowingLongPredicate getAlternate()
     {
         return SpiedThrowingLongPredicate.newSpy();
     }
@@ -28,7 +28,7 @@ public final class ThrowingLongPredicateTest
     protected ThrowingLongPredicate getPreparedInstance()
         throws Throwable
     {
-        final ThrowingLongPredicate spy = getBaseInstance();
+        final ThrowingLongPredicate spy = getAlternate();
 
         when(spy.doTest(arg)).thenReturn(true).thenThrow(checked)
             .thenThrow(unchecked).thenThrow(error);
@@ -37,7 +37,7 @@ public final class ThrowingLongPredicateTest
     }
 
     @Override
-    protected LongPredicate getNonThrowingInstance()
+    protected LongPredicate getFallbackInstance()
     {
         return mock(ThrowingLongPredicate.class);
     }
@@ -96,7 +96,7 @@ public final class ThrowingLongPredicateTest
         throws Throwable
     {
         final ThrowingLongPredicate first = getPreparedInstance();
-        final ThrowingLongPredicate second = getBaseInstance();
+        final ThrowingLongPredicate second = getAlternate();
         // That's the default, but...
         when(second.doTest(arg)).thenReturn(false);
 
@@ -118,7 +118,7 @@ public final class ThrowingLongPredicateTest
         throws Throwable
     {
         final ThrowingLongPredicate first = getPreparedInstance();
-        final LongPredicate second = getNonThrowingInstance();
+        final LongPredicate second = getFallbackInstance();
         // That's the default, but...
         when(second.test(arg)).thenReturn(false);
 

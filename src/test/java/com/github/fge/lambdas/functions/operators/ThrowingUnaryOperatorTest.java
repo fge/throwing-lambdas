@@ -21,7 +21,7 @@ public final class ThrowingUnaryOperatorTest
     private final Type1 ret2 = Type1.mock();
 
     @Override
-    protected ThrowingUnaryOperator<Type1> getBaseInstance()
+    protected ThrowingUnaryOperator<Type1> getAlternate()
     {
         return SpiedThrowingUnaryOperator.newSpy();
     }
@@ -30,7 +30,7 @@ public final class ThrowingUnaryOperatorTest
     protected ThrowingUnaryOperator<Type1> getPreparedInstance()
         throws Throwable
     {
-        final ThrowingUnaryOperator<Type1> spy = getBaseInstance();
+        final ThrowingUnaryOperator<Type1> spy = getAlternate();
 
         when(spy.doApply(arg)).thenReturn(ret1).thenThrow(checked)
             .thenThrow(unchecked).thenThrow(error);
@@ -39,7 +39,7 @@ public final class ThrowingUnaryOperatorTest
     }
 
     @Override
-    protected UnaryOperator<Type1> getNonThrowingInstance()
+    protected UnaryOperator<Type1> getFallbackInstance()
     {
         //noinspection unchecked
         return mock(UnaryOperator.class);
@@ -99,7 +99,7 @@ public final class ThrowingUnaryOperatorTest
         throws Throwable
     {
         final ThrowingUnaryOperator<Type1> first = getPreparedInstance();
-        final ThrowingUnaryOperator<Type1> second = getBaseInstance();
+        final ThrowingUnaryOperator<Type1> second = getAlternate();
         when(second.apply(arg)).thenReturn(ret2);
 
         final UnaryOperator<Type1> instance = first.orTryWith(second);
@@ -120,7 +120,7 @@ public final class ThrowingUnaryOperatorTest
         throws Throwable
     {
         final ThrowingUnaryOperator<Type1> first = getPreparedInstance();
-        final UnaryOperator<Type1> second = getNonThrowingInstance();
+        final UnaryOperator<Type1> second = getFallbackInstance();
         when(second.apply(arg)).thenReturn(ret2);
 
         final UnaryOperator<Type1> instance = first.fallbackTo(second);

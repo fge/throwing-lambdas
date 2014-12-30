@@ -31,7 +31,7 @@ public final class ThrowingIntConsumerTest
     }
 
     @Override
-    protected ThrowingIntConsumer getBaseInstance()
+    protected ThrowingIntConsumer getAlternate()
         throws Throwable
     {
         final ThrowingIntConsumer spy = SpiedThrowingIntConsumer.newSpy();
@@ -56,7 +56,7 @@ public final class ThrowingIntConsumerTest
     }
 
     @Override
-    protected IntConsumer getNonThrowingInstance()
+    protected IntConsumer getFallbackInstance()
     {
         final IntConsumer mock = mock(IntConsumer.class);
 
@@ -121,7 +121,7 @@ public final class ThrowingIntConsumerTest
         throws Throwable
     {
         final ThrowingIntConsumer first = getPreparedInstance();
-        final ThrowingIntConsumer second = getBaseInstance();
+        final ThrowingIntConsumer second = getAlternate();
 
         final IntConsumer instance = first.orTryWith(second);
 
@@ -141,7 +141,7 @@ public final class ThrowingIntConsumerTest
         throws Throwable
     {
         final ThrowingIntConsumer first = getPreparedInstance();
-        final IntConsumer second = getNonThrowingInstance();
+        final IntConsumer second = getFallbackInstance();
 
         final IntConsumer instance = first.fallbackTo(second);
 

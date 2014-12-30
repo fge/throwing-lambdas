@@ -21,7 +21,7 @@ public final class ThrowingLongUnaryOperatorTest
     private final long ret2 = 22L;
 
     @Override
-    protected ThrowingLongUnaryOperator getBaseInstance()
+    protected ThrowingLongUnaryOperator getAlternate()
     {
         return SpiedThrowingLongUnaryOperator.newSpy();
     }
@@ -30,7 +30,7 @@ public final class ThrowingLongUnaryOperatorTest
     protected ThrowingLongUnaryOperator getPreparedInstance()
         throws Throwable
     {
-        final ThrowingLongUnaryOperator spy = getBaseInstance();
+        final ThrowingLongUnaryOperator spy = getAlternate();
 
         when(spy.doApplyAsLong(arg)).thenReturn(ret1).thenThrow(checked)
             .thenThrow(unchecked).thenThrow(error);
@@ -39,7 +39,7 @@ public final class ThrowingLongUnaryOperatorTest
     }
 
     @Override
-    protected LongUnaryOperator getNonThrowingInstance()
+    protected LongUnaryOperator getFallbackInstance()
     {
         return mock(ThrowingLongUnaryOperator.class);
     }
@@ -98,7 +98,7 @@ public final class ThrowingLongUnaryOperatorTest
         throws Throwable
     {
         final ThrowingLongUnaryOperator first = getPreparedInstance();
-        final ThrowingLongUnaryOperator second = getBaseInstance();
+        final ThrowingLongUnaryOperator second = getAlternate();
         when(second.doApplyAsLong(arg)).thenReturn(ret2);
 
         final LongUnaryOperator instance = first.orTryWith(second);
@@ -119,7 +119,7 @@ public final class ThrowingLongUnaryOperatorTest
         throws Throwable
     {
         final ThrowingLongUnaryOperator first = getPreparedInstance();
-        final LongUnaryOperator second = getNonThrowingInstance();
+        final LongUnaryOperator second = getFallbackInstance();
         when(second.applyAsLong(arg)).thenReturn(ret2);
 
         final LongUnaryOperator instance = first.fallbackTo(second);

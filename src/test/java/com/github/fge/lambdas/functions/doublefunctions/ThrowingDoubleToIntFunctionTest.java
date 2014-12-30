@@ -21,7 +21,7 @@ public final class ThrowingDoubleToIntFunctionTest
     private final int ret2 = 3;
 
     @Override
-    protected ThrowingDoubleToIntFunction getBaseInstance()
+    protected ThrowingDoubleToIntFunction getAlternate()
     {
         return SpiedThrowingDoubleToIntFunction.newSpy();
     }
@@ -30,7 +30,7 @@ public final class ThrowingDoubleToIntFunctionTest
     protected ThrowingDoubleToIntFunction getPreparedInstance()
         throws Throwable
     {
-        final ThrowingDoubleToIntFunction spy = getBaseInstance();
+        final ThrowingDoubleToIntFunction spy = getAlternate();
 
         when(spy.doApplyAsInt(arg)).thenReturn(ret1).thenThrow(checked)
             .thenThrow(unchecked).thenThrow(error);
@@ -39,7 +39,7 @@ public final class ThrowingDoubleToIntFunctionTest
     }
 
     @Override
-    protected DoubleToIntFunction getNonThrowingInstance()
+    protected DoubleToIntFunction getFallbackInstance()
     {
         return mock(DoubleToIntFunction.class);
     }
@@ -98,7 +98,7 @@ public final class ThrowingDoubleToIntFunctionTest
         throws Throwable
     {
         final ThrowingDoubleToIntFunction first = getPreparedInstance();
-        final ThrowingDoubleToIntFunction second = getBaseInstance();
+        final ThrowingDoubleToIntFunction second = getAlternate();
         when(second.doApplyAsInt(arg)).thenReturn(ret2);
 
         final DoubleToIntFunction instance = first.orTryWith(second);
@@ -119,7 +119,7 @@ public final class ThrowingDoubleToIntFunctionTest
         throws Throwable
     {
         final ThrowingDoubleToIntFunction first = getPreparedInstance();
-        final DoubleToIntFunction second = getNonThrowingInstance();
+        final DoubleToIntFunction second = getFallbackInstance();
         when(second.applyAsInt(arg)).thenReturn(ret2);
 
         final DoubleToIntFunction instance = first.fallbackTo(second);

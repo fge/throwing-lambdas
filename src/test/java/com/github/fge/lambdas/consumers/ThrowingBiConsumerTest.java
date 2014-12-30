@@ -34,7 +34,7 @@ public final class ThrowingBiConsumerTest
     }
 
     @Override
-    protected ThrowingBiConsumer<Type1, Type2> getBaseInstance()
+    protected ThrowingBiConsumer<Type1, Type2> getAlternate()
         throws Throwable
     {
         final ThrowingBiConsumer<Type1, Type2> spy
@@ -61,7 +61,7 @@ public final class ThrowingBiConsumerTest
     }
 
     @Override
-    protected BiConsumer<Type1, Type2> getNonThrowingInstance()
+    protected BiConsumer<Type1, Type2> getFallbackInstance()
     {
         @SuppressWarnings("unchecked")
         final BiConsumer<Type1, Type2> mock = mock(BiConsumer.class);
@@ -129,7 +129,7 @@ public final class ThrowingBiConsumerTest
         throws Throwable
     {
         final ThrowingBiConsumer<Type1, Type2> first = getPreparedInstance();
-        final ThrowingBiConsumer<Type1, Type2> second = getBaseInstance();
+        final ThrowingBiConsumer<Type1, Type2> second = getAlternate();
 
         final BiConsumer<Type1, Type2> instance = first.orTryWith(second);
 
@@ -149,7 +149,7 @@ public final class ThrowingBiConsumerTest
         throws Throwable
     {
         final ThrowingBiConsumer<Type1, Type2> first = getPreparedInstance();
-        final BiConsumer<Type1, Type2> second = getNonThrowingInstance();
+        final BiConsumer<Type1, Type2> second = getFallbackInstance();
 
         final BiConsumer<Type1, Type2> instance = first.fallbackTo(second);
 

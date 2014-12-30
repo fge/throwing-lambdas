@@ -20,7 +20,7 @@ public final class ThrowingDoubleSupplierTest
     private final double ret2 = 0.25;
 
     @Override
-    protected ThrowingDoubleSupplier getBaseInstance()
+    protected ThrowingDoubleSupplier getAlternate()
     {
         return SpiedThrowingDoubleSupplier.newSpy();
     }
@@ -29,7 +29,7 @@ public final class ThrowingDoubleSupplierTest
     protected ThrowingDoubleSupplier getPreparedInstance()
         throws Throwable
     {
-        final ThrowingDoubleSupplier spy = getBaseInstance();
+        final ThrowingDoubleSupplier spy = getAlternate();
 
         when(spy.doGetAsDouble()).thenReturn(ret1).thenThrow(checked)
             .thenThrow(unchecked).thenThrow(error);
@@ -38,7 +38,7 @@ public final class ThrowingDoubleSupplierTest
     }
 
     @Override
-    protected DoubleSupplier getNonThrowingInstance()
+    protected DoubleSupplier getFallbackInstance()
     {
         return mock(DoubleSupplier.class);
     }
@@ -97,7 +97,7 @@ public final class ThrowingDoubleSupplierTest
         throws Throwable
     {
         final ThrowingDoubleSupplier first = getPreparedInstance();
-        final ThrowingDoubleSupplier second = getBaseInstance();
+        final ThrowingDoubleSupplier second = getAlternate();
         when(second.doGetAsDouble()).thenReturn(ret2);
 
         final DoubleSupplier instance = first.orTryWith(second);
@@ -118,7 +118,7 @@ public final class ThrowingDoubleSupplierTest
         throws Throwable
     {
         final ThrowingDoubleSupplier first = getPreparedInstance();
-        final DoubleSupplier second = getNonThrowingInstance();
+        final DoubleSupplier second = getFallbackInstance();
         when(second.getAsDouble()).thenReturn(ret2);
 
         final DoubleSupplier instance = first.fallbackTo(second);

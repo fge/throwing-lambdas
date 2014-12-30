@@ -22,7 +22,7 @@ public final class ThrowingFunctionTest
     private final Type2 ret2 = Type2.mock();
 
     @Override
-    protected ThrowingFunction<Type1, Type2> getBaseInstance()
+    protected ThrowingFunction<Type1, Type2> getAlternate()
     {
         return SpiedThrowingFunction.newSpy();
     }
@@ -31,7 +31,7 @@ public final class ThrowingFunctionTest
     protected ThrowingFunction<Type1, Type2> getPreparedInstance()
         throws Throwable
     {
-        final ThrowingFunction<Type1, Type2> spy = getBaseInstance();
+        final ThrowingFunction<Type1, Type2> spy = getAlternate();
 
         when(spy.doApply(arg)).thenReturn(ret1).thenThrow(checked)
             .thenThrow(unchecked).thenThrow(error);
@@ -40,7 +40,7 @@ public final class ThrowingFunctionTest
     }
 
     @Override
-    protected Function<Type1, Type2> getNonThrowingInstance()
+    protected Function<Type1, Type2> getFallbackInstance()
     {
         //noinspection unchecked
         return mock(Function.class);
@@ -101,7 +101,7 @@ public final class ThrowingFunctionTest
         throws Throwable
     {
         final ThrowingFunction<Type1, Type2> first = getPreparedInstance();
-        final ThrowingFunction<Type1, Type2> second = getBaseInstance();
+        final ThrowingFunction<Type1, Type2> second = getAlternate();
         when(second.doApply(arg)).thenReturn(ret2);
 
         final Function<Type1, Type2> instance = first.orTryWith(second);
@@ -123,7 +123,7 @@ public final class ThrowingFunctionTest
         throws Throwable
     {
         final ThrowingFunction<Type1, Type2> first = getPreparedInstance();
-        final Function<Type1, Type2> second = getNonThrowingInstance();
+        final Function<Type1, Type2> second = getFallbackInstance();
         when(second.apply(arg)).thenReturn(ret2);
 
         final Function<Type1, Type2> instance = first.fallbackTo(second);

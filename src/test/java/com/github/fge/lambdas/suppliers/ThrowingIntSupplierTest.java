@@ -21,7 +21,7 @@ public final class ThrowingIntSupplierTest
     private final int ret2 = 24; // Opposite of The Answer.
 
     @Override
-    protected ThrowingIntSupplier getBaseInstance()
+    protected ThrowingIntSupplier getAlternate()
     {
         return SpiedThrowingIntSupplier.newSpy();
     }
@@ -30,7 +30,7 @@ public final class ThrowingIntSupplierTest
     protected ThrowingIntSupplier getPreparedInstance()
         throws Throwable
     {
-        final ThrowingIntSupplier spy = getBaseInstance();
+        final ThrowingIntSupplier spy = getAlternate();
 
         when(spy.doGetAsInt()).thenReturn(ret1).thenThrow(checked)
             .thenThrow(unchecked).thenThrow(error);
@@ -39,7 +39,7 @@ public final class ThrowingIntSupplierTest
     }
 
     @Override
-    protected IntSupplier getNonThrowingInstance()
+    protected IntSupplier getFallbackInstance()
     {
         return mock(IntSupplier.class);
     }
@@ -98,7 +98,7 @@ public final class ThrowingIntSupplierTest
             throws Throwable
     {
         final ThrowingIntSupplier first = getPreparedInstance();
-        final ThrowingIntSupplier second = getBaseInstance();
+        final ThrowingIntSupplier second = getAlternate();
         when(second.doGetAsInt()).thenReturn(ret2);
 
         final IntSupplier instance = first.orTryWith(second);
@@ -120,7 +120,7 @@ public final class ThrowingIntSupplierTest
             throws Throwable
     {
         final ThrowingIntSupplier first = getPreparedInstance();
-        final IntSupplier second = getNonThrowingInstance();
+        final IntSupplier second = getFallbackInstance();
         when(second.getAsInt()).thenReturn(ret2);
 
         final IntSupplier instance = first.fallbackTo(second);

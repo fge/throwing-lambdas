@@ -20,7 +20,7 @@ public final class ThrowingPredicateTest
     private final Type1 arg = Type1.mock();
 
     @Override
-    protected ThrowingPredicate<Type1> getBaseInstance()
+    protected ThrowingPredicate<Type1> getAlternate()
     {
         return SpiedThrowingPredicate.newSpy();
     }
@@ -29,7 +29,7 @@ public final class ThrowingPredicateTest
     protected ThrowingPredicate<Type1> getPreparedInstance()
         throws Throwable
     {
-        final ThrowingPredicate<Type1> spy = getBaseInstance();
+        final ThrowingPredicate<Type1> spy = getAlternate();
 
         when(spy.doTest(arg)).thenReturn(true).thenThrow(checked)
             .thenThrow(unchecked).thenThrow(error);
@@ -38,7 +38,7 @@ public final class ThrowingPredicateTest
     }
 
     @Override
-    protected Predicate<Type1> getNonThrowingInstance()
+    protected Predicate<Type1> getFallbackInstance()
     {
         return mock(Predicate.class);
     }
@@ -98,7 +98,7 @@ public final class ThrowingPredicateTest
         throws Throwable
     {
         final ThrowingPredicate<Type1> first = getPreparedInstance();
-        final ThrowingPredicate<Type1> second = getBaseInstance();
+        final ThrowingPredicate<Type1> second = getAlternate();
         // This is by default, but...
         when(second.doTest(arg)).thenReturn(false);
 
@@ -120,7 +120,7 @@ public final class ThrowingPredicateTest
         throws Throwable
     {
         final ThrowingPredicate<Type1> first = getPreparedInstance();
-        final Predicate<Type1> second = getNonThrowingInstance();
+        final Predicate<Type1> second = getFallbackInstance();
         when(second.test(arg)).thenReturn(false);
 
         final Predicate<Type1> instance = first.fallbackTo(second);

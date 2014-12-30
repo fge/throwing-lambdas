@@ -24,7 +24,7 @@ public final class ThrowingBiFunctionTest
     private final Type3 ret2 = Type3.mock();
 
     @Override
-    protected ThrowingBiFunction<Type1, Type2, Type3> getBaseInstance()
+    protected ThrowingBiFunction<Type1, Type2, Type3> getAlternate()
     {
         return SpiedThrowingBiFunction.newSpy();
     }
@@ -33,7 +33,7 @@ public final class ThrowingBiFunctionTest
     protected ThrowingBiFunction<Type1, Type2, Type3> getPreparedInstance()
         throws Throwable
     {
-        final ThrowingBiFunction<Type1, Type2, Type3> spy = getBaseInstance();
+        final ThrowingBiFunction<Type1, Type2, Type3> spy = getAlternate();
 
         when(spy.doApply(arg1, arg2)).thenReturn(ret1).thenThrow(checked)
             .thenThrow(unchecked).thenThrow(error);
@@ -42,7 +42,7 @@ public final class ThrowingBiFunctionTest
     }
 
     @Override
-    protected BiFunction<Type1, Type2, Type3> getNonThrowingInstance()
+    protected BiFunction<Type1, Type2, Type3> getFallbackInstance()
     {
         //noinspection unchecked
         return mock(BiFunction.class);
@@ -107,7 +107,7 @@ public final class ThrowingBiFunctionTest
         final ThrowingBiFunction<Type1, Type2, Type3> first
             = getPreparedInstance();
         final ThrowingBiFunction<Type1, Type2, Type3> second
-            = getBaseInstance();
+            = getAlternate();
         when(second.doApply(arg1, arg2)).thenReturn(ret2);
 
         final BiFunction<Type1, Type2, Type3> instance
@@ -131,7 +131,7 @@ public final class ThrowingBiFunctionTest
     {
         final ThrowingBiFunction<Type1, Type2, Type3> first
             = getPreparedInstance();
-        final BiFunction<Type1, Type2, Type3> second = getNonThrowingInstance();
+        final BiFunction<Type1, Type2, Type3> second = getFallbackInstance();
         when(second.apply(arg1, arg2)).thenReturn(ret2);
 
         final BiFunction<Type1, Type2, Type3> instance = first.fallbackTo(

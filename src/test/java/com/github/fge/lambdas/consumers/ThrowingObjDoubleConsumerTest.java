@@ -32,7 +32,7 @@ public final class ThrowingObjDoubleConsumerTest
     }
 
     @Override
-    protected ThrowingObjDoubleConsumer<Type1> getBaseInstance()
+    protected ThrowingObjDoubleConsumer<Type1> getAlternate()
         throws Throwable
     {
         final ThrowingObjDoubleConsumer<Type1> spy
@@ -59,7 +59,7 @@ public final class ThrowingObjDoubleConsumerTest
     }
 
     @Override
-    protected ObjDoubleConsumer<Type1> getNonThrowingInstance()
+    protected ObjDoubleConsumer<Type1> getFallbackInstance()
     {
         @SuppressWarnings("unchecked")
         final ObjDoubleConsumer<Type1> mock = mock(ObjDoubleConsumer.class);
@@ -127,7 +127,7 @@ public final class ThrowingObjDoubleConsumerTest
         throws Throwable
     {
         final ThrowingObjDoubleConsumer<Type1> first = getPreparedInstance();
-        final ThrowingObjDoubleConsumer<Type1> second = getBaseInstance();
+        final ThrowingObjDoubleConsumer<Type1> second = getAlternate();
 
         final ObjDoubleConsumer<Type1> instance = first.orTryWith(second);
 
@@ -147,7 +147,7 @@ public final class ThrowingObjDoubleConsumerTest
         throws Throwable
     {
         final ThrowingObjDoubleConsumer<Type1> first = getPreparedInstance();
-        final ObjDoubleConsumer<Type1> second = getNonThrowingInstance();
+        final ObjDoubleConsumer<Type1> second = getFallbackInstance();
 
         final ObjDoubleConsumer<Type1> instance = first.fallbackTo(second);
 

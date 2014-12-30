@@ -32,7 +32,7 @@ public final class ThrowingLongConsumerTest
     }
 
     @Override
-    protected ThrowingLongConsumer getBaseInstance()
+    protected ThrowingLongConsumer getAlternate()
         throws Throwable
     {
         final ThrowingLongConsumer spy = SpiedThrowingLongConsumer.newSpy();
@@ -57,7 +57,7 @@ public final class ThrowingLongConsumerTest
     }
 
     @Override
-    protected LongConsumer getNonThrowingInstance()
+    protected LongConsumer getFallbackInstance()
     {
         final LongConsumer mock = mock(LongConsumer.class);
 
@@ -122,7 +122,7 @@ public final class ThrowingLongConsumerTest
         throws Throwable
     {
         final ThrowingLongConsumer first = getPreparedInstance();
-        final ThrowingLongConsumer second = getBaseInstance();
+        final ThrowingLongConsumer second = getAlternate();
 
         final LongConsumer instance = first.orTryWith(second);
 
@@ -142,7 +142,7 @@ public final class ThrowingLongConsumerTest
         throws Throwable
     {
         final ThrowingLongConsumer first = getPreparedInstance();
-        final LongConsumer second = getNonThrowingInstance();
+        final LongConsumer second = getFallbackInstance();
 
         final LongConsumer instance = first.fallbackTo(second);
 

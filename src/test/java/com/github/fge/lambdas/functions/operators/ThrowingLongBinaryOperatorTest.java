@@ -22,7 +22,7 @@ public final class ThrowingLongBinaryOperatorTest
     private final long ret2 = 625L;
 
     @Override
-    protected ThrowingLongBinaryOperator getBaseInstance()
+    protected ThrowingLongBinaryOperator getAlternate()
     {
         return SpiedThrowingLongBinaryOperator.newSpy();
     }
@@ -31,7 +31,7 @@ public final class ThrowingLongBinaryOperatorTest
     protected ThrowingLongBinaryOperator getPreparedInstance()
         throws Throwable
     {
-        final ThrowingLongBinaryOperator spy = getBaseInstance();
+        final ThrowingLongBinaryOperator spy = getAlternate();
 
         when(spy.doApplyAsLong(left, right)).thenReturn(ret1)
             .thenThrow(checked).thenThrow(unchecked).thenThrow(error);
@@ -40,7 +40,7 @@ public final class ThrowingLongBinaryOperatorTest
     }
 
     @Override
-    protected LongBinaryOperator getNonThrowingInstance()
+    protected LongBinaryOperator getFallbackInstance()
     {
         return mock(LongBinaryOperator.class);
     }
@@ -99,7 +99,7 @@ public final class ThrowingLongBinaryOperatorTest
         throws Throwable
     {
         final ThrowingLongBinaryOperator first = getPreparedInstance();
-        final ThrowingLongBinaryOperator second = getBaseInstance();
+        final ThrowingLongBinaryOperator second = getAlternate();
         when(second.doApplyAsLong(left, right)).thenReturn(ret2);
 
         final LongBinaryOperator instance = first.orTryWith(second);
@@ -120,7 +120,7 @@ public final class ThrowingLongBinaryOperatorTest
         throws Throwable
     {
         final ThrowingLongBinaryOperator first = getPreparedInstance();
-        final LongBinaryOperator second = getNonThrowingInstance();
+        final LongBinaryOperator second = getFallbackInstance();
         when(second.applyAsLong(left, right)).thenReturn(ret2);
 
         final LongBinaryOperator instance = first.fallbackTo(second);

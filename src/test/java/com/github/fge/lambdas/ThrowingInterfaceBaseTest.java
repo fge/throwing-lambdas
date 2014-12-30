@@ -23,13 +23,12 @@ public abstract class ThrowingInterfaceBaseTest<T extends N, N, R>
     protected final Error error = new Error();
 
     /**
-     * Return a raw mock
-     *
-     * <p>This mock should be a Mockito spy().</p>
+     * Return an alternate mock for use with {@link
+     * ThrowingFunctionalInterface#orTryWith(Object)}
      *
      * @return a mock
      */
-    protected abstract T getBaseInstance()
+    protected abstract T getAlternate()
         throws Throwable;
 
     /**
@@ -50,14 +49,15 @@ public abstract class ThrowingInterfaceBaseTest<T extends N, N, R>
         throws Throwable;
 
     /**
-     * Return a mock of the non throwing version of the interface
+     * Return a mock of the non throwing version of the interface for use in
+     * {@link ThrowingFunctionalInterface#fallbackTo(Object)}
      *
      * <p>A mock of the interface itself is enough. No need to stub (it will
      * only be verify()ed).</p>
      *
      * @return a mock
      */
-    protected abstract N getNonThrowingInstance();
+    protected abstract N getFallbackInstance();
 
     /**
      * Return a runnable from running an instance

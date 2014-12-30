@@ -22,7 +22,7 @@ public final class ThrowingBinaryOperatorTest
     private final Type1 ret2 = Type1.mock();
 
     @Override
-    protected ThrowingBinaryOperator<Type1> getBaseInstance()
+    protected ThrowingBinaryOperator<Type1> getAlternate()
     {
         return SpiedThrowingBinaryOperator.newSpy();
     }
@@ -31,7 +31,7 @@ public final class ThrowingBinaryOperatorTest
     protected ThrowingBinaryOperator<Type1> getPreparedInstance()
         throws Throwable
     {
-        final ThrowingBinaryOperator<Type1> spy = getBaseInstance();
+        final ThrowingBinaryOperator<Type1> spy = getAlternate();
 
         when(spy.doApply(left, right)).thenReturn(ret1).thenThrow(checked)
             .thenThrow(unchecked).thenThrow(error);
@@ -40,7 +40,7 @@ public final class ThrowingBinaryOperatorTest
     }
 
     @Override
-    protected BinaryOperator<Type1> getNonThrowingInstance()
+    protected BinaryOperator<Type1> getFallbackInstance()
     {
         //noinspection unchecked
         return mock(BinaryOperator.class);
@@ -100,7 +100,7 @@ public final class ThrowingBinaryOperatorTest
         throws Throwable
     {
         final ThrowingBinaryOperator<Type1> first = getPreparedInstance();
-        final ThrowingBinaryOperator<Type1> second = getBaseInstance();
+        final ThrowingBinaryOperator<Type1> second = getAlternate();
         when(second.apply(left, right)).thenReturn(ret2);
 
         final BinaryOperator<Type1> instance = first.orTryWith(second);
@@ -121,7 +121,7 @@ public final class ThrowingBinaryOperatorTest
         throws Throwable
     {
         final ThrowingBinaryOperator<Type1> first = getPreparedInstance();
-        final BinaryOperator<Type1> second = getNonThrowingInstance();
+        final BinaryOperator<Type1> second = getFallbackInstance();
         when(second.apply(left, right)).thenReturn(ret2);
 
         final BinaryOperator<Type1> instance = first.fallbackTo(second);

@@ -24,7 +24,7 @@ public final class ThrowingComparatorTest
     private final int ret2 = 421;
 
     @Override
-    protected ThrowingComparator<Type1> getBaseInstance()
+    protected ThrowingComparator<Type1> getAlternate()
     {
         return SpiedThrowingComparator.newSpy();
     }
@@ -33,7 +33,7 @@ public final class ThrowingComparatorTest
     protected ThrowingComparator<Type1> getPreparedInstance()
         throws Throwable
     {
-        final ThrowingComparator<Type1> spy = getBaseInstance();
+        final ThrowingComparator<Type1> spy = getAlternate();
 
         when(spy.doCompare(arg1, arg2)).thenReturn(ret1)
             .thenThrow(checked).thenThrow(unchecked).thenThrow(error);
@@ -42,7 +42,7 @@ public final class ThrowingComparatorTest
     }
 
     @Override
-    protected Comparator<Type1> getNonThrowingInstance()
+    protected Comparator<Type1> getFallbackInstance()
     {
         //noinspection unchecked
         return mock(Comparator.class);
@@ -103,7 +103,7 @@ public final class ThrowingComparatorTest
     {
         final ThrowingComparator<Type1> first = getPreparedInstance();
 
-        final ThrowingComparator<Type1> second = getBaseInstance();
+        final ThrowingComparator<Type1> second = getAlternate();
         when(second.doCompare(arg1, arg2)).thenReturn(ret2);
 
         final Comparator<Type1> instance = first.orTryWith(second);
@@ -126,7 +126,7 @@ public final class ThrowingComparatorTest
     {
         final ThrowingComparator<Type1> first = getPreparedInstance();
 
-        final Comparator<Type1> second = getNonThrowingInstance();
+        final Comparator<Type1> second = getFallbackInstance();
         when(second.compare(arg1, arg2)).thenReturn(ret2);
 
         final Comparator<Type1> instance = first.fallbackTo(second);

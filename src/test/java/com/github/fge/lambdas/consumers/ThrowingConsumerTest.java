@@ -32,7 +32,7 @@ public final class ThrowingConsumerTest
     }
 
     @Override
-    protected ThrowingConsumer<Type1> getBaseInstance()
+    protected ThrowingConsumer<Type1> getAlternate()
         throws Throwable
     {
         final ThrowingConsumer<Type1> spy = SpiedThrowingConsumer.newSpy();
@@ -47,7 +47,7 @@ public final class ThrowingConsumerTest
     protected ThrowingConsumer<Type1> getPreparedInstance()
         throws Throwable
     {
-        final ThrowingConsumer<Type1> spy = getBaseInstance();
+        final ThrowingConsumer<Type1> spy = getAlternate();
 
         doAnswer(invocation -> { sentinel.set(ret1); return null; })
             .doThrow(checked).doThrow(unchecked).doThrow(error)
@@ -57,7 +57,7 @@ public final class ThrowingConsumerTest
     }
 
     @Override
-    protected Consumer<Type1> getNonThrowingInstance()
+    protected Consumer<Type1> getFallbackInstance()
     {
         //noinspection unchecked
         final Consumer<Type1> mock = mock(Consumer.class);
@@ -121,7 +121,7 @@ public final class ThrowingConsumerTest
         throws Throwable
     {
         final ThrowingConsumer<Type1> first = getPreparedInstance();
-        final ThrowingConsumer<Type1> second = getBaseInstance();
+        final ThrowingConsumer<Type1> second = getAlternate();
 
         final Consumer<Type1> instance = first.orTryWith(second);
 
@@ -141,7 +141,7 @@ public final class ThrowingConsumerTest
         throws Throwable
     {
         final ThrowingConsumer<Type1> first = getPreparedInstance();
-        final Consumer<Type1> second = getNonThrowingInstance();
+        final Consumer<Type1> second = getFallbackInstance();
 
         final Consumer<Type1> instance = first.fallbackTo(second);
 

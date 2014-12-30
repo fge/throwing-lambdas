@@ -21,7 +21,7 @@ public final class ThrowingDoubleToLongFunctionTest
     private final long ret2 = 387297L;
 
     @Override
-    protected ThrowingDoubleToLongFunction getBaseInstance()
+    protected ThrowingDoubleToLongFunction getAlternate()
     {
         return SpiedThrowingDoubleToLongFunction.newSpy();
     }
@@ -30,7 +30,7 @@ public final class ThrowingDoubleToLongFunctionTest
     protected ThrowingDoubleToLongFunction getPreparedInstance()
         throws Throwable
     {
-        final ThrowingDoubleToLongFunction spy = getBaseInstance();
+        final ThrowingDoubleToLongFunction spy = getAlternate();
 
         when(spy.doApplyAsLong(arg)).thenReturn(ret1).thenThrow(checked)
             .thenThrow(unchecked).thenThrow(error);
@@ -39,7 +39,7 @@ public final class ThrowingDoubleToLongFunctionTest
     }
 
     @Override
-    protected DoubleToLongFunction getNonThrowingInstance()
+    protected DoubleToLongFunction getFallbackInstance()
     {
         return mock(DoubleToLongFunction.class);
     }
@@ -98,7 +98,7 @@ public final class ThrowingDoubleToLongFunctionTest
         throws Throwable
     {
         final ThrowingDoubleToLongFunction first = getPreparedInstance();
-        final ThrowingDoubleToLongFunction second = getBaseInstance();
+        final ThrowingDoubleToLongFunction second = getAlternate();
         when(second.doApplyAsLong(arg)).thenReturn(ret2);
 
         final DoubleToLongFunction instance = first.orTryWith(second);
@@ -119,7 +119,7 @@ public final class ThrowingDoubleToLongFunctionTest
         throws Throwable
     {
         final ThrowingDoubleToLongFunction first = getPreparedInstance();
-        final DoubleToLongFunction second = getNonThrowingInstance();
+        final DoubleToLongFunction second = getFallbackInstance();
         when(second.applyAsLong(arg)).thenReturn(ret2);
 
         final DoubleToLongFunction instance = first.fallbackTo(second);

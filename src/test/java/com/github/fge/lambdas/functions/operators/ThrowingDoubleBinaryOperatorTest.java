@@ -22,7 +22,7 @@ public final class ThrowingDoubleBinaryOperatorTest
     private final double ret2 = 0.625;
 
     @Override
-    protected ThrowingDoubleBinaryOperator getBaseInstance()
+    protected ThrowingDoubleBinaryOperator getAlternate()
     {
         return SpiedThrowingDoubleBinaryOperator.newSpy();
     }
@@ -31,7 +31,7 @@ public final class ThrowingDoubleBinaryOperatorTest
     protected ThrowingDoubleBinaryOperator getPreparedInstance()
         throws Throwable
     {
-        final ThrowingDoubleBinaryOperator spy = getBaseInstance();
+        final ThrowingDoubleBinaryOperator spy = getAlternate();
 
         when(spy.doApplyAsDouble(left, right)).thenReturn(ret1)
             .thenThrow(checked).thenThrow(unchecked).thenThrow(error);
@@ -40,7 +40,7 @@ public final class ThrowingDoubleBinaryOperatorTest
     }
 
     @Override
-    protected DoubleBinaryOperator getNonThrowingInstance()
+    protected DoubleBinaryOperator getFallbackInstance()
     {
         return mock(DoubleBinaryOperator.class);
     }
@@ -99,7 +99,7 @@ public final class ThrowingDoubleBinaryOperatorTest
         throws Throwable
     {
         final ThrowingDoubleBinaryOperator first = getPreparedInstance();
-        final ThrowingDoubleBinaryOperator second = getBaseInstance();
+        final ThrowingDoubleBinaryOperator second = getAlternate();
         when(second.doApplyAsDouble(left, right)).thenReturn(ret2);
 
         final DoubleBinaryOperator instance = first.orTryWith(second);
@@ -120,7 +120,7 @@ public final class ThrowingDoubleBinaryOperatorTest
         throws Throwable
     {
         final ThrowingDoubleBinaryOperator first = getPreparedInstance();
-        final DoubleBinaryOperator second = getNonThrowingInstance();
+        final DoubleBinaryOperator second = getFallbackInstance();
         when(second.applyAsDouble(left, right)).thenReturn(ret2);
 
         final DoubleBinaryOperator instance = first.fallbackTo(second);

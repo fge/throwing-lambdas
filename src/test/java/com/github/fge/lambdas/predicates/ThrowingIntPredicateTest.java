@@ -19,7 +19,7 @@ public final class ThrowingIntPredicateTest
     private final int arg = 16;
 
     @Override
-    protected ThrowingIntPredicate getBaseInstance()
+    protected ThrowingIntPredicate getAlternate()
     {
         return SpiedThrowingIntPredicate.newSpy();
     }
@@ -28,7 +28,7 @@ public final class ThrowingIntPredicateTest
     protected ThrowingIntPredicate getPreparedInstance()
         throws Throwable
     {
-        final ThrowingIntPredicate spy = getBaseInstance();
+        final ThrowingIntPredicate spy = getAlternate();
 
         when(spy.doTest(arg)).thenReturn(true).thenThrow(checked)
             .thenThrow(unchecked).thenThrow(error);
@@ -37,7 +37,7 @@ public final class ThrowingIntPredicateTest
     }
 
     @Override
-    protected IntPredicate getNonThrowingInstance()
+    protected IntPredicate getFallbackInstance()
     {
         return mock(ThrowingIntPredicate.class);
     }
@@ -96,7 +96,7 @@ public final class ThrowingIntPredicateTest
         throws Throwable
     {
         final ThrowingIntPredicate first = getPreparedInstance();
-        final ThrowingIntPredicate second = getBaseInstance();
+        final ThrowingIntPredicate second = getAlternate();
         // That's the default, but...
         when(second.doTest(arg)).thenReturn(false);
 
@@ -118,7 +118,7 @@ public final class ThrowingIntPredicateTest
         throws Throwable
     {
         final ThrowingIntPredicate first = getPreparedInstance();
-        final IntPredicate second = getNonThrowingInstance();
+        final IntPredicate second = getFallbackInstance();
         // That's the default, but...
         when(second.test(arg)).thenReturn(false);
 

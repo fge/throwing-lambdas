@@ -20,7 +20,7 @@ public final class ThrowingLongSupplierTest
     private final long ret2 = 24L; // Opposite of The Answer.
 
     @Override
-    protected ThrowingLongSupplier getBaseInstance()
+    protected ThrowingLongSupplier getAlternate()
     {
         return SpiedThrowingLongSupplier.newSpy();
     }
@@ -29,7 +29,7 @@ public final class ThrowingLongSupplierTest
     protected ThrowingLongSupplier getPreparedInstance()
         throws Throwable
     {
-        final ThrowingLongSupplier spy = getBaseInstance();
+        final ThrowingLongSupplier spy = getAlternate();
 
         when(spy.doGetAsLong()).thenReturn(ret1).thenThrow(checked)
             .thenThrow(unchecked).thenThrow(error);
@@ -38,7 +38,7 @@ public final class ThrowingLongSupplierTest
     }
 
     @Override
-    protected LongSupplier getNonThrowingInstance()
+    protected LongSupplier getFallbackInstance()
     {
         return mock(LongSupplier.class);
     }
@@ -97,7 +97,7 @@ public final class ThrowingLongSupplierTest
         throws Throwable
     {
         final ThrowingLongSupplier first = getPreparedInstance();
-        final ThrowingLongSupplier second = getBaseInstance();
+        final ThrowingLongSupplier second = getAlternate();
         when(second.doGetAsLong()).thenReturn(ret2);
 
         final LongSupplier instance = first.orTryWith(second);
@@ -119,7 +119,7 @@ public final class ThrowingLongSupplierTest
         throws Throwable
     {
         final ThrowingLongSupplier first = getPreparedInstance();
-        final LongSupplier second = getNonThrowingInstance();
+        final LongSupplier second = getFallbackInstance();
         when(second.getAsLong()).thenReturn(ret2);
 
         final LongSupplier instance = first.fallbackTo(second);

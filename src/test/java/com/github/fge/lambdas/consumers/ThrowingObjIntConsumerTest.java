@@ -32,7 +32,7 @@ public final class ThrowingObjIntConsumerTest
     }
 
     @Override
-    protected ThrowingObjIntConsumer<Type1> getBaseInstance()
+    protected ThrowingObjIntConsumer<Type1> getAlternate()
         throws Throwable
     {
         final ThrowingObjIntConsumer<Type1> spy
@@ -59,7 +59,7 @@ public final class ThrowingObjIntConsumerTest
     }
 
     @Override
-    protected ObjIntConsumer<Type1> getNonThrowingInstance()
+    protected ObjIntConsumer<Type1> getFallbackInstance()
     {
         @SuppressWarnings("unchecked")
         final ObjIntConsumer<Type1> mock = mock(ObjIntConsumer.class);
@@ -127,7 +127,7 @@ public final class ThrowingObjIntConsumerTest
         throws Throwable
     {
         final ThrowingObjIntConsumer<Type1> first = getPreparedInstance();
-        final ThrowingObjIntConsumer<Type1> second = getBaseInstance();
+        final ThrowingObjIntConsumer<Type1> second = getAlternate();
 
         final ObjIntConsumer<Type1> instance = first.orTryWith(second);
 
@@ -147,7 +147,7 @@ public final class ThrowingObjIntConsumerTest
         throws Throwable
     {
         final ThrowingObjIntConsumer<Type1> first = getPreparedInstance();
-        final ObjIntConsumer<Type1> second = getNonThrowingInstance();
+        final ObjIntConsumer<Type1> second = getFallbackInstance();
 
         final ObjIntConsumer<Type1> instance = first.fallbackTo(second);
 
