@@ -17,20 +17,30 @@ public final class ThrowingIntUnaryOperatorTest
     extends ThrowingInterfaceBaseTest<ThrowingIntUnaryOperator, IntUnaryOperator, Integer>
 {
     private final int arg = 1;
-    private final int ret1 = 5;
-    private final int ret2 = 20;
+
+    public ThrowingIntUnaryOperatorTest()
+    {
+        super(5, 20);
+    }
 
     @Override
     protected ThrowingIntUnaryOperator getAlternate()
+        throws Throwable
     {
-        return SpiedThrowingIntUnaryOperator.newSpy();
+        final ThrowingIntUnaryOperator spy =
+            SpiedThrowingIntUnaryOperator.newSpy();
+
+        when(spy.doApplyAsInt(arg)).thenReturn(ret2);
+
+        return spy;
     }
 
     @Override
     protected ThrowingIntUnaryOperator getPreparedInstance()
         throws Throwable
     {
-        final ThrowingIntUnaryOperator spy = getAlternate();
+        final ThrowingIntUnaryOperator spy
+            = SpiedThrowingIntUnaryOperator.newSpy();
 
         when(spy.doApplyAsInt(arg)).thenReturn(ret1).thenThrow(checked)
             .thenThrow(unchecked).thenThrow(error);
@@ -41,7 +51,11 @@ public final class ThrowingIntUnaryOperatorTest
     @Override
     protected IntUnaryOperator getFallbackInstance()
     {
-        return mock(ThrowingIntUnaryOperator.class);
+        final IntUnaryOperator mock = mock(IntUnaryOperator.class);
+
+        when(mock.applyAsInt(arg)).thenReturn(ret2);
+
+        return mock;
     }
 
     @Override
@@ -99,7 +113,6 @@ public final class ThrowingIntUnaryOperatorTest
     {
         final ThrowingIntUnaryOperator first = getPreparedInstance();
         final ThrowingIntUnaryOperator second = getAlternate();
-        when(second.doApplyAsInt(arg)).thenReturn(ret2);
 
         final IntUnaryOperator instance = first.orTryWith(second);
 
@@ -120,7 +133,6 @@ public final class ThrowingIntUnaryOperatorTest
     {
         final ThrowingIntUnaryOperator first = getPreparedInstance();
         final IntUnaryOperator second = getFallbackInstance();
-        when(second.applyAsInt(arg)).thenReturn(ret2);
 
         final IntUnaryOperator instance = first.fallbackTo(second);
 

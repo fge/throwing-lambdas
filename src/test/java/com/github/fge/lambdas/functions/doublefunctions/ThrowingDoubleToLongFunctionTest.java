@@ -17,20 +17,30 @@ public final class ThrowingDoubleToLongFunctionTest
     extends ThrowingInterfaceBaseTest<ThrowingDoubleToLongFunction, DoubleToLongFunction, Long>
 {
     private final double arg = 2.0;
-    private final long ret1 = 42L;
-    private final long ret2 = 387297L;
+
+    public ThrowingDoubleToLongFunctionTest()
+    {
+        super(42L, 387297L);
+    }
+
 
     @Override
     protected ThrowingDoubleToLongFunction getAlternate()
+        throws Throwable
     {
-        return SpiedThrowingDoubleToLongFunction.newSpy();
+        final ThrowingDoubleToLongFunction spy =
+            SpiedThrowingDoubleToLongFunction.newSpy();
+
+        when(spy.doApplyAsLong(arg)).thenReturn(ret2);
+        return spy;
     }
 
     @Override
     protected ThrowingDoubleToLongFunction getPreparedInstance()
         throws Throwable
     {
-        final ThrowingDoubleToLongFunction spy = getAlternate();
+        final ThrowingDoubleToLongFunction spy
+            = SpiedThrowingDoubleToLongFunction.newSpy();
 
         when(spy.doApplyAsLong(arg)).thenReturn(ret1).thenThrow(checked)
             .thenThrow(unchecked).thenThrow(error);
@@ -41,7 +51,11 @@ public final class ThrowingDoubleToLongFunctionTest
     @Override
     protected DoubleToLongFunction getFallbackInstance()
     {
-        return mock(DoubleToLongFunction.class);
+        final DoubleToLongFunction mock = mock(DoubleToLongFunction.class);
+
+        when(mock.applyAsLong(arg)).thenReturn(ret2);
+
+        return mock;
     }
 
     @Override
@@ -99,7 +113,6 @@ public final class ThrowingDoubleToLongFunctionTest
     {
         final ThrowingDoubleToLongFunction first = getPreparedInstance();
         final ThrowingDoubleToLongFunction second = getAlternate();
-        when(second.doApplyAsLong(arg)).thenReturn(ret2);
 
         final DoubleToLongFunction instance = first.orTryWith(second);
 
@@ -120,7 +133,6 @@ public final class ThrowingDoubleToLongFunctionTest
     {
         final ThrowingDoubleToLongFunction first = getPreparedInstance();
         final DoubleToLongFunction second = getFallbackInstance();
-        when(second.applyAsLong(arg)).thenReturn(ret2);
 
         final DoubleToLongFunction instance = first.fallbackTo(second);
 

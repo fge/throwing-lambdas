@@ -17,20 +17,30 @@ public final class ThrowingLongFunctionTest
     extends ThrowingInterfaceBaseTest<ThrowingLongFunction<Type1>, LongFunction<Type1>, Type1>
 {
     private final long arg = 2898L;
-    private final Type1 ret1 = Type1.mock();
-    private final Type1 ret2 = Type1.mock();
+
+    public ThrowingLongFunctionTest()
+    {
+        super(Type1.mock(), Type1.mock());
+    }
 
     @Override
     protected ThrowingLongFunction<Type1> getAlternate()
+        throws Throwable
     {
-        return SpiedThrowingLongFunction.newSpy();
+        final ThrowingLongFunction<Type1> spy
+            = SpiedThrowingLongFunction.newSpy();
+
+        when(spy.doApply(arg)).thenReturn(ret2);
+
+        return spy;
     }
 
     @Override
     protected ThrowingLongFunction<Type1> getPreparedInstance()
         throws Throwable
     {
-        final ThrowingLongFunction<Type1> spy = getAlternate();
+        final ThrowingLongFunction<Type1> spy
+            = SpiedThrowingLongFunction.newSpy();
 
         when(spy.doApply(arg)).thenReturn(ret1).thenThrow(checked)
             .thenThrow(unchecked).thenThrow(error);
@@ -41,8 +51,12 @@ public final class ThrowingLongFunctionTest
     @Override
     protected LongFunction<Type1> getFallbackInstance()
     {
-        //noinspection unchecked
-        return mock(LongFunction.class);
+        @SuppressWarnings("unchecked")
+        final LongFunction<Type1> mock = mock(LongFunction.class);
+
+        when(mock.apply(arg)).thenReturn(ret2);
+
+        return mock;
     }
 
     @Override
@@ -101,7 +115,6 @@ public final class ThrowingLongFunctionTest
     {
         final ThrowingLongFunction<Type1> first = getPreparedInstance();
         final ThrowingLongFunction<Type1> second = getAlternate();
-        when(second.doApply(arg)).thenReturn(ret2);
 
         final LongFunction<Type1> instance = first.orTryWith(second);
 
@@ -122,7 +135,6 @@ public final class ThrowingLongFunctionTest
     {
         final ThrowingLongFunction<Type1> first = getPreparedInstance();
         final LongFunction<Type1> second = getFallbackInstance();
-        when(second.apply(arg)).thenReturn(ret2);
 
         final LongFunction<Type1> instance = first.fallbackTo(second);
 

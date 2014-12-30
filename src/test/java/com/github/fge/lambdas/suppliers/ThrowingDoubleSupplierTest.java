@@ -16,20 +16,29 @@ import static org.mockito.Mockito.when;
 public final class ThrowingDoubleSupplierTest
     extends ThrowingInterfaceBaseTest<ThrowingDoubleSupplier, DoubleSupplier, Double>
 {
-    private final double ret1 = 0.5;
-    private final double ret2 = 0.25;
+    public ThrowingDoubleSupplierTest()
+    {
+        super(0.5, 0.25);
+    }
 
     @Override
     protected ThrowingDoubleSupplier getAlternate()
+        throws Throwable
     {
-        return SpiedThrowingDoubleSupplier.newSpy();
+        final ThrowingDoubleSupplier spy =
+            SpiedThrowingDoubleSupplier.newSpy();
+
+        when(spy.doGetAsDouble()).thenReturn(ret2);
+
+        return spy;
     }
 
     @Override
     protected ThrowingDoubleSupplier getPreparedInstance()
         throws Throwable
     {
-        final ThrowingDoubleSupplier spy = getAlternate();
+        final ThrowingDoubleSupplier spy
+            = SpiedThrowingDoubleSupplier.newSpy();
 
         when(spy.doGetAsDouble()).thenReturn(ret1).thenThrow(checked)
             .thenThrow(unchecked).thenThrow(error);
@@ -40,7 +49,11 @@ public final class ThrowingDoubleSupplierTest
     @Override
     protected DoubleSupplier getFallbackInstance()
     {
-        return mock(DoubleSupplier.class);
+        final DoubleSupplier mock = mock(DoubleSupplier.class);
+
+        when(mock.getAsDouble()).thenReturn(ret2);
+
+        return mock;
     }
 
     @Override
@@ -98,7 +111,6 @@ public final class ThrowingDoubleSupplierTest
     {
         final ThrowingDoubleSupplier first = getPreparedInstance();
         final ThrowingDoubleSupplier second = getAlternate();
-        when(second.doGetAsDouble()).thenReturn(ret2);
 
         final DoubleSupplier instance = first.orTryWith(second);
 
@@ -119,7 +131,6 @@ public final class ThrowingDoubleSupplierTest
     {
         final ThrowingDoubleSupplier first = getPreparedInstance();
         final DoubleSupplier second = getFallbackInstance();
-        when(second.getAsDouble()).thenReturn(ret2);
 
         final DoubleSupplier instance = first.fallbackTo(second);
 

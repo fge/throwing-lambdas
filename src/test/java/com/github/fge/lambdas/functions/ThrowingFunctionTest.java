@@ -18,20 +18,30 @@ public final class ThrowingFunctionTest
     extends ThrowingInterfaceBaseTest<ThrowingFunction<Type1, Type2>, Function<Type1, Type2>, Type2>
 {
     private final Type1 arg = Type1.mock();
-    private final Type2 ret1 = Type2.mock();
-    private final Type2 ret2 = Type2.mock();
+
+    public ThrowingFunctionTest()
+    {
+        super(Type2.mock(), Type2.mock());
+    }
 
     @Override
     protected ThrowingFunction<Type1, Type2> getAlternate()
+        throws Throwable
     {
-        return SpiedThrowingFunction.newSpy();
+        final ThrowingFunction<Type1, Type2> spy =
+            SpiedThrowingFunction.newSpy();
+
+        when(spy.doApply(arg)).thenReturn(ret2);
+
+        return spy;
     }
 
     @Override
     protected ThrowingFunction<Type1, Type2> getPreparedInstance()
         throws Throwable
     {
-        final ThrowingFunction<Type1, Type2> spy = getAlternate();
+        final ThrowingFunction<Type1, Type2> spy
+            = SpiedThrowingFunction.newSpy();
 
         when(spy.doApply(arg)).thenReturn(ret1).thenThrow(checked)
             .thenThrow(unchecked).thenThrow(error);
@@ -42,8 +52,12 @@ public final class ThrowingFunctionTest
     @Override
     protected Function<Type1, Type2> getFallbackInstance()
     {
-        //noinspection unchecked
-        return mock(Function.class);
+        @SuppressWarnings("unchecked")
+        final Function<Type1, Type2> mock = mock(Function.class);
+
+        when(mock.apply(arg)).thenReturn(ret2);
+
+        return mock;
     }
 
     @Override
@@ -102,7 +116,6 @@ public final class ThrowingFunctionTest
     {
         final ThrowingFunction<Type1, Type2> first = getPreparedInstance();
         final ThrowingFunction<Type1, Type2> second = getAlternate();
-        when(second.doApply(arg)).thenReturn(ret2);
 
         final Function<Type1, Type2> instance = first.orTryWith(second);
 
@@ -124,7 +137,6 @@ public final class ThrowingFunctionTest
     {
         final ThrowingFunction<Type1, Type2> first = getPreparedInstance();
         final Function<Type1, Type2> second = getFallbackInstance();
-        when(second.apply(arg)).thenReturn(ret2);
 
         final Function<Type1, Type2> instance = first.fallbackTo(second);
 

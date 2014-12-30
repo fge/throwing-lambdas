@@ -17,20 +17,30 @@ public final class ThrowingLongToIntFunctionTest
     extends ThrowingInterfaceBaseTest<ThrowingLongToIntFunction, LongToIntFunction, Integer>
 {
     private final long arg = 2015L;
-    private final int ret1 = 42;
-    private final int ret2 = 3;
+
+    public ThrowingLongToIntFunctionTest()
+    {
+        super(42, 3);
+    }
 
     @Override
     protected ThrowingLongToIntFunction getAlternate()
+        throws Throwable
     {
-        return SpiedThrowingLongToIntFunction.newSpy();
+        final ThrowingLongToIntFunction spy =
+            SpiedThrowingLongToIntFunction.newSpy();
+
+        when(spy.doApplyAsInt(arg)).thenReturn(ret2);
+
+        return spy;
     }
 
     @Override
     protected ThrowingLongToIntFunction getPreparedInstance()
         throws Throwable
     {
-        final ThrowingLongToIntFunction spy = getAlternate();
+        final ThrowingLongToIntFunction spy
+            = SpiedThrowingLongToIntFunction.newSpy();
 
         when(spy.doApplyAsInt(arg)).thenReturn(ret1).thenThrow(checked)
             .thenThrow(unchecked).thenThrow(error);
@@ -41,7 +51,11 @@ public final class ThrowingLongToIntFunctionTest
     @Override
     protected LongToIntFunction getFallbackInstance()
     {
-        return mock(LongToIntFunction.class);
+        final LongToIntFunction mock = mock(LongToIntFunction.class);
+
+        when(mock.applyAsInt(arg)).thenReturn(ret2);
+
+        return mock;
     }
 
     @Override
@@ -99,7 +113,6 @@ public final class ThrowingLongToIntFunctionTest
     {
         final ThrowingLongToIntFunction first = getPreparedInstance();
         final ThrowingLongToIntFunction second = getAlternate();
-        when(second.doApplyAsInt(arg)).thenReturn(ret2);
 
         final LongToIntFunction instance = first.orTryWith(second);
 
@@ -120,7 +133,6 @@ public final class ThrowingLongToIntFunctionTest
     {
         final ThrowingLongToIntFunction first = getPreparedInstance();
         final LongToIntFunction second = getFallbackInstance();
-        when(second.applyAsInt(arg)).thenReturn(ret2);
 
         final LongToIntFunction instance = first.fallbackTo(second);
 

@@ -13,7 +13,8 @@ import java.util.function.ObjIntConsumer;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-@SuppressWarnings("ProhibitedExceptionDeclared")
+@SuppressWarnings({"ProhibitedExceptionDeclared", "OverlyBroadThrowsClause",
+    "AutoBoxing"})
 public final class ThrowingObjIntConsumerTest
     extends ThrowingInterfaceBaseTest<ThrowingObjIntConsumer<Type1>, ObjIntConsumer<Type1>, Integer>
 {
@@ -22,8 +23,10 @@ public final class ThrowingObjIntConsumerTest
 
     private final AtomicInteger sentinel = new AtomicInteger(0);
 
-    private final int ret1 = 42;
-    private final int ret2 = 0x42;
+    public ThrowingObjIntConsumerTest()
+    {
+        super(42, 24);
+    }
 
     @BeforeMethod
     public void resetSentinel()

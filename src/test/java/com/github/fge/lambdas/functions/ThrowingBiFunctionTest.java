@@ -20,20 +20,29 @@ public final class ThrowingBiFunctionTest
 {
     private final Type1 arg1 = Type1.mock();
     private final Type2 arg2 = Type2.mock();
-    private final Type3 ret1 = Type3.mock();
-    private final Type3 ret2 = Type3.mock();
+
+    public ThrowingBiFunctionTest()
+    {
+        super(Type3.mock(), Type3.mock());
+    }
 
     @Override
     protected ThrowingBiFunction<Type1, Type2, Type3> getAlternate()
+        throws Throwable
     {
-        return SpiedThrowingBiFunction.newSpy();
+        final ThrowingBiFunction<Type1, Type2, Type3>
+            spy = SpiedThrowingBiFunction.newSpy();
+
+        when(spy.doApply(arg1, arg2)).thenReturn(ret2);
+        return spy;
     }
 
     @Override
     protected ThrowingBiFunction<Type1, Type2, Type3> getPreparedInstance()
         throws Throwable
     {
-        final ThrowingBiFunction<Type1, Type2, Type3> spy = getAlternate();
+        final ThrowingBiFunction<Type1, Type2, Type3> spy
+            = SpiedThrowingBiFunction.newSpy();
 
         when(spy.doApply(arg1, arg2)).thenReturn(ret1).thenThrow(checked)
             .thenThrow(unchecked).thenThrow(error);
@@ -44,8 +53,12 @@ public final class ThrowingBiFunctionTest
     @Override
     protected BiFunction<Type1, Type2, Type3> getFallbackInstance()
     {
-        //noinspection unchecked
-        return mock(BiFunction.class);
+        @SuppressWarnings("unchecked")
+        final BiFunction<Type1, Type2, Type3> mock = mock(BiFunction.class);
+
+        when(mock.apply(arg1, arg2)).thenReturn(ret2);
+
+        return mock;
     }
 
     @Override
@@ -108,7 +121,6 @@ public final class ThrowingBiFunctionTest
             = getPreparedInstance();
         final ThrowingBiFunction<Type1, Type2, Type3> second
             = getAlternate();
-        when(second.doApply(arg1, arg2)).thenReturn(ret2);
 
         final BiFunction<Type1, Type2, Type3> instance
             = first.orTryWith(second);
@@ -132,7 +144,6 @@ public final class ThrowingBiFunctionTest
         final ThrowingBiFunction<Type1, Type2, Type3> first
             = getPreparedInstance();
         final BiFunction<Type1, Type2, Type3> second = getFallbackInstance();
-        when(second.apply(arg1, arg2)).thenReturn(ret2);
 
         final BiFunction<Type1, Type2, Type3> instance = first.fallbackTo(
             second);

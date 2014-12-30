@@ -18,20 +18,30 @@ public final class ThrowingBinaryOperatorTest
 {
     private final Type1 left = Type1.mock();
     private final Type1 right = Type1.mock();
-    private final Type1 ret1 = Type1.mock();
-    private final Type1 ret2 = Type1.mock();
+
+    public ThrowingBinaryOperatorTest()
+    {
+        super(Type1.mock(), Type1.mock());
+    }
 
     @Override
     protected ThrowingBinaryOperator<Type1> getAlternate()
+        throws Throwable
     {
-        return SpiedThrowingBinaryOperator.newSpy();
+        final ThrowingBinaryOperator<Type1> spy =
+            SpiedThrowingBinaryOperator.newSpy();
+
+        when(spy.doApply(left, right)).thenReturn(ret2);
+
+        return spy;
     }
 
     @Override
     protected ThrowingBinaryOperator<Type1> getPreparedInstance()
         throws Throwable
     {
-        final ThrowingBinaryOperator<Type1> spy = getAlternate();
+        final ThrowingBinaryOperator<Type1> spy
+            = SpiedThrowingBinaryOperator.newSpy();
 
         when(spy.doApply(left, right)).thenReturn(ret1).thenThrow(checked)
             .thenThrow(unchecked).thenThrow(error);
@@ -42,8 +52,12 @@ public final class ThrowingBinaryOperatorTest
     @Override
     protected BinaryOperator<Type1> getFallbackInstance()
     {
-        //noinspection unchecked
-        return mock(BinaryOperator.class);
+        @SuppressWarnings("unchecked")
+        final BinaryOperator<Type1> mock = mock(BinaryOperator.class);
+
+        when(mock.apply(left, right)).thenReturn(ret2);
+
+        return mock;
     }
 
     @Override
@@ -101,7 +115,6 @@ public final class ThrowingBinaryOperatorTest
     {
         final ThrowingBinaryOperator<Type1> first = getPreparedInstance();
         final ThrowingBinaryOperator<Type1> second = getAlternate();
-        when(second.apply(left, right)).thenReturn(ret2);
 
         final BinaryOperator<Type1> instance = first.orTryWith(second);
 
@@ -122,7 +135,6 @@ public final class ThrowingBinaryOperatorTest
     {
         final ThrowingBinaryOperator<Type1> first = getPreparedInstance();
         final BinaryOperator<Type1> second = getFallbackInstance();
-        when(second.apply(left, right)).thenReturn(ret2);
 
         final BinaryOperator<Type1> instance = first.fallbackTo(second);
 

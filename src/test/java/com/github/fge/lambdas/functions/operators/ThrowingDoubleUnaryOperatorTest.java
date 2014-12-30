@@ -17,20 +17,30 @@ public final class ThrowingDoubleUnaryOperatorTest
     extends ThrowingInterfaceBaseTest<ThrowingDoubleUnaryOperator, DoubleUnaryOperator, Double>
 {
     private final double arg = 1.0;
-    private final double ret1 = 0.5;
-    private final double ret2 = 2.0;
+
+    public ThrowingDoubleUnaryOperatorTest()
+    {
+        super(0.5, 2.0);
+    }
 
     @Override
     protected ThrowingDoubleUnaryOperator getAlternate()
+        throws Throwable
     {
-        return SpiedThrowingDoubleUnaryOperator.newSpy();
+        final ThrowingDoubleUnaryOperator spy =
+            SpiedThrowingDoubleUnaryOperator.newSpy();
+
+        when(spy.doApplyAsDouble(arg)).thenReturn(ret2);
+
+        return spy;
     }
 
     @Override
     protected ThrowingDoubleUnaryOperator getPreparedInstance()
         throws Throwable
     {
-        final ThrowingDoubleUnaryOperator spy = getAlternate();
+        final ThrowingDoubleUnaryOperator spy
+            = SpiedThrowingDoubleUnaryOperator.newSpy();
 
         when(spy.doApplyAsDouble(arg)).thenReturn(ret1).thenThrow(checked)
             .thenThrow(unchecked).thenThrow(error);
@@ -41,7 +51,11 @@ public final class ThrowingDoubleUnaryOperatorTest
     @Override
     protected DoubleUnaryOperator getFallbackInstance()
     {
-        return mock(ThrowingDoubleUnaryOperator.class);
+        final DoubleUnaryOperator mock = mock(DoubleUnaryOperator.class);
+
+        when(mock.applyAsDouble(arg)).thenReturn(ret2);
+
+        return mock;
     }
 
     @Override
@@ -99,7 +113,6 @@ public final class ThrowingDoubleUnaryOperatorTest
     {
         final ThrowingDoubleUnaryOperator first = getPreparedInstance();
         final ThrowingDoubleUnaryOperator second = getAlternate();
-        when(second.doApplyAsDouble(arg)).thenReturn(ret2);
 
         final DoubleUnaryOperator instance = first.orTryWith(second);
 
@@ -120,7 +133,6 @@ public final class ThrowingDoubleUnaryOperatorTest
     {
         final ThrowingDoubleUnaryOperator first = getPreparedInstance();
         final DoubleUnaryOperator second = getFallbackInstance();
-        when(second.applyAsDouble(arg)).thenReturn(ret2);
 
         final DoubleUnaryOperator instance = first.fallbackTo(second);
 

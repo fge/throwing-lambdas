@@ -18,17 +18,29 @@ public final class ThrowingDoublePredicateTest
 {
     private final double arg = 16.25;
 
+    public ThrowingDoublePredicateTest()
+    {
+        super(true, false);
+    }
+
     @Override
     protected ThrowingDoublePredicate getAlternate()
+        throws Throwable
     {
-        return SpiedThrowingDoublePredicate.newSpy();
+        final ThrowingDoublePredicate spy =
+            SpiedThrowingDoublePredicate.newSpy();
+
+        when(spy.doTest(arg)).thenReturn(ret2);
+
+        return spy;
     }
 
     @Override
     protected ThrowingDoublePredicate getPreparedInstance()
         throws Throwable
     {
-        final ThrowingDoublePredicate spy = getAlternate();
+        final ThrowingDoublePredicate spy
+            = SpiedThrowingDoublePredicate.newSpy();
 
         when(spy.doTest(arg)).thenReturn(true).thenThrow(checked)
             .thenThrow(unchecked).thenThrow(error);
@@ -39,7 +51,11 @@ public final class ThrowingDoublePredicateTest
     @Override
     protected DoublePredicate getFallbackInstance()
     {
-        return mock(ThrowingDoublePredicate.class);
+        final DoublePredicate mock = mock(DoublePredicate.class);
+
+        when(mock.test(arg)).thenReturn(ret2);
+
+        return mock;
     }
 
     @Override
@@ -97,8 +113,6 @@ public final class ThrowingDoublePredicateTest
     {
         final ThrowingDoublePredicate first = getPreparedInstance();
         final ThrowingDoublePredicate second = getAlternate();
-        // That's the default, but...
-        when(second.doTest(arg)).thenReturn(false);
 
         final DoublePredicate instance = first.orTryWith(second);
 
@@ -119,8 +133,6 @@ public final class ThrowingDoublePredicateTest
     {
         final ThrowingDoublePredicate first = getPreparedInstance();
         final DoublePredicate second = getFallbackInstance();
-        // That's the default, but...
-        when(second.test(arg)).thenReturn(false);
 
         final DoublePredicate instance = first.fallbackTo(second);
 

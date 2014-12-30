@@ -18,20 +18,30 @@ public final class ThrowingDoubleBinaryOperatorTest
 {
     private final double left = 0.125;
     private final double right = 125.0;
-    private final double ret1 = 2.0;
-    private final double ret2 = 0.625;
+
+    public ThrowingDoubleBinaryOperatorTest()
+    {
+        super(2.0, 0.625);
+    }
 
     @Override
     protected ThrowingDoubleBinaryOperator getAlternate()
+        throws Throwable
     {
-        return SpiedThrowingDoubleBinaryOperator.newSpy();
+        final ThrowingDoubleBinaryOperator spy =
+            SpiedThrowingDoubleBinaryOperator.newSpy();
+
+        when(spy.doApplyAsDouble(left, right)).thenReturn(ret2);
+
+        return spy;
     }
 
     @Override
     protected ThrowingDoubleBinaryOperator getPreparedInstance()
         throws Throwable
     {
-        final ThrowingDoubleBinaryOperator spy = getAlternate();
+        final ThrowingDoubleBinaryOperator spy
+            = SpiedThrowingDoubleBinaryOperator.newSpy();
 
         when(spy.doApplyAsDouble(left, right)).thenReturn(ret1)
             .thenThrow(checked).thenThrow(unchecked).thenThrow(error);
@@ -42,7 +52,11 @@ public final class ThrowingDoubleBinaryOperatorTest
     @Override
     protected DoubleBinaryOperator getFallbackInstance()
     {
-        return mock(DoubleBinaryOperator.class);
+        final DoubleBinaryOperator mock = mock(DoubleBinaryOperator.class);
+
+        when(mock.applyAsDouble(left, right)).thenReturn(ret2);
+
+        return mock;
     }
 
     @Override
@@ -100,7 +114,6 @@ public final class ThrowingDoubleBinaryOperatorTest
     {
         final ThrowingDoubleBinaryOperator first = getPreparedInstance();
         final ThrowingDoubleBinaryOperator second = getAlternate();
-        when(second.doApplyAsDouble(left, right)).thenReturn(ret2);
 
         final DoubleBinaryOperator instance = first.orTryWith(second);
 
@@ -121,7 +134,6 @@ public final class ThrowingDoubleBinaryOperatorTest
     {
         final ThrowingDoubleBinaryOperator first = getPreparedInstance();
         final DoubleBinaryOperator second = getFallbackInstance();
-        when(second.applyAsDouble(left, right)).thenReturn(ret2);
 
         final DoubleBinaryOperator instance = first.fallbackTo(second);
 

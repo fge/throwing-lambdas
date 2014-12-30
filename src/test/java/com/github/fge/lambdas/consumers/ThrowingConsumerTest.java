@@ -14,7 +14,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 
-@SuppressWarnings({"ProhibitedExceptionDeclared", "OverlyBroadThrowsClause"})
+@SuppressWarnings({"ProhibitedExceptionDeclared", "OverlyBroadThrowsClause",
+    "AutoBoxing"})
 public final class ThrowingConsumerTest
     extends ThrowingInterfaceBaseTest<ThrowingConsumer<Type1>, Consumer<Type1>, Integer>
 {
@@ -22,8 +23,10 @@ public final class ThrowingConsumerTest
 
     private final AtomicInteger sentinel = new AtomicInteger(0);
 
-    private final int ret1 = 42;
-    private final int ret2 = 24;
+    public ThrowingConsumerTest()
+    {
+        super(42, 24);
+    }
 
     @BeforeMethod
     public void resetSentinel()
@@ -47,7 +50,7 @@ public final class ThrowingConsumerTest
     protected ThrowingConsumer<Type1> getPreparedInstance()
         throws Throwable
     {
-        final ThrowingConsumer<Type1> spy = getAlternate();
+        final ThrowingConsumer<Type1> spy = SpiedThrowingConsumer.newSpy();
 
         doAnswer(invocation -> { sentinel.set(ret1); return null; })
             .doThrow(checked).doThrow(unchecked).doThrow(error)
@@ -59,10 +62,12 @@ public final class ThrowingConsumerTest
     @Override
     protected Consumer<Type1> getFallbackInstance()
     {
-        //noinspection unchecked
+        @SuppressWarnings("unchecked")
         final Consumer<Type1> mock = mock(Consumer.class);
+
         doAnswer(invocation -> { sentinel.set(ret2); return null; })
             .when(mock).accept(arg);
+
         return mock;
     }
 

@@ -17,20 +17,31 @@ public final class ThrowingDoubleFunctionTest
     extends ThrowingInterfaceBaseTest<ThrowingDoubleFunction<Type1>, DoubleFunction<Type1>, Type1>
 {
     private final double arg = 0.25;
-    private final Type1 ret1 = Type1.mock();
-    private final Type1 ret2 = Type1.mock();
+
+    public ThrowingDoubleFunctionTest()
+    {
+        super(Type1.mock(), Type1.mock());
+    }
+
 
     @Override
     protected ThrowingDoubleFunction<Type1> getAlternate()
+        throws Throwable
     {
-        return SpiedThrowingDoubleFunction.newSpy();
+        final ThrowingDoubleFunction<Type1> spy =
+            SpiedThrowingDoubleFunction.newSpy();
+
+        when(spy.doApply(arg)).thenReturn(ret2);
+
+        return spy;
     }
 
     @Override
     protected ThrowingDoubleFunction<Type1> getPreparedInstance()
         throws Throwable
     {
-        final ThrowingDoubleFunction<Type1> spy = getAlternate();
+        final ThrowingDoubleFunction<Type1> spy
+            = SpiedThrowingDoubleFunction.newSpy();
 
         when(spy.doApply(arg)).thenReturn(ret1).thenThrow(checked)
             .thenThrow(unchecked).thenThrow(error);
@@ -38,11 +49,15 @@ public final class ThrowingDoubleFunctionTest
         return spy;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected DoubleFunction<Type1> getFallbackInstance()
     {
-        //noinspection unchecked
-        return mock(DoubleFunction.class);
+        final DoubleFunction<Type1> mock = mock(DoubleFunction.class);
+
+        when(mock.apply(arg)).thenReturn(ret2);
+
+        return mock;
     }
 
     @Override
@@ -101,7 +116,6 @@ public final class ThrowingDoubleFunctionTest
     {
         final ThrowingDoubleFunction<Type1> first = getPreparedInstance();
         final ThrowingDoubleFunction<Type1> second = getAlternate();
-        when(second.doApply(arg)).thenReturn(ret2);
 
         final DoubleFunction<Type1> instance = first.orTryWith(second);
 
@@ -122,7 +136,6 @@ public final class ThrowingDoubleFunctionTest
     {
         final ThrowingDoubleFunction<Type1> first = getPreparedInstance();
         final DoubleFunction<Type1> second = getFallbackInstance();
-        when(second.apply(arg)).thenReturn(ret2);
 
         final DoubleFunction<Type1> instance = first.fallbackTo(second);
 

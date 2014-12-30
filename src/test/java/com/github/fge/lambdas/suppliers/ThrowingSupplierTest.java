@@ -12,25 +12,31 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@SuppressWarnings({"ProhibitedExceptionDeclared", "unchecked",
-    "OverlyBroadThrowsClause"})
+@SuppressWarnings({"ProhibitedExceptionDeclared", "OverlyBroadThrowsClause"})
 public final class ThrowingSupplierTest
     extends ThrowingInterfaceBaseTest<ThrowingSupplier<Type1>, Supplier<Type1>, Type1>
 {
-    private final Type1 ret1 = Type1.mock();
-    private final Type1 ret2 = Type1.mock();
+    public ThrowingSupplierTest()
+    {
+        super(Type1.mock(), Type1.mock());
+    }
 
     @Override
     protected ThrowingSupplier<Type1> getAlternate()
+        throws Throwable
     {
-        return SpiedThrowingSupplier.newSpy();
+        final ThrowingSupplier<Type1> spy = SpiedThrowingSupplier.newSpy();
+
+        when(spy.doGet()).thenReturn(ret2);
+
+        return spy;
     }
 
     @Override
     protected ThrowingSupplier<Type1> getPreparedInstance()
         throws Throwable
     {
-        final ThrowingSupplier<Type1> spy = getAlternate();
+        final ThrowingSupplier<Type1> spy = SpiedThrowingSupplier.newSpy();
 
         when(spy.doGet()).thenReturn(ret1).thenThrow(checked)
             .thenThrow(unchecked).thenThrow(error);
@@ -41,7 +47,12 @@ public final class ThrowingSupplierTest
     @Override
     protected Supplier<Type1> getFallbackInstance()
     {
-        return mock(Supplier.class);
+        @SuppressWarnings("unchecked")
+        final Supplier<Type1> mock = mock(Supplier.class);
+
+        when(mock.get()).thenReturn(ret2);
+
+        return mock;
     }
 
     @Override
@@ -99,7 +110,6 @@ public final class ThrowingSupplierTest
     {
         final ThrowingSupplier<Type1> first = getPreparedInstance();
         final ThrowingSupplier<Type1> second = getAlternate();
-        when(second.doGet()).thenReturn(ret2);
 
         final Supplier<Type1> instance = first.orTryWith(second);
 
@@ -121,7 +131,6 @@ public final class ThrowingSupplierTest
     {
         final ThrowingSupplier<Type1> first = getPreparedInstance();
         final Supplier<Type1> second = getFallbackInstance();
-        when(second.get()).thenReturn(ret2);
 
         final Supplier<Type1> instance = first.fallbackTo(second);
 

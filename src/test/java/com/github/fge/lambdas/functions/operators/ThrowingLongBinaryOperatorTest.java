@@ -18,20 +18,30 @@ public final class ThrowingLongBinaryOperatorTest
 {
     private final long left = 398098L;
     private final long right = 125L;
-    private final long ret1 = 2L;
-    private final long ret2 = 625L;
+
+    public ThrowingLongBinaryOperatorTest()
+    {
+        super(2L, 625L);
+    }
 
     @Override
     protected ThrowingLongBinaryOperator getAlternate()
+        throws Throwable
     {
-        return SpiedThrowingLongBinaryOperator.newSpy();
+        final ThrowingLongBinaryOperator spy =
+            SpiedThrowingLongBinaryOperator.newSpy();
+
+        when(spy.doApplyAsLong(left, right)).thenReturn(ret2);
+
+        return spy;
     }
 
     @Override
     protected ThrowingLongBinaryOperator getPreparedInstance()
         throws Throwable
     {
-        final ThrowingLongBinaryOperator spy = getAlternate();
+        final ThrowingLongBinaryOperator spy
+            = SpiedThrowingLongBinaryOperator.newSpy();
 
         when(spy.doApplyAsLong(left, right)).thenReturn(ret1)
             .thenThrow(checked).thenThrow(unchecked).thenThrow(error);
@@ -42,7 +52,11 @@ public final class ThrowingLongBinaryOperatorTest
     @Override
     protected LongBinaryOperator getFallbackInstance()
     {
-        return mock(LongBinaryOperator.class);
+        final LongBinaryOperator mock = mock(LongBinaryOperator.class);
+
+        when(mock.applyAsLong(left, right)).thenReturn(ret2);
+
+        return mock;
     }
 
     @Override
@@ -100,7 +114,6 @@ public final class ThrowingLongBinaryOperatorTest
     {
         final ThrowingLongBinaryOperator first = getPreparedInstance();
         final ThrowingLongBinaryOperator second = getAlternate();
-        when(second.doApplyAsLong(left, right)).thenReturn(ret2);
 
         final LongBinaryOperator instance = first.orTryWith(second);
 
@@ -121,7 +134,6 @@ public final class ThrowingLongBinaryOperatorTest
     {
         final ThrowingLongBinaryOperator first = getPreparedInstance();
         final LongBinaryOperator second = getFallbackInstance();
-        when(second.applyAsLong(left, right)).thenReturn(ret2);
 
         final LongBinaryOperator instance = first.fallbackTo(second);
 

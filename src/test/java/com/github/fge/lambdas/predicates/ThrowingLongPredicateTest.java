@@ -18,17 +18,29 @@ public final class ThrowingLongPredicateTest
 {
     private final long arg = 0x287981723987L;
 
+    public ThrowingLongPredicateTest()
+    {
+        super(true, false);
+    }
+
     @Override
     protected ThrowingLongPredicate getAlternate()
+        throws Throwable
     {
-        return SpiedThrowingLongPredicate.newSpy();
+        final ThrowingLongPredicate spy =
+            SpiedThrowingLongPredicate.newSpy();
+
+        when(spy.doTest(arg)).thenReturn(ret2);
+
+        return spy;
     }
 
     @Override
     protected ThrowingLongPredicate getPreparedInstance()
         throws Throwable
     {
-        final ThrowingLongPredicate spy = getAlternate();
+        final ThrowingLongPredicate spy
+            = SpiedThrowingLongPredicate.newSpy();
 
         when(spy.doTest(arg)).thenReturn(true).thenThrow(checked)
             .thenThrow(unchecked).thenThrow(error);
@@ -39,7 +51,11 @@ public final class ThrowingLongPredicateTest
     @Override
     protected LongPredicate getFallbackInstance()
     {
-        return mock(ThrowingLongPredicate.class);
+        final LongPredicate mock = mock(LongPredicate.class);
+
+        when(mock.test(arg)).thenReturn(ret2);
+
+        return mock;
     }
 
     @Override
@@ -97,8 +113,6 @@ public final class ThrowingLongPredicateTest
     {
         final ThrowingLongPredicate first = getPreparedInstance();
         final ThrowingLongPredicate second = getAlternate();
-        // That's the default, but...
-        when(second.doTest(arg)).thenReturn(false);
 
         final LongPredicate instance = first.orTryWith(second);
 
@@ -119,8 +133,6 @@ public final class ThrowingLongPredicateTest
     {
         final ThrowingLongPredicate first = getPreparedInstance();
         final LongPredicate second = getFallbackInstance();
-        // That's the default, but...
-        when(second.test(arg)).thenReturn(false);
 
         final LongPredicate instance = first.fallbackTo(second);
 

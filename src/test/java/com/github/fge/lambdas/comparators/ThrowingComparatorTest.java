@@ -12,28 +12,37 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@SuppressWarnings({ "AutoBoxing", "ProhibitedExceptionDeclared",
-    "OverlyBroadThrowsClause" })
+@SuppressWarnings({"ProhibitedExceptionDeclared", "AutoBoxing",
+    "OverlyBroadThrowsClause"})
 public final class ThrowingComparatorTest
     extends ThrowingInterfaceBaseTest<ThrowingComparator<Type1>, Comparator<Type1>, Integer>
 {
     private final Type1 arg1 = Type1.mock();
     private final Type1 arg2 = Type1.mock();
 
-    private final int ret1 = 42;
-    private final int ret2 = 421;
+    public ThrowingComparatorTest()
+    {
+        super(42, 421);
+    }
 
     @Override
     protected ThrowingComparator<Type1> getAlternate()
+        throws Throwable
     {
-        return SpiedThrowingComparator.newSpy();
+        final ThrowingComparator<Type1> spy =
+            SpiedThrowingComparator.newSpy();
+
+        when(spy.doCompare(arg1, arg2)).thenReturn(ret2);
+
+        return spy;
     }
 
     @Override
     protected ThrowingComparator<Type1> getPreparedInstance()
         throws Throwable
     {
-        final ThrowingComparator<Type1> spy = getAlternate();
+        final ThrowingComparator<Type1> spy
+            = SpiedThrowingComparator.newSpy();
 
         when(spy.doCompare(arg1, arg2)).thenReturn(ret1)
             .thenThrow(checked).thenThrow(unchecked).thenThrow(error);
@@ -44,8 +53,12 @@ public final class ThrowingComparatorTest
     @Override
     protected Comparator<Type1> getFallbackInstance()
     {
-        //noinspection unchecked
-        return mock(Comparator.class);
+        @SuppressWarnings("unchecked")
+        final Comparator<Type1> mock = mock(Comparator.class);
+
+        when(mock.compare(arg1, arg2)).thenReturn(ret2);
+
+        return mock;
     }
 
     @Override
@@ -102,9 +115,7 @@ public final class ThrowingComparatorTest
         throws Throwable
     {
         final ThrowingComparator<Type1> first = getPreparedInstance();
-
         final ThrowingComparator<Type1> second = getAlternate();
-        when(second.doCompare(arg1, arg2)).thenReturn(ret2);
 
         final Comparator<Type1> instance = first.orTryWith(second);
 
@@ -112,7 +123,6 @@ public final class ThrowingComparatorTest
         final Callable<Integer> callable = callableFrom(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
-
         assertThat(callable.call()).isEqualTo(ret2);
 
         verifyUncheckedThrow(runnable);
@@ -127,7 +137,6 @@ public final class ThrowingComparatorTest
         final ThrowingComparator<Type1> first = getPreparedInstance();
 
         final Comparator<Type1> second = getFallbackInstance();
-        when(second.compare(arg1, arg2)).thenReturn(ret2);
 
         final Comparator<Type1> instance = first.fallbackTo(second);
 
@@ -135,7 +144,6 @@ public final class ThrowingComparatorTest
         final Callable<Integer> callable = callableFrom(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
-
         assertThat(callable.call()).isEqualTo(ret2);
 
         verifyUncheckedThrow(runnable);
@@ -154,7 +162,6 @@ public final class ThrowingComparatorTest
         final Callable<Integer> callable = callableFrom(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
-
         assertThat(callable.call()).isEqualTo(ret2);
 
         verifyUncheckedThrow(runnable);

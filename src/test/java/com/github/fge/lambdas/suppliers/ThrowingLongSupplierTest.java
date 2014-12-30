@@ -16,20 +16,28 @@ import static org.mockito.Mockito.when;
 public final class ThrowingLongSupplierTest
     extends ThrowingInterfaceBaseTest<ThrowingLongSupplier, LongSupplier, Long>
 {
-    private final long ret1 = 42L; // Arbitrarily random, also The Answer.
-    private final long ret2 = 24L; // Opposite of The Answer.
+    public ThrowingLongSupplierTest()
+    {
+        super(42L, 24L);
+    }
 
     @Override
     protected ThrowingLongSupplier getAlternate()
+        throws Throwable
     {
-        return SpiedThrowingLongSupplier.newSpy();
+        final ThrowingLongSupplier spy = SpiedThrowingLongSupplier.newSpy();
+
+        when(spy.doGetAsLong()).thenReturn(ret2);
+
+        return spy;
     }
 
     @Override
     protected ThrowingLongSupplier getPreparedInstance()
         throws Throwable
     {
-        final ThrowingLongSupplier spy = getAlternate();
+        final ThrowingLongSupplier spy
+            = SpiedThrowingLongSupplier.newSpy();
 
         when(spy.doGetAsLong()).thenReturn(ret1).thenThrow(checked)
             .thenThrow(unchecked).thenThrow(error);
@@ -40,7 +48,11 @@ public final class ThrowingLongSupplierTest
     @Override
     protected LongSupplier getFallbackInstance()
     {
-        return mock(LongSupplier.class);
+        final LongSupplier mock = mock(LongSupplier.class);
+
+        when(mock.getAsLong()).thenReturn(ret2);
+
+        return mock;
     }
 
     @Override
@@ -98,7 +110,6 @@ public final class ThrowingLongSupplierTest
     {
         final ThrowingLongSupplier first = getPreparedInstance();
         final ThrowingLongSupplier second = getAlternate();
-        when(second.doGetAsLong()).thenReturn(ret2);
 
         final LongSupplier instance = first.orTryWith(second);
 
@@ -106,7 +117,6 @@ public final class ThrowingLongSupplierTest
         final Callable<Long> callable = callableFrom(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
-
         assertThat(callable.call()).isEqualTo(ret2);
 
         verifyUncheckedThrow(runnable);
@@ -120,7 +130,6 @@ public final class ThrowingLongSupplierTest
     {
         final ThrowingLongSupplier first = getPreparedInstance();
         final LongSupplier second = getFallbackInstance();
-        when(second.getAsLong()).thenReturn(ret2);
 
         final LongSupplier instance = first.fallbackTo(second);
 

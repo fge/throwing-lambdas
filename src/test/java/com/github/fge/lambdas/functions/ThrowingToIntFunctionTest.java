@@ -18,20 +18,30 @@ public final class ThrowingToIntFunctionTest
     extends ThrowingInterfaceBaseTest<ThrowingToIntFunction<Type1>, ToIntFunction<Type1>, Integer>
 {
     private final Type1 arg = Type1.mock();
-    private final int ret1 = 42;
-    private final int ret2 = 25;
+
+    public ThrowingToIntFunctionTest()
+    {
+        super(42, 25);
+    }
 
     @Override
     protected ThrowingToIntFunction<Type1> getAlternate()
+        throws Throwable
     {
-        return SpiedThrowingToIntFunction.newSpy();
+        final ThrowingToIntFunction<Type1> spy =
+            SpiedThrowingToIntFunction.newSpy();
+
+        when(spy.doApplyAsInt(arg)).thenReturn(ret2);
+
+        return spy;
     }
 
     @Override
     protected ThrowingToIntFunction<Type1> getPreparedInstance()
         throws Throwable
     {
-        final ThrowingToIntFunction<Type1> spy = getAlternate();
+        final ThrowingToIntFunction<Type1> spy
+            = SpiedThrowingToIntFunction.newSpy();
 
         when(spy.doApplyAsInt(arg)).thenReturn(ret1).thenThrow(checked)
             .thenThrow(unchecked).thenThrow(error);
@@ -42,8 +52,12 @@ public final class ThrowingToIntFunctionTest
     @Override
     protected ToIntFunction<Type1> getFallbackInstance()
     {
-        //noinspection unchecked
-        return mock(ToIntFunction.class);
+        @SuppressWarnings("unchecked")
+        final ToIntFunction<Type1> mock = mock(ToIntFunction.class);
+
+        when(mock.applyAsInt(arg)).thenReturn(ret2);
+
+        return mock;
     }
 
     @Override
@@ -102,7 +116,6 @@ public final class ThrowingToIntFunctionTest
     {
         final ThrowingToIntFunction<Type1> first = getPreparedInstance();
         final ThrowingToIntFunction<Type1> second = getAlternate();
-        when(second.applyAsInt(arg)).thenReturn(ret2);
 
         final ToIntFunction<Type1> instance = first.orTryWith(second);
 
@@ -123,7 +136,6 @@ public final class ThrowingToIntFunctionTest
     {
         final ThrowingToIntFunction<Type1> first = getPreparedInstance();
         final ToIntFunction<Type1> second = getFallbackInstance();
-        when(second.applyAsInt(arg)).thenReturn(ret2);
 
         final ToIntFunction<Type1> instance = first.fallbackTo(second);
 

@@ -15,7 +15,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 
-@SuppressWarnings({"ProhibitedExceptionDeclared", "OverlyBroadThrowsClause"})
+@SuppressWarnings({"AutoBoxing", "ProhibitedExceptionDeclared",
+    "OverlyBroadThrowsClause"})
 public final class ThrowingBiConsumerTest
     extends ThrowingInterfaceBaseTest<ThrowingBiConsumer<Type1, Type2>, BiConsumer<Type1, Type2>, Integer>
 {
@@ -24,8 +25,11 @@ public final class ThrowingBiConsumerTest
 
     private final AtomicInteger sentinel = new AtomicInteger(0);
 
-    private final int ret1 = 42;
-    private final int ret2 = 24;
+    public ThrowingBiConsumerTest()
+    {
+        super(42, 24);
+    }
+
 
     @BeforeMethod
     public void resetSentinel()

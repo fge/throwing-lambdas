@@ -17,20 +17,30 @@ public final class ThrowingLongUnaryOperatorTest
     extends ThrowingInterfaceBaseTest<ThrowingLongUnaryOperator, LongUnaryOperator, Long>
 {
     private final long arg = 2837987219387L;
-    private final long ret1 = 2980982197L;
-    private final long ret2 = 22L;
+
+    public ThrowingLongUnaryOperatorTest()
+    {
+        super(2980982197L, 22L);
+    }
 
     @Override
     protected ThrowingLongUnaryOperator getAlternate()
+        throws Throwable
     {
-        return SpiedThrowingLongUnaryOperator.newSpy();
+        final ThrowingLongUnaryOperator spy =
+            SpiedThrowingLongUnaryOperator.newSpy();
+
+        when(spy.doApplyAsLong(arg)).thenReturn(ret2);
+
+        return spy;
     }
 
     @Override
     protected ThrowingLongUnaryOperator getPreparedInstance()
         throws Throwable
     {
-        final ThrowingLongUnaryOperator spy = getAlternate();
+        final ThrowingLongUnaryOperator spy
+            = SpiedThrowingLongUnaryOperator.newSpy();
 
         when(spy.doApplyAsLong(arg)).thenReturn(ret1).thenThrow(checked)
             .thenThrow(unchecked).thenThrow(error);
@@ -41,7 +51,11 @@ public final class ThrowingLongUnaryOperatorTest
     @Override
     protected LongUnaryOperator getFallbackInstance()
     {
-        return mock(ThrowingLongUnaryOperator.class);
+        final LongUnaryOperator mock = mock(LongUnaryOperator.class);
+
+        when(mock.applyAsLong(arg)).thenReturn(ret2);
+
+        return mock;
     }
 
     @Override
@@ -99,7 +113,6 @@ public final class ThrowingLongUnaryOperatorTest
     {
         final ThrowingLongUnaryOperator first = getPreparedInstance();
         final ThrowingLongUnaryOperator second = getAlternate();
-        when(second.doApplyAsLong(arg)).thenReturn(ret2);
 
         final LongUnaryOperator instance = first.orTryWith(second);
 
@@ -120,7 +133,6 @@ public final class ThrowingLongUnaryOperatorTest
     {
         final ThrowingLongUnaryOperator first = getPreparedInstance();
         final LongUnaryOperator second = getFallbackInstance();
-        when(second.applyAsLong(arg)).thenReturn(ret2);
 
         final LongUnaryOperator instance = first.fallbackTo(second);
 

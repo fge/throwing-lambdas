@@ -13,7 +13,8 @@ import java.util.function.ObjLongConsumer;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-@SuppressWarnings({"ProhibitedExceptionDeclared", "OverlyBroadThrowsClause"})
+@SuppressWarnings({"ProhibitedExceptionDeclared", "OverlyBroadThrowsClause",
+    "AutoBoxing"})
 public final class ThrowingObjLongConsumerTest
     extends ThrowingInterfaceBaseTest<ThrowingObjLongConsumer<Type1>,
     ObjLongConsumer<Type1>, Integer>
@@ -23,8 +24,10 @@ public final class ThrowingObjLongConsumerTest
 
     private final AtomicInteger sentinel = new AtomicInteger(0);
 
-    private final int ret1 = 42;
-    private final int ret2 = 0x42;
+    public ThrowingObjLongConsumerTest()
+    {
+        super(42, 24);
+    }
 
     @BeforeMethod
     public void resetSentinel()

@@ -17,20 +17,30 @@ public final class ThrowingIntToLongFunctionTest
     extends ThrowingInterfaceBaseTest<ThrowingIntToLongFunction, IntToLongFunction, Long>
 {
     private final int arg = 2;
-    private final long ret1 = 42L;
-    private final long ret2 = 387297L;
+
+    public ThrowingIntToLongFunctionTest()
+    {
+        super(42L, 387297L);
+    }
 
     @Override
     protected ThrowingIntToLongFunction getAlternate()
+        throws Throwable
     {
-        return SpiedThrowingIntToLongFunction.newSpy();
+        final ThrowingIntToLongFunction spy =
+            SpiedThrowingIntToLongFunction.newSpy();
+
+        when(spy.doApplyAsLong(arg)).thenReturn(ret2);
+
+        return spy;
     }
 
     @Override
     protected ThrowingIntToLongFunction getPreparedInstance()
         throws Throwable
     {
-        final ThrowingIntToLongFunction spy = getAlternate();
+        final ThrowingIntToLongFunction spy
+            = SpiedThrowingIntToLongFunction.newSpy();
 
         when(spy.doApplyAsLong(arg)).thenReturn(ret1).thenThrow(checked)
             .thenThrow(unchecked).thenThrow(error);
@@ -41,7 +51,11 @@ public final class ThrowingIntToLongFunctionTest
     @Override
     protected IntToLongFunction getFallbackInstance()
     {
-        return mock(IntToLongFunction.class);
+        final IntToLongFunction mock = mock(IntToLongFunction.class);
+
+        when(mock.applyAsLong(arg)).thenReturn(ret2);
+
+        return mock;
     }
 
     @Override
@@ -99,7 +113,6 @@ public final class ThrowingIntToLongFunctionTest
     {
         final ThrowingIntToLongFunction first = getPreparedInstance();
         final ThrowingIntToLongFunction second = getAlternate();
-        when(second.doApplyAsLong(arg)).thenReturn(ret2);
 
         final IntToLongFunction instance = first.orTryWith(second);
 
@@ -120,7 +133,6 @@ public final class ThrowingIntToLongFunctionTest
     {
         final ThrowingIntToLongFunction first = getPreparedInstance();
         final IntToLongFunction second = getFallbackInstance();
-        when(second.applyAsLong(arg)).thenReturn(ret2);
 
         final IntToLongFunction instance = first.fallbackTo(second);
 

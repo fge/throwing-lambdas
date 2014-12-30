@@ -11,8 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @param <T> type of the Throwing interface
  * @param <N> type of the non Throwing interface
- * @param <R> type of the result from the interface (use {@code Void} if no
- *    return)
+ * @param <R> type of the result from the interface
  */
 @SuppressWarnings("ProhibitedExceptionDeclared")
 @Test
@@ -21,6 +20,15 @@ public abstract class ThrowingInterfaceBaseTest<T extends N, N, R>
     protected final Exception checked = new Exception();
     protected final RuntimeException unchecked = new RuntimeException();
     protected final Error error = new Error();
+
+    protected final R ret1;
+    protected final R ret2;
+
+    protected ThrowingInterfaceBaseTest(final R ret1, final R ret2)
+    {
+        this.ret1 = ret1;
+        this.ret2 = ret2;
+    }
 
     /**
      * Return an alternate mock for use with {@link

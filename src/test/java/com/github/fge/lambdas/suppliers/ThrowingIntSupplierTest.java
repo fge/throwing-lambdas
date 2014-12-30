@@ -16,21 +16,27 @@ import static org.mockito.Mockito.when;
 public final class ThrowingIntSupplierTest
         extends ThrowingInterfaceBaseTest<ThrowingIntSupplier, IntSupplier, Integer>
 {
-
-    private final int ret1 = 42; // Arbitrarily random, also The Answer.
-    private final int ret2 = 24; // Opposite of The Answer.
+    public ThrowingIntSupplierTest()
+    {
+        super(42, 24);
+    }
 
     @Override
     protected ThrowingIntSupplier getAlternate()
+        throws Throwable
     {
-        return SpiedThrowingIntSupplier.newSpy();
+        final ThrowingIntSupplier spy = SpiedThrowingIntSupplier.newSpy();
+
+        when(spy.doGetAsInt()).thenReturn(ret2);
+        return spy;
     }
 
     @Override
     protected ThrowingIntSupplier getPreparedInstance()
         throws Throwable
     {
-        final ThrowingIntSupplier spy = getAlternate();
+        final ThrowingIntSupplier spy
+            = SpiedThrowingIntSupplier.newSpy();
 
         when(spy.doGetAsInt()).thenReturn(ret1).thenThrow(checked)
             .thenThrow(unchecked).thenThrow(error);
@@ -41,7 +47,11 @@ public final class ThrowingIntSupplierTest
     @Override
     protected IntSupplier getFallbackInstance()
     {
-        return mock(IntSupplier.class);
+        final IntSupplier mock = mock(IntSupplier.class);
+
+        when(mock.getAsInt()).thenReturn(ret2);
+
+        return mock;
     }
 
     @Override
@@ -99,7 +109,6 @@ public final class ThrowingIntSupplierTest
     {
         final ThrowingIntSupplier first = getPreparedInstance();
         final ThrowingIntSupplier second = getAlternate();
-        when(second.doGetAsInt()).thenReturn(ret2);
 
         final IntSupplier instance = first.orTryWith(second);
 
@@ -121,7 +130,6 @@ public final class ThrowingIntSupplierTest
     {
         final ThrowingIntSupplier first = getPreparedInstance();
         final IntSupplier second = getFallbackInstance();
-        when(second.getAsInt()).thenReturn(ret2);
 
         final IntSupplier instance = first.fallbackTo(second);
 

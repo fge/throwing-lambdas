@@ -17,20 +17,30 @@ public final class ThrowingDoubleToIntFunctionTest
     extends ThrowingInterfaceBaseTest<ThrowingDoubleToIntFunction, DoubleToIntFunction, Integer>
 {
     private final double arg = 2.0;
-    private final int ret1 = 42;
-    private final int ret2 = 3;
+
+    public ThrowingDoubleToIntFunctionTest()
+    {
+        super(42, 3);
+    }
 
     @Override
     protected ThrowingDoubleToIntFunction getAlternate()
+        throws Throwable
     {
-        return SpiedThrowingDoubleToIntFunction.newSpy();
+        final ThrowingDoubleToIntFunction spy =
+            SpiedThrowingDoubleToIntFunction.newSpy();
+
+        when(spy.doApplyAsInt(arg)).thenReturn(ret2);
+
+        return spy;
     }
 
     @Override
     protected ThrowingDoubleToIntFunction getPreparedInstance()
         throws Throwable
     {
-        final ThrowingDoubleToIntFunction spy = getAlternate();
+        final ThrowingDoubleToIntFunction spy
+            = SpiedThrowingDoubleToIntFunction.newSpy();
 
         when(spy.doApplyAsInt(arg)).thenReturn(ret1).thenThrow(checked)
             .thenThrow(unchecked).thenThrow(error);
@@ -41,7 +51,11 @@ public final class ThrowingDoubleToIntFunctionTest
     @Override
     protected DoubleToIntFunction getFallbackInstance()
     {
-        return mock(DoubleToIntFunction.class);
+        final DoubleToIntFunction mock = mock(DoubleToIntFunction.class);
+
+        when(mock.applyAsInt(arg)).thenReturn(ret2);
+
+        return mock;
     }
 
     @Override
@@ -99,7 +113,6 @@ public final class ThrowingDoubleToIntFunctionTest
     {
         final ThrowingDoubleToIntFunction first = getPreparedInstance();
         final ThrowingDoubleToIntFunction second = getAlternate();
-        when(second.doApplyAsInt(arg)).thenReturn(ret2);
 
         final DoubleToIntFunction instance = first.orTryWith(second);
 
@@ -120,7 +133,6 @@ public final class ThrowingDoubleToIntFunctionTest
     {
         final ThrowingDoubleToIntFunction first = getPreparedInstance();
         final DoubleToIntFunction second = getFallbackInstance();
-        when(second.applyAsInt(arg)).thenReturn(ret2);
 
         final DoubleToIntFunction instance = first.fallbackTo(second);
 

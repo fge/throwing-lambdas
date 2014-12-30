@@ -18,20 +18,30 @@ public final class ThrowingToLongFunctionTest
     extends ThrowingInterfaceBaseTest<ThrowingToLongFunction<Type1>, ToLongFunction<Type1>, Long>
 {
     private final Type1 arg = Type1.mock();
-    private final long ret1 = 42L;
-    private final long ret2 = 25L;
+
+    public ThrowingToLongFunctionTest()
+    {
+        super(42L, 25L);
+    }
 
     @Override
     protected ThrowingToLongFunction<Type1> getAlternate()
+        throws Throwable
     {
-        return SpiedThrowingToLongFunction.newSpy();
+        final ThrowingToLongFunction<Type1> spy =
+            SpiedThrowingToLongFunction.newSpy();
+
+        when(spy.doApplyAsLong(arg)).thenReturn(ret2);
+
+        return spy;
     }
 
     @Override
     protected ThrowingToLongFunction<Type1> getPreparedInstance()
         throws Throwable
     {
-        final ThrowingToLongFunction<Type1> spy = getAlternate();
+        final ThrowingToLongFunction<Type1> spy
+            = SpiedThrowingToLongFunction.newSpy();
 
         when(spy.doApplyAsLong(arg)).thenReturn(ret1).thenThrow(checked)
             .thenThrow(unchecked).thenThrow(error);
@@ -42,8 +52,12 @@ public final class ThrowingToLongFunctionTest
     @Override
     protected ToLongFunction<Type1> getFallbackInstance()
     {
-        //noinspection unchecked
-        return mock(ToLongFunction.class);
+        @SuppressWarnings("unchecked")
+        final ToLongFunction<Type1> mock = mock(ToLongFunction.class);
+
+        when(mock.applyAsLong(arg)).thenReturn(ret2);
+
+        return mock;
     }
 
     @Override
@@ -102,7 +116,6 @@ public final class ThrowingToLongFunctionTest
     {
         final ThrowingToLongFunction<Type1> first = getPreparedInstance();
         final ThrowingToLongFunction<Type1> second = getAlternate();
-        when(second.applyAsLong(arg)).thenReturn(ret2);
 
         final ToLongFunction<Type1> instance = first.orTryWith(second);
 
@@ -123,7 +136,6 @@ public final class ThrowingToLongFunctionTest
     {
         final ThrowingToLongFunction<Type1> first = getPreparedInstance();
         final ToLongFunction<Type1> second = getFallbackInstance();
-        when(second.applyAsLong(arg)).thenReturn(ret2);
 
         final ToLongFunction<Type1> instance = first.fallbackTo(second);
 

@@ -17,20 +17,30 @@ public final class ThrowingUnaryOperatorTest
     extends ThrowingInterfaceBaseTest<ThrowingUnaryOperator<Type1>, UnaryOperator<Type1>, Type1>
 {
     private final Type1 arg = Type1.mock();
-    private final Type1 ret1 = Type1.mock();
-    private final Type1 ret2 = Type1.mock();
+
+    public ThrowingUnaryOperatorTest()
+    {
+        super(Type1.mock(), Type1.mock());
+    }
 
     @Override
     protected ThrowingUnaryOperator<Type1> getAlternate()
+        throws Throwable
     {
-        return SpiedThrowingUnaryOperator.newSpy();
+        final ThrowingUnaryOperator<Type1> spy =
+            SpiedThrowingUnaryOperator.newSpy();
+
+        when(spy.doApply(arg)).thenReturn(ret2);
+
+        return spy;
     }
 
     @Override
     protected ThrowingUnaryOperator<Type1> getPreparedInstance()
         throws Throwable
     {
-        final ThrowingUnaryOperator<Type1> spy = getAlternate();
+        final ThrowingUnaryOperator<Type1> spy
+            = SpiedThrowingUnaryOperator.newSpy();
 
         when(spy.doApply(arg)).thenReturn(ret1).thenThrow(checked)
             .thenThrow(unchecked).thenThrow(error);
@@ -41,8 +51,12 @@ public final class ThrowingUnaryOperatorTest
     @Override
     protected UnaryOperator<Type1> getFallbackInstance()
     {
-        //noinspection unchecked
-        return mock(UnaryOperator.class);
+        @SuppressWarnings("unchecked")
+        final UnaryOperator<Type1> mock = mock(UnaryOperator.class);
+
+        when(mock.apply(arg)).thenReturn(ret2);
+
+        return mock;
     }
 
     @Override
@@ -100,7 +114,6 @@ public final class ThrowingUnaryOperatorTest
     {
         final ThrowingUnaryOperator<Type1> first = getPreparedInstance();
         final ThrowingUnaryOperator<Type1> second = getAlternate();
-        when(second.apply(arg)).thenReturn(ret2);
 
         final UnaryOperator<Type1> instance = first.orTryWith(second);
 
@@ -121,7 +134,6 @@ public final class ThrowingUnaryOperatorTest
     {
         final ThrowingUnaryOperator<Type1> first = getPreparedInstance();
         final UnaryOperator<Type1> second = getFallbackInstance();
-        when(second.apply(arg)).thenReturn(ret2);
 
         final UnaryOperator<Type1> instance = first.fallbackTo(second);
 

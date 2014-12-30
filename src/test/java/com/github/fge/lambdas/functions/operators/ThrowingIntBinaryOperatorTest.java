@@ -18,20 +18,30 @@ public final class ThrowingIntBinaryOperatorTest
 {
     private final int left = 125;
     private final int right = 2125;
-    private final int ret1 = 42;
-    private final int ret2 = 625;
+
+    public ThrowingIntBinaryOperatorTest()
+    {
+        super(42, 625);
+    }
 
     @Override
     protected ThrowingIntBinaryOperator getAlternate()
+        throws Throwable
     {
-        return SpiedThrowingIntBinaryOperator.newSpy();
+        final ThrowingIntBinaryOperator spy =
+            SpiedThrowingIntBinaryOperator.newSpy();
+
+        when(spy.doApplyAsInt(left, right)).thenReturn(ret2);
+
+        return spy;
     }
 
     @Override
     protected ThrowingIntBinaryOperator getPreparedInstance()
         throws Throwable
     {
-        final ThrowingIntBinaryOperator spy = getAlternate();
+        final ThrowingIntBinaryOperator spy
+            = SpiedThrowingIntBinaryOperator.newSpy();
 
         when(spy.doApplyAsInt(left, right)).thenReturn(ret1)
             .thenThrow(checked).thenThrow(unchecked).thenThrow(error);
@@ -42,7 +52,11 @@ public final class ThrowingIntBinaryOperatorTest
     @Override
     protected IntBinaryOperator getFallbackInstance()
     {
-        return mock(IntBinaryOperator.class);
+        final IntBinaryOperator mock = mock(IntBinaryOperator.class);
+
+        when(mock.applyAsInt(left, right)).thenReturn(ret2);
+
+        return mock;
     }
 
     @Override
@@ -100,7 +114,6 @@ public final class ThrowingIntBinaryOperatorTest
     {
         final ThrowingIntBinaryOperator first = getPreparedInstance();
         final ThrowingIntBinaryOperator second = getAlternate();
-        when(second.doApplyAsInt(left, right)).thenReturn(ret2);
 
         final IntBinaryOperator instance = first.orTryWith(second);
 
@@ -121,7 +134,6 @@ public final class ThrowingIntBinaryOperatorTest
     {
         final ThrowingIntBinaryOperator first = getPreparedInstance();
         final IntBinaryOperator second = getFallbackInstance();
-        when(second.applyAsInt(left, right)).thenReturn(ret2);
 
         final IntBinaryOperator instance = first.fallbackTo(second);
 

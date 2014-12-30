@@ -13,17 +13,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 
-@SuppressWarnings({"ProhibitedExceptionDeclared", "OverlyBroadThrowsClause"})
+@SuppressWarnings({"ProhibitedExceptionDeclared", "OverlyBroadThrowsClause",
+    "AutoBoxing"})
 public final class ThrowingLongConsumerTest
     extends ThrowingInterfaceBaseTest<ThrowingLongConsumer, LongConsumer, Integer>
 {
     private final long arg = 42L;
 
-
     private final AtomicInteger sentinel = new AtomicInteger(0);
 
-    private final int ret1 = 42;
-    private final int ret2 = 24;
+    public ThrowingLongConsumerTest()
+    {
+        super(42, 24);
+    }
 
     @BeforeMethod
     public void resetSentinel()

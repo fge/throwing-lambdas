@@ -13,7 +13,8 @@ import java.util.function.ObjDoubleConsumer;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-@SuppressWarnings({"ProhibitedExceptionDeclared", "OverlyBroadThrowsClause"})
+@SuppressWarnings({"ProhibitedExceptionDeclared", "OverlyBroadThrowsClause",
+    "AutoBoxing"})
 public final class ThrowingObjDoubleConsumerTest
     extends ThrowingInterfaceBaseTest<ThrowingObjDoubleConsumer<Type1>, ObjDoubleConsumer<Type1>, Integer>
 {
@@ -22,8 +23,10 @@ public final class ThrowingObjDoubleConsumerTest
 
     private final AtomicInteger sentinel = new AtomicInteger(0);
 
-    private final int ret1 = 42;
-    private final int ret2 = 0x42;
+    public ThrowingObjDoubleConsumerTest()
+    {
+        super(42, 24);
+    }
 
     @BeforeMethod
     public void resetSentinel()

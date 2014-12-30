@@ -18,20 +18,30 @@ public final class ThrowingToDoubleFunctionTest
     extends ThrowingInterfaceBaseTest<ThrowingToDoubleFunction<Type1>, ToDoubleFunction<Type1>, Double>
 {
     private final Type1 arg = Type1.mock();
-    private final double ret1 = 0.5;
-    private final double ret2 = 0.25;
+
+    public ThrowingToDoubleFunctionTest()
+    {
+        super(0.5, 0.25);
+    }
 
     @Override
     protected ThrowingToDoubleFunction<Type1> getAlternate()
+        throws Throwable
     {
-        return SpiedThrowingToDoubleFunction.newSpy();
+        final ThrowingToDoubleFunction<Type1> spy =
+            SpiedThrowingToDoubleFunction.newSpy();
+
+        when(spy.doApplyAsDouble(arg)).thenReturn(ret2);
+
+        return spy;
     }
 
     @Override
     protected ThrowingToDoubleFunction<Type1> getPreparedInstance()
         throws Throwable
     {
-        final ThrowingToDoubleFunction<Type1> spy = getAlternate();
+        final ThrowingToDoubleFunction<Type1> spy
+            = SpiedThrowingToDoubleFunction.newSpy();
 
         when(spy.doApplyAsDouble(arg)).thenReturn(ret1).thenThrow(checked)
             .thenThrow(unchecked).thenThrow(error);
@@ -42,8 +52,12 @@ public final class ThrowingToDoubleFunctionTest
     @Override
     protected ToDoubleFunction<Type1> getFallbackInstance()
     {
-        //noinspection unchecked
-        return mock(ToDoubleFunction.class);
+        @SuppressWarnings("unchecked")
+        final ToDoubleFunction<Type1> mock = mock(ToDoubleFunction.class);
+
+        when(mock.applyAsDouble(arg)).thenReturn(ret2);
+
+        return mock;
     }
 
     @Override
@@ -102,7 +116,6 @@ public final class ThrowingToDoubleFunctionTest
     {
         final ThrowingToDoubleFunction<Type1> first = getPreparedInstance();
         final ThrowingToDoubleFunction<Type1> second = getAlternate();
-        when(second.applyAsDouble(arg)).thenReturn(ret2);
 
         final ToDoubleFunction<Type1> instance = first.orTryWith(second);
 
@@ -123,7 +136,6 @@ public final class ThrowingToDoubleFunctionTest
     {
         final ThrowingToDoubleFunction<Type1> first = getPreparedInstance();
         final ToDoubleFunction<Type1> second = getFallbackInstance();
-        when(second.applyAsDouble(arg)).thenReturn(ret2);
 
         final ToDoubleFunction<Type1> instance = first.fallbackTo(second);
 

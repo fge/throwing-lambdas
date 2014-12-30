@@ -12,24 +12,36 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@SuppressWarnings({"ProhibitedExceptionDeclared", "AutoBoxing", "unchecked",
+@SuppressWarnings({"AutoBoxing", "ProhibitedExceptionDeclared",
     "OverlyBroadThrowsClause"})
 public final class ThrowingPredicateTest
     extends ThrowingInterfaceBaseTest<ThrowingPredicate<Type1>, Predicate<Type1>, Boolean>
 {
     private final Type1 arg = Type1.mock();
 
+    public ThrowingPredicateTest()
+    {
+        super(true, false);
+    }
+
     @Override
     protected ThrowingPredicate<Type1> getAlternate()
+        throws Throwable
     {
-        return SpiedThrowingPredicate.newSpy();
+        final ThrowingPredicate<Type1> spy =
+            SpiedThrowingPredicate.newSpy();
+
+        when(spy.doTest(arg)).thenReturn(ret2);
+
+        return spy;
     }
 
     @Override
     protected ThrowingPredicate<Type1> getPreparedInstance()
         throws Throwable
     {
-        final ThrowingPredicate<Type1> spy = getAlternate();
+        final ThrowingPredicate<Type1> spy
+            = SpiedThrowingPredicate.newSpy();
 
         when(spy.doTest(arg)).thenReturn(true).thenThrow(checked)
             .thenThrow(unchecked).thenThrow(error);
@@ -40,7 +52,12 @@ public final class ThrowingPredicateTest
     @Override
     protected Predicate<Type1> getFallbackInstance()
     {
-        return mock(Predicate.class);
+        @SuppressWarnings("unchecked")
+        final Predicate<Type1> mock = mock(Predicate.class);
+
+        when(mock.test(arg)).thenReturn(ret2);
+
+        return mock;
     }
 
     @Override
@@ -99,8 +116,6 @@ public final class ThrowingPredicateTest
     {
         final ThrowingPredicate<Type1> first = getPreparedInstance();
         final ThrowingPredicate<Type1> second = getAlternate();
-        // This is by default, but...
-        when(second.doTest(arg)).thenReturn(false);
 
         final Predicate<Type1> instance = first.orTryWith(second);
 
@@ -121,7 +136,6 @@ public final class ThrowingPredicateTest
     {
         final ThrowingPredicate<Type1> first = getPreparedInstance();
         final Predicate<Type1> second = getFallbackInstance();
-        when(second.test(arg)).thenReturn(false);
 
         final Predicate<Type1> instance = first.fallbackTo(second);
 
