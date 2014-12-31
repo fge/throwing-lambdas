@@ -1,8 +1,6 @@
 package com.github.fge.lambdas.suppliers;
 
-import com.github.fge.lambdas.ThrowingInterfaceBaseTest;
-import com.github.fge.lambdas.ThrownByLambdaException;
-import com.github.fge.lambdas.helpers.MyException;
+import com.github.fge.lambdas.ThrowingInterfaceTest;
 import com.github.fge.lambdas.helpers.Type1;
 
 import java.util.concurrent.Callable;
@@ -14,45 +12,33 @@ import static org.mockito.Mockito.when;
 
 @SuppressWarnings({"ProhibitedExceptionDeclared", "OverlyBroadThrowsClause"})
 public final class ThrowingSupplierTest
-    extends ThrowingInterfaceBaseTest<ThrowingSupplier<Type1>, Supplier<Type1>, Type1>
+    extends ThrowingInterfaceTest<ThrowingSupplier<Type1>, ThrowingSupplier<Type1>, Supplier<Type1>, Type1>
 {
     public ThrowingSupplierTest()
     {
-        super(Type1.mock(), Type1.mock());
+        super(SpiedThrowingSupplier::newSpy, () -> mock(Supplier.class),
+            Type1.mock(), Type1.mock());
     }
 
     @Override
-    protected ThrowingSupplier<Type1> getAlternate()
+    protected void setupFull(final ThrowingSupplier<Type1> instance)
         throws Throwable
     {
-        final ThrowingSupplier<Type1> spy = SpiedThrowingSupplier.newSpy();
-
-        when(spy.doGet()).thenReturn(ret2);
-
-        return spy;
-    }
-
-    @Override
-    protected ThrowingSupplier<Type1> getTestInstance()
-        throws Throwable
-    {
-        final ThrowingSupplier<Type1> spy = SpiedThrowingSupplier.newSpy();
-
-        when(spy.doGet()).thenReturn(ret1).thenThrow(checked)
+        when(instance.doGet()).thenReturn(ret1).thenThrow(checked)
             .thenThrow(unchecked).thenThrow(error);
-
-        return spy;
     }
 
     @Override
-    protected Supplier<Type1> getFallback()
+    protected void setupAlternate(final ThrowingSupplier<Type1> instance)
+        throws Throwable
     {
-        @SuppressWarnings("unchecked")
-        final Supplier<Type1> mock = mock(Supplier.class);
+        when(instance.doGet()).thenReturn(ret2);
+    }
 
-        when(mock.get()).thenReturn(ret2);
-
-        return mock;
+    @Override
+    protected void setupFallback(final Supplier<Type1> instance)
+    {
+        when(instance.get()).thenReturn(ret2);
     }
 
     @Override
@@ -61,86 +47,10 @@ public final class ThrowingSupplierTest
         return instance::get;
     }
 
-    @Override
-    public void testUnchained()
-        throws Throwable
-    {
-        final ThrowingSupplier<Type1> instance = getTestInstance();
-
-        final Callable<Type1> callable = asCallable(instance);
-
-        assertThat(callable.call()).isSameAs(ret1);
-
-        verifyCheckedRethrow(callable, ThrownByLambdaException.class);
-
-        verifyUncheckedThrow(callable);
-
-        verifyErrorThrow(callable);
-    }
-
-    @Override
-    public void testChainedWithOrThrow()
-        throws Throwable
-    {
-        final Supplier<Type1> instance
-            = getTestInstance().orThrow(MyException.class);
-
-        final Callable<Type1> callable = asCallable(instance);
-
-        assertThat(callable.call()).isSameAs(ret1);
-
-        verifyCheckedRethrow(callable, MyException.class);
-
-        verifyUncheckedThrow(callable);
-
-        verifyErrorThrow(callable);
-    }
-
-    @Override
-    public void testChainedWithOrTryWith()
-        throws Throwable
-    {
-        final ThrowingSupplier<Type1> first = getTestInstance();
-        final ThrowingSupplier<Type1> second = getAlternate();
-
-        final Supplier<Type1> instance = first.orTryWith(second);
-
-        final Callable<Type1> callable = asCallable(instance);
-
-        assertThat(callable.call()).isSameAs(ret1);
-
-        assertThat(callable.call()).isSameAs(ret2);
-
-        verifyUncheckedThrow(callable);
-
-        verifyErrorThrow(callable);
-    }
-
-    @Override
-    public void testChainedWithFallbackTo()
-        throws Throwable
-    {
-        final ThrowingSupplier<Type1> first = getTestInstance();
-        final Supplier<Type1> second = getFallback();
-
-        final Supplier<Type1> instance = first.fallbackTo(second);
-
-        final Callable<Type1> callable = asCallable(instance);
-
-        assertThat(callable.call()).isSameAs(ret1);
-        assertThat(callable.call()).isSameAs(ret2);
-
-        verifyUncheckedThrow(callable);
-
-        verifyErrorThrow(callable);
-    }
-
     public void testChainedWithOrReturn()
         throws Throwable
     {
-        final ThrowingSupplier<Type1> first = getTestInstance();
-
-        final Supplier<Type1> instance = first.orReturn(ret2);
+        final Supplier<Type1> instance = getFullInstance().orReturn(ret2);
 
         final Callable<Type1> callable = asCallable(instance);
 
