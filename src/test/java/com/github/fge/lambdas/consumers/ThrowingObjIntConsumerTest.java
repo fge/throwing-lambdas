@@ -1,8 +1,6 @@
 package com.github.fge.lambdas.consumers;
 
-import com.github.fge.lambdas.ThrowingInterfaceBaseTest;
-import com.github.fge.lambdas.ThrownByLambdaException;
-import com.github.fge.lambdas.helpers.MyException;
+import com.github.fge.lambdas.ThrowingInterfaceTest;
 import com.github.fge.lambdas.helpers.Type1;
 import org.testng.annotations.BeforeMethod;
 
@@ -11,21 +9,23 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.ObjIntConsumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
 
 @SuppressWarnings({"ProhibitedExceptionDeclared", "OverlyBroadThrowsClause",
     "AutoBoxing"})
 public final class ThrowingObjIntConsumerTest
-    extends ThrowingInterfaceBaseTest<ThrowingObjIntConsumer<Type1>, ObjIntConsumer<Type1>, Integer>
+    extends ThrowingInterfaceTest<ThrowingObjIntConsumer<Type1>, ThrowingObjIntConsumer<Type1>, ObjIntConsumer<Type1>, Integer>
 {
-    private final Type1 arg1 = Type1.mock();
-    private final int arg2 = 042;
+    private final Type1 t = Type1.mock();
+    private final int value = 142;
 
     private final AtomicInteger sentinel = new AtomicInteger(0);
 
     public ThrowingObjIntConsumerTest()
     {
-        super(42, 24);
+        super(SpiedThrowingObjIntConsumer::newSpy,
+            () -> mock(ObjIntConsumer.class), 42, 24);
     }
 
     @BeforeMethod
@@ -35,132 +35,40 @@ public final class ThrowingObjIntConsumerTest
     }
 
     @Override
-    protected ThrowingObjIntConsumer<Type1> getAlternate()
+    protected void setupFull(final ThrowingObjIntConsumer<Type1> instance)
         throws Throwable
     {
-        final ThrowingObjIntConsumer<Type1> spy
-            = SpiedThrowingObjIntConsumer.newSpy();
-
-        doAnswer(invocation -> { sentinel.set(ret2); return null; })
-            .when(spy).doAccept(arg1, arg2);
-
-        return spy;
-    }
-
-    @Override
-    protected ThrowingObjIntConsumer<Type1> getTestInstance()
-        throws Throwable
-    {
-        final ThrowingObjIntConsumer<Type1> spy
-            = SpiedThrowingObjIntConsumer.newSpy();
-
         doAnswer(invocation -> { sentinel.set(ret1); return null; })
             .doThrow(checked).doThrow(unchecked).doThrow(error)
-            .when(spy).doAccept(arg1, arg2);
-
-        return spy;
+            .when(instance).doAccept(t, value);
     }
 
     @Override
-    protected ObjIntConsumer<Type1> getFallback()
+    protected void setupAlternate(final ThrowingObjIntConsumer<Type1> instance)
+        throws Throwable
     {
-        @SuppressWarnings("unchecked")
-        final ObjIntConsumer<Type1> mock = mock(ObjIntConsumer.class);
-
         doAnswer(invocation -> { sentinel.set(ret2); return null; })
-            .when(mock).accept(arg1, arg2);
+            .when(instance).doAccept(t, value);
+    }
 
-        return mock;
+    @Override
+    protected void setupFallback(final ObjIntConsumer<Type1> instance)
+    {
+        doAnswer(invocation -> { sentinel.set(ret2); return null; })
+            .when(instance).accept(t, value);
     }
 
     @Override
     protected Callable<Integer> asCallable(
         final ObjIntConsumer<Type1> instance)
     {
-        return () -> { instance.accept(arg1, arg2); return sentinel.get(); };
-    }
-
-    @Override
-    public void testUnchained()
-        throws Throwable
-    {
-        final ThrowingObjIntConsumer<Type1> instance = getTestInstance();
-
-        final Callable<Integer> callable = asCallable(instance);
-
-        assertThat(callable.call()).isEqualTo(ret1);
-
-        verifyCheckedRethrow(callable, ThrownByLambdaException.class);
-
-        verifyUncheckedThrow(callable);
-
-        verifyErrorThrow(callable);
-    }
-
-    @Override
-    public void testChainedWithOrThrow()
-        throws Throwable
-    {
-        final ThrowingObjIntConsumer<Type1> spy = getTestInstance();
-
-        final ObjIntConsumer<Type1> instance
-            = spy.orThrow(MyException.class);
-
-        final Callable<Integer> callable = asCallable(instance);
-
-        assertThat(callable.call()).isEqualTo(ret1);
-
-        verifyCheckedRethrow(callable, MyException.class);
-
-        verifyUncheckedThrow(callable);
-
-        verifyErrorThrow(callable);
-    }
-
-    @Override
-    public void testChainedWithOrTryWith()
-        throws Throwable
-    {
-        final ThrowingObjIntConsumer<Type1> first = getTestInstance();
-        final ThrowingObjIntConsumer<Type1> second = getAlternate();
-
-        final ObjIntConsumer<Type1> instance = first.orTryWith(second);
-
-        final Callable<Integer> callable = asCallable(instance);
-
-        assertThat(callable.call()).isEqualTo(ret1);
-        assertThat(callable.call()).isEqualTo(ret2);
-
-        verifyUncheckedThrow(callable);
-
-        verifyErrorThrow(callable);
-    }
-
-    @Override
-    public void testChainedWithFallbackTo()
-        throws Throwable
-    {
-        final ThrowingObjIntConsumer<Type1> first = getTestInstance();
-        final ObjIntConsumer<Type1> second = getFallback();
-
-        final ObjIntConsumer<Type1> instance = first.fallbackTo(second);
-
-        final Callable<Integer> callable = asCallable(instance);
-
-        assertThat(callable.call()).isEqualTo(ret1);
-        assertThat(callable.call()).isEqualTo(ret2);
-
-        verifyUncheckedThrow(callable);
-
-        verifyErrorThrow(callable);
+        return () -> { instance.accept(t, value); return sentinel.get(); };
     }
 
     public void testChainedWithDoNothing()
         throws Throwable
     {
-        final ThrowingObjIntConsumer<Type1> first = getTestInstance();
-
-        final ObjIntConsumer<Type1> instance = first.orDoNothing();
+        final ObjIntConsumer<Type1> instance = getFullInstance().orDoNothing();
 
         final Callable<Integer> callable = asCallable(instance);
 

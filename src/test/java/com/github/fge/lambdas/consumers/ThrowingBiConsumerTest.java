@@ -1,8 +1,6 @@
 package com.github.fge.lambdas.consumers;
 
-import com.github.fge.lambdas.ThrowingInterfaceBaseTest;
-import com.github.fge.lambdas.ThrownByLambdaException;
-import com.github.fge.lambdas.helpers.MyException;
+import com.github.fge.lambdas.ThrowingInterfaceTest;
 import com.github.fge.lambdas.helpers.Type1;
 import com.github.fge.lambdas.helpers.Type2;
 import org.testng.annotations.BeforeMethod;
@@ -18,18 +16,18 @@ import static org.mockito.Mockito.mock;
 @SuppressWarnings({"AutoBoxing", "ProhibitedExceptionDeclared",
     "OverlyBroadThrowsClause"})
 public final class ThrowingBiConsumerTest
-    extends ThrowingInterfaceBaseTest<ThrowingBiConsumer<Type1, Type2>, BiConsumer<Type1, Type2>, Integer>
+    extends ThrowingInterfaceTest<ThrowingBiConsumer<Type1, Type2>, ThrowingBiConsumer<Type1, Type2>, BiConsumer<Type1, Type2>, Integer>
 {
-    private final Type1 arg1 = Type1.mock();
-    private final Type2 arg2 = Type2.mock();
+    private final Type1 t = Type1.mock();
+    private final Type2 u = Type2.mock();
 
     private final AtomicInteger sentinel = new AtomicInteger(0);
 
     public ThrowingBiConsumerTest()
     {
-        super(42, 24);
+        super(SpiedThrowingBiConsumer::newSpy, () -> mock(BiConsumer.class),
+            42, 24);
     }
-
 
     @BeforeMethod
     public void resetSentinel()
@@ -38,132 +36,42 @@ public final class ThrowingBiConsumerTest
     }
 
     @Override
-    protected ThrowingBiConsumer<Type1, Type2> getAlternate()
+    protected void setupFull(final ThrowingBiConsumer<Type1, Type2> instance)
         throws Throwable
     {
-        final ThrowingBiConsumer<Type1, Type2> spy
-            = SpiedThrowingBiConsumer.newSpy();
-
-        doAnswer(invocation -> { sentinel.set(ret2); return null; })
-            .when(spy).doAccept(arg1, arg2);
-
-        return spy;
-    }
-
-    @Override
-    protected ThrowingBiConsumer<Type1, Type2> getTestInstance()
-        throws Throwable
-    {
-        final ThrowingBiConsumer<Type1, Type2> spy
-            = SpiedThrowingBiConsumer.newSpy();
-
         doAnswer(invocation -> { sentinel.set(ret1); return null; })
             .doThrow(checked).doThrow(unchecked).doThrow(error)
-            .when(spy).doAccept(arg1, arg2);
-
-        return spy;
+            .when(instance).doAccept(t, u);
     }
 
     @Override
-    protected BiConsumer<Type1, Type2> getFallback()
+    protected void setupAlternate(
+        final ThrowingBiConsumer<Type1, Type2> instance)
+        throws Throwable
     {
-        @SuppressWarnings("unchecked")
-        final BiConsumer<Type1, Type2> mock = mock(BiConsumer.class);
-
         doAnswer(invocation -> { sentinel.set(ret2); return null; })
-            .when(mock).accept(arg1, arg2);
+            .when(instance).doAccept(t, u);
+    }
 
-        return mock;
+    @Override
+    protected void setupFallback(final BiConsumer<Type1, Type2> instance)
+    {
+        doAnswer(invocation -> { sentinel.set(ret2); return null; })
+            .when(instance).accept(t, u);
     }
 
     @Override
     protected Callable<Integer> asCallable(
         final BiConsumer<Type1, Type2> instance)
     {
-        return () -> { instance.accept(arg1, arg2); return sentinel.get(); };
-    }
-
-    @Override
-    public void testUnchained()
-        throws Throwable
-    {
-        final ThrowingBiConsumer<Type1, Type2> instance = getTestInstance();
-
-        final Callable<Integer> callable = asCallable(instance);
-
-        assertThat(callable.call()).isEqualTo(ret1);
-
-        verifyCheckedRethrow(callable, ThrownByLambdaException.class);
-
-        verifyUncheckedThrow(callable);
-
-        verifyErrorThrow(callable);
-    }
-
-    @Override
-    public void testChainedWithOrThrow()
-        throws Throwable
-    {
-        final ThrowingBiConsumer<Type1, Type2> spy = getTestInstance();
-
-        final BiConsumer<Type1, Type2> instance
-            = spy.orThrow(MyException.class);
-
-        final Callable<Integer> callable = asCallable(instance);
-
-        assertThat(callable.call()).isEqualTo(ret1);
-
-        verifyCheckedRethrow(callable, MyException.class);
-
-        verifyUncheckedThrow(callable);
-
-        verifyErrorThrow(callable);
-    }
-
-    @Override
-    public void testChainedWithOrTryWith()
-        throws Throwable
-    {
-        final ThrowingBiConsumer<Type1, Type2> first = getTestInstance();
-        final ThrowingBiConsumer<Type1, Type2> second = getAlternate();
-
-        final BiConsumer<Type1, Type2> instance = first.orTryWith(second);
-
-        final Callable<Integer> callable = asCallable(instance);
-
-        assertThat(callable.call()).isEqualTo(ret1);
-        assertThat(callable.call()).isEqualTo(ret2);
-
-        verifyUncheckedThrow(callable);
-
-        verifyErrorThrow(callable);
-    }
-
-    @Override
-    public void testChainedWithFallbackTo()
-        throws Throwable
-    {
-        final ThrowingBiConsumer<Type1, Type2> first = getTestInstance();
-        final BiConsumer<Type1, Type2> second = getFallback();
-
-        final BiConsumer<Type1, Type2> instance = first.fallbackTo(second);
-
-        final Callable<Integer> callable = asCallable(instance);
-
-        assertThat(callable.call()).isEqualTo(ret1);
-        assertThat(callable.call()).isEqualTo(ret2);
-
-        verifyUncheckedThrow(callable);
-
-        verifyErrorThrow(callable);
+        return () -> { instance.accept(t, u); return sentinel.get(); };
     }
 
     public void testChainedWithDoNothing()
         throws Throwable
     {
-        final ThrowingBiConsumer<Type1, Type2> first = getTestInstance();
-
-        final BiConsumer<Type1, Type2> instance = first.orDoNothing();
+        final BiConsumer<Type1, Type2> instance
+            = getFullInstance().orDoNothing();
 
         final Callable<Integer> callable = asCallable(instance);
 
