@@ -1,8 +1,6 @@
 package com.github.fge.lambdas.predicates;
 
-import com.github.fge.lambdas.ThrowingInterfaceBaseTest;
-import com.github.fge.lambdas.ThrownByLambdaException;
-import com.github.fge.lambdas.helpers.MyException;
+import com.github.fge.lambdas.ThrowingInterfaceTest;
 import com.github.fge.lambdas.helpers.Type1;
 
 import java.util.concurrent.Callable;
@@ -15,135 +13,47 @@ import static org.mockito.Mockito.when;
 @SuppressWarnings({"AutoBoxing", "ProhibitedExceptionDeclared",
     "OverlyBroadThrowsClause"})
 public final class ThrowingPredicateTest
-    extends ThrowingInterfaceBaseTest<ThrowingPredicate<Type1>, Predicate<Type1>, Boolean>
+    extends ThrowingInterfaceTest<ThrowingPredicate<Type1>, ThrowingPredicate<Type1>, Predicate<Type1>, Boolean>
 {
-    private final Type1 arg = Type1.mock();
+    private final Type1 t = Type1.mock();
 
     public ThrowingPredicateTest()
     {
-        super(true, false);
+        super(SpiedThrowingPredicate::newSpy, () -> mock(Predicate.class), true,
+            false);
     }
 
     @Override
-    protected ThrowingPredicate<Type1> getAlternate()
+    protected void setupFull(final ThrowingPredicate<Type1> instance)
         throws Throwable
     {
-        final ThrowingPredicate<Type1> spy =
-            SpiedThrowingPredicate.newSpy();
-
-        when(spy.doTest(arg)).thenReturn(ret2);
-
-        return spy;
-    }
-
-    @Override
-    protected ThrowingPredicate<Type1> getTestInstance()
-        throws Throwable
-    {
-        final ThrowingPredicate<Type1> spy
-            = SpiedThrowingPredicate.newSpy();
-
-        when(spy.doTest(arg)).thenReturn(true).thenThrow(checked)
+        when(instance.doTest(t)).thenReturn(true).thenThrow(checked)
             .thenThrow(unchecked).thenThrow(error);
-
-        return spy;
     }
 
     @Override
-    protected Predicate<Type1> getFallback()
+    protected void setupAlternate(final ThrowingPredicate<Type1> instance)
+        throws Throwable
     {
-        @SuppressWarnings("unchecked")
-        final Predicate<Type1> mock = mock(Predicate.class);
+        when(instance.doTest(t)).thenReturn(ret2);
+    }
 
-        when(mock.test(arg)).thenReturn(ret2);
-
-        return mock;
+    @Override
+    protected void setupFallback(final Predicate<Type1> instance)
+    {
+        when(instance.test(t)).thenReturn(ret2);
     }
 
     @Override
     protected Callable<Boolean> asCallable(final Predicate<Type1> instance)
     {
-        return () -> instance.test(arg);
-    }
-
-    @Override
-    public void testUnchained()
-        throws Throwable
-    {
-        final ThrowingPredicate<Type1> instance = getTestInstance();
-
-        final Callable<Boolean> callable = asCallable(instance);
-
-        assertThat(callable.call()).isTrue();
-
-        verifyCheckedRethrow(callable, ThrownByLambdaException.class);
-
-        verifyUncheckedThrow(callable);
-
-        verifyErrorThrow(callable);
-    }
-
-    @Override
-    public void testChainedWithOrThrow()
-        throws Throwable
-    {
-        final Predicate<Type1> instance
-            = getTestInstance().orThrow(MyException.class);
-
-        final Callable<Boolean> callable = asCallable(instance);
-
-        assertThat(callable.call()).isTrue();
-
-        verifyCheckedRethrow(callable, MyException.class);
-
-        verifyUncheckedThrow(callable);
-
-        verifyErrorThrow(callable);
-
-    }
-
-    @Override
-    public void testChainedWithOrTryWith()
-        throws Throwable
-    {
-        final ThrowingPredicate<Type1> first = getTestInstance();
-        final ThrowingPredicate<Type1> second = getAlternate();
-
-        final Predicate<Type1> instance = first.orTryWith(second);
-
-        final Callable<Boolean> callable = asCallable(instance);
-
-        assertThat(callable.call()).isTrue();
-        assertThat(callable.call()).isFalse();
-
-        verifyUncheckedThrow(callable);
-
-        verifyErrorThrow(callable);
-    }
-
-    @Override
-    public void testChainedWithFallbackTo()
-        throws Throwable
-    {
-        final ThrowingPredicate<Type1> first = getTestInstance();
-        final Predicate<Type1> second = getFallback();
-
-        final Predicate<Type1> instance = first.fallbackTo(second);
-
-        final Callable<Boolean> callable = asCallable(instance);
-
-        assertThat(callable.call()).isTrue();
-        assertThat(callable.call()).isFalse();
-
-        verifyUncheckedThrow(callable);
-
-        verifyErrorThrow(callable);
+        return () -> instance.test(t);
     }
 
     public void testChainedWithOrReturn()
         throws Throwable
     {
-        final Predicate<Type1> instance = getTestInstance().orReturn(false);
+        final Predicate<Type1> instance = getFullInstance().orReturn(false);
 
         final Callable<Boolean> callable = asCallable(instance);
 

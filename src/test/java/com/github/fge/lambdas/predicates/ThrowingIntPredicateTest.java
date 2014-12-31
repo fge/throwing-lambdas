@@ -1,8 +1,6 @@
 package com.github.fge.lambdas.predicates;
 
-import com.github.fge.lambdas.ThrowingInterfaceBaseTest;
-import com.github.fge.lambdas.ThrownByLambdaException;
-import com.github.fge.lambdas.helpers.MyException;
+import com.github.fge.lambdas.ThrowingInterfaceTest;
 
 import java.util.concurrent.Callable;
 import java.util.function.IntPredicate;
@@ -14,133 +12,48 @@ import static org.mockito.Mockito.when;
 @SuppressWarnings({"ProhibitedExceptionDeclared", "AutoBoxing",
     "OverlyBroadThrowsClause"})
 public final class ThrowingIntPredicateTest
-    extends ThrowingInterfaceBaseTest<ThrowingIntPredicate, IntPredicate, Boolean>
+    extends ThrowingInterfaceTest<ThrowingIntPredicate, ThrowingIntPredicate, IntPredicate, Boolean>
 {
-    private final int arg = 16;
+    private final int value = 16;
 
     public ThrowingIntPredicateTest()
     {
-        super(true, false);
+        super(SpiedThrowingIntPredicate::newSpy, () -> mock(IntPredicate.class),
+            true, false);
     }
 
     @Override
-    protected ThrowingIntPredicate getAlternate()
+    protected void setupFull(final ThrowingIntPredicate instance)
         throws Throwable
     {
-        final ThrowingIntPredicate spy =
-            SpiedThrowingIntPredicate.newSpy();
-
-        when(spy.doTest(arg)).thenReturn(ret2);
-
-        return spy;
-    }
-
-    @Override
-    protected ThrowingIntPredicate getTestInstance()
-        throws Throwable
-    {
-        final ThrowingIntPredicate spy
-            = SpiedThrowingIntPredicate.newSpy();
-
-        when(spy.doTest(arg)).thenReturn(true).thenThrow(checked)
+        when(instance.doTest(value)).thenReturn(true).thenThrow(checked)
             .thenThrow(unchecked).thenThrow(error);
-
-        return spy;
     }
 
     @Override
-    protected IntPredicate getFallback()
+    protected void setupAlternate(final ThrowingIntPredicate instance)
+        throws Throwable
     {
-        final IntPredicate mock = mock(IntPredicate.class);
+        when(instance.doTest(value)).thenReturn(ret2);
+    }
 
-        when(mock.test(arg)).thenReturn(false);
-
-        return mock;
+    @Override
+    protected void setupFallback(final IntPredicate instance)
+    {
+        when(instance.test(value)).thenReturn(false);
     }
 
     @Override
     protected Callable<Boolean> asCallable(final IntPredicate instance)
     {
-        return () -> instance.test(arg);
+        return () -> instance.test(value);
     }
 
-    @Override
-    public void testUnchained()
-        throws Throwable
-    {
-        final ThrowingIntPredicate instance = getTestInstance();
-
-        final Callable<Boolean> callable = asCallable(instance);
-
-        assertThat(callable.call()).isTrue();
-
-        verifyCheckedRethrow(callable, ThrownByLambdaException.class);
-
-        verifyUncheckedThrow(callable);
-
-        verifyErrorThrow(callable);
-    }
-
-    @Override
-    public void testChainedWithOrThrow()
-        throws Throwable
-    {
-        final IntPredicate instance
-            = getTestInstance().orThrow(MyException.class);
-
-        final Callable<Boolean> callable = asCallable(instance);
-
-        assertThat(callable.call()).isTrue();
-
-        verifyCheckedRethrow(callable, MyException.class);
-
-        verifyUncheckedThrow(callable);
-
-        verifyErrorThrow(callable);
-    }
-
-    @Override
-    public void testChainedWithOrTryWith()
-        throws Throwable
-    {
-        final ThrowingIntPredicate first = getTestInstance();
-        final ThrowingIntPredicate second = getAlternate();
-
-        final IntPredicate instance = first.orTryWith(second);
-
-        final Callable<Boolean> callable = asCallable(instance);
-
-        assertThat(callable.call()).isTrue();
-        assertThat(callable.call()).isFalse();
-
-        verifyUncheckedThrow(callable);
-
-        verifyErrorThrow(callable);
-    }
-
-    @Override
-    public void testChainedWithFallbackTo()
-        throws Throwable
-    {
-        final ThrowingIntPredicate first = getTestInstance();
-        final IntPredicate second = getFallback();
-
-        final IntPredicate instance = first.fallbackTo(second);
-
-        final Callable<Boolean> callable = asCallable(instance);
-
-        assertThat(callable.call()).isTrue();
-        assertThat(callable.call()).isFalse();
-
-        verifyUncheckedThrow(callable);
-
-        verifyErrorThrow(callable);
-    }
 
     public void testChainedWithOrReturn()
         throws Throwable
     {
-        final IntPredicate instance = getTestInstance().orReturn(false);
+        final IntPredicate instance = getFullInstance().orReturn(false);
 
         final Callable<Boolean> callable = asCallable(instance);
 
