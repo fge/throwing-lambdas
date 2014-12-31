@@ -1,8 +1,6 @@
 package com.github.fge.lambdas.functions.intfunctions;
 
-import com.github.fge.lambdas.ThrowingInterfaceBaseTest;
-import com.github.fge.lambdas.ThrownByLambdaException;
-import com.github.fge.lambdas.helpers.MyException;
+import com.github.fge.lambdas.ThrowingInterfaceTest;
 
 import java.util.concurrent.Callable;
 import java.util.function.IntToDoubleFunction;
@@ -14,134 +12,47 @@ import static org.mockito.Mockito.when;
 @SuppressWarnings({ "ProhibitedExceptionDeclared", "AutoBoxing",
     "OverlyBroadThrowsClause" })
 public final class ThrowingIntToDoubleFunctionTest
-    extends ThrowingInterfaceBaseTest<ThrowingIntToDoubleFunction, IntToDoubleFunction, Double>
+    extends ThrowingInterfaceTest<ThrowingIntToDoubleFunction, ThrowingIntToDoubleFunction, IntToDoubleFunction, Double>
 {
-    private final int arg = 2;
+    private final int value = 2;
 
     public ThrowingIntToDoubleFunctionTest()
     {
-        super(4.0, 0.5);
+        super(SpiedThrowingIntToDoubleFunction::newSpy,
+            () -> mock(IntToDoubleFunction.class), 4.0, 0.5);
     }
 
     @Override
-    protected ThrowingIntToDoubleFunction getAlternate()
+    protected void setupFull(final ThrowingIntToDoubleFunction instance)
         throws Throwable
     {
-        final ThrowingIntToDoubleFunction spy =
-            SpiedThrowingIntToDoubleFunction.newSpy();
-
-        when(spy.doApplyAsDouble(arg)).thenReturn(ret2);
-
-        return spy;
+        when(instance.doApplyAsDouble(value)).thenReturn(ret1)
+            .thenThrow(checked).thenThrow(unchecked).thenThrow(error);
     }
 
     @Override
-    protected ThrowingIntToDoubleFunction getTestInstance()
+    protected void setupAlternate(final ThrowingIntToDoubleFunction instance)
         throws Throwable
     {
-        final ThrowingIntToDoubleFunction spy
-            = SpiedThrowingIntToDoubleFunction.newSpy();
-
-        when(spy.doApplyAsDouble(arg)).thenReturn(ret1).thenThrow(checked)
-            .thenThrow(unchecked).thenThrow(error);
-
-        return spy;
+        when(instance.doApplyAsDouble(value)).thenReturn(ret2);
     }
 
     @Override
-    protected IntToDoubleFunction getFallback()
+    protected void setupFallback(final IntToDoubleFunction instance)
     {
-        final IntToDoubleFunction mock = mock(IntToDoubleFunction.class);
-
-        when(mock.applyAsDouble(arg)).thenReturn(ret2);
-
-        return mock;
+        when(instance.applyAsDouble(value)).thenReturn(ret2);
     }
 
     @Override
     protected Callable<Double> asCallable(final IntToDoubleFunction instance)
     {
-        return () -> instance.applyAsDouble(arg);
-    }
-
-    @Override
-    public void testUnchained()
-        throws Throwable
-    {
-        final ThrowingIntToDoubleFunction instance = getTestInstance();
-
-        final Callable<Double> callable = asCallable(instance);
-
-        assertThat(callable.call()).isEqualTo(ret1);
-
-        verifyCheckedRethrow(callable, ThrownByLambdaException.class);
-
-        verifyUncheckedThrow(callable);
-
-        verifyErrorThrow(callable);
-    }
-
-    @Override
-    public void testChainedWithOrThrow()
-        throws Throwable
-    {
-        final IntToDoubleFunction instance
-            = getTestInstance().orThrow(MyException.class);
-
-        final Callable<Double> callable = asCallable(instance);
-
-        assertThat(callable.call()).isEqualTo(ret1);
-
-        verifyCheckedRethrow(callable, MyException.class);
-
-        verifyUncheckedThrow(callable);
-
-        verifyErrorThrow(callable);
-    }
-
-    @Override
-    public void testChainedWithOrTryWith()
-        throws Throwable
-    {
-        final ThrowingIntToDoubleFunction first = getTestInstance();
-        final ThrowingIntToDoubleFunction second = getAlternate();
-
-        final IntToDoubleFunction instance = first.orTryWith(second);
-
-        final Callable<Double> callable = asCallable(instance);
-
-        assertThat(callable.call()).isEqualTo(ret1);
-        assertThat(callable.call()).isEqualTo(ret2);
-
-        verifyUncheckedThrow(callable);
-
-        verifyErrorThrow(callable);
-    }
-
-    @Override
-    public void testChainedWithFallbackTo()
-        throws Throwable
-    {
-        final ThrowingIntToDoubleFunction first = getTestInstance();
-        final IntToDoubleFunction second = getFallback();
-
-        final IntToDoubleFunction instance = first.fallbackTo(second);
-
-        final Callable<Double> callable = asCallable(instance);
-
-        assertThat(callable.call()).isEqualTo(ret1);
-        assertThat(callable.call()).isEqualTo(ret2);
-
-        verifyUncheckedThrow(callable);
-
-        verifyErrorThrow(callable);
+        return () -> instance.applyAsDouble(value);
     }
 
     public void testChainedWithOrReturn()
         throws Throwable
     {
-        final IntToDoubleFunction instance
-            = getTestInstance().orReturn(ret2);
+        final IntToDoubleFunction instance = getFullInstance().orReturn(ret2);
 
         final Callable<Double> callable = asCallable(instance);
 
