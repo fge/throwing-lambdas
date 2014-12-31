@@ -2,17 +2,13 @@ package com.github.fge.lambdas.functions;
 
 import com.github.fge.lambdas.ThrowingFunctionalInterface;
 import com.github.fge.lambdas.functions.doublefunctions.ThrowingDoubleFunction;
-import com.github.fge.lambdas.functions.doublefunctions
-    .ThrowingDoubleToIntFunction;
-import com.github.fge.lambdas.functions.doublefunctions
-    .ThrowingDoubleToLongFunction;
+import com.github.fge.lambdas.functions.doublefunctions.ThrowingDoubleToIntFunction;
+import com.github.fge.lambdas.functions.doublefunctions.ThrowingDoubleToLongFunction;
 import com.github.fge.lambdas.functions.intfunctions.ThrowingIntFunction;
-import com.github.fge.lambdas.functions.intfunctions
-    .ThrowingIntToDoubleFunction;
+import com.github.fge.lambdas.functions.intfunctions.ThrowingIntToDoubleFunction;
 import com.github.fge.lambdas.functions.intfunctions.ThrowingIntToLongFunction;
 import com.github.fge.lambdas.functions.longfunctions.ThrowingLongFunction;
-import com.github.fge.lambdas.functions.longfunctions
-    .ThrowingLongToDoubleFunction;
+import com.github.fge.lambdas.functions.longfunctions.ThrowingLongToDoubleFunction;
 import com.github.fge.lambdas.functions.longfunctions.ThrowingLongToIntFunction;
 
 import java.util.function.BiFunction;
