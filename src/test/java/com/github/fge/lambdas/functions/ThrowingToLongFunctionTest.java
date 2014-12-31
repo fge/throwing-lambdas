@@ -1,8 +1,6 @@
 package com.github.fge.lambdas.functions;
 
-import com.github.fge.lambdas.ThrowingInterfaceBaseTest;
-import com.github.fge.lambdas.ThrownByLambdaException;
-import com.github.fge.lambdas.helpers.MyException;
+import com.github.fge.lambdas.ThrowingInterfaceTest;
 import com.github.fge.lambdas.helpers.Type1;
 
 import java.util.concurrent.Callable;
@@ -15,137 +13,48 @@ import static org.mockito.Mockito.when;
 @SuppressWarnings({ "ProhibitedExceptionDeclared", "AutoBoxing",
     "OverlyBroadThrowsClause" })
 public final class ThrowingToLongFunctionTest
-    extends ThrowingInterfaceBaseTest<ThrowingToLongFunction<Type1>, ToLongFunction<Type1>, Long>
+    extends ThrowingInterfaceTest<ThrowingToLongFunction<Type1>, ThrowingToLongFunction<Type1>, ToLongFunction<Type1>, Long>
 {
-    private final Type1 arg = Type1.mock();
+    private final Type1 value = Type1.mock();
 
     public ThrowingToLongFunctionTest()
     {
-        super(42L, 25L);
+        super(SpiedThrowingToLongFunction::newSpy,
+            () -> mock(ToLongFunction.class), 42L, 25L);
     }
 
     @Override
-    protected ThrowingToLongFunction<Type1> getAlternate()
+    protected void setupFull(final ThrowingToLongFunction<Type1> instance)
         throws Throwable
     {
-        final ThrowingToLongFunction<Type1> spy =
-            SpiedThrowingToLongFunction.newSpy();
-
-        when(spy.doApplyAsLong(arg)).thenReturn(ret2);
-
-        return spy;
-    }
-
-    @Override
-    protected ThrowingToLongFunction<Type1> getTestInstance()
-        throws Throwable
-    {
-        final ThrowingToLongFunction<Type1> spy
-            = SpiedThrowingToLongFunction.newSpy();
-
-        when(spy.doApplyAsLong(arg)).thenReturn(ret1).thenThrow(checked)
+        when(instance.doApplyAsLong(value)).thenReturn(ret1).thenThrow(checked)
             .thenThrow(unchecked).thenThrow(error);
-
-        return spy;
     }
 
     @Override
-    protected ToLongFunction<Type1> getFallback()
+    protected void setupAlternate(final ThrowingToLongFunction<Type1> instance)
+        throws Throwable
     {
-        @SuppressWarnings("unchecked")
-        final ToLongFunction<Type1> mock = mock(ToLongFunction.class);
+        when(instance.doApplyAsLong(value)).thenReturn(ret2);
+    }
 
-        when(mock.applyAsLong(arg)).thenReturn(ret2);
-
-        return mock;
+    @Override
+    protected void setupFallback(final ToLongFunction<Type1> instance)
+    {
+        when(instance.applyAsLong(value)).thenReturn(ret2);
     }
 
     @Override
     protected Callable<Long> asCallable(
         final ToLongFunction<Type1> instance)
     {
-        return () -> instance.applyAsLong(arg);
-    }
-
-    @Override
-    public void testUnchained()
-        throws Throwable
-    {
-        final ThrowingToLongFunction<Type1> instance = getTestInstance();
-
-        final Callable<Long> callable = asCallable(instance);
-
-        assertThat(callable.call()).isEqualTo(ret1);
-
-        verifyCheckedRethrow(callable, ThrownByLambdaException.class);
-
-        verifyUncheckedThrow(callable);
-
-        verifyErrorThrow(callable);
-    }
-
-    @Override
-    public void testChainedWithOrThrow()
-        throws Throwable
-    {
-        final ToLongFunction<Type1> instance
-            = getTestInstance().orThrow(MyException.class);
-
-        final Callable<Long> callable = asCallable(instance);
-
-        assertThat(callable.call()).isEqualTo(ret1);
-
-        verifyCheckedRethrow(callable, MyException.class);
-
-        verifyUncheckedThrow(callable);
-
-        verifyErrorThrow(callable);
-    }
-
-    @Override
-    public void testChainedWithOrTryWith()
-        throws Throwable
-    {
-        final ThrowingToLongFunction<Type1> first = getTestInstance();
-        final ThrowingToLongFunction<Type1> second = getAlternate();
-
-        final ToLongFunction<Type1> instance = first.orTryWith(second);
-
-        final Callable<Long> callable = asCallable(instance);
-
-        assertThat(callable.call()).isEqualTo(ret1);
-        assertThat(callable.call()).isEqualTo(ret2);
-
-        verifyUncheckedThrow(callable);
-
-        verifyErrorThrow(callable);
-    }
-
-    @Override
-    public void testChainedWithFallbackTo()
-        throws Throwable
-    {
-        final ThrowingToLongFunction<Type1> first = getTestInstance();
-        final ToLongFunction<Type1> second = getFallback();
-
-        final ToLongFunction<Type1> instance = first.fallbackTo(second);
-
-        final Callable<Long> callable = asCallable(instance);
-
-        assertThat(callable.call()).isEqualTo(ret1);
-        assertThat(callable.call()).isEqualTo(ret2);
-
-        verifyUncheckedThrow(callable);
-
-        verifyErrorThrow(callable);
+        return () -> instance.applyAsLong(value);
     }
 
     public void testChainedWithOrReturn()
         throws Throwable
     {
-        final ThrowingToLongFunction<Type1> first = getTestInstance();
-
-        final ToLongFunction<Type1> instance = first.orReturn(ret2);
+        final ToLongFunction<Type1> instance = getFullInstance().orReturn(ret2);
 
         final Callable<Long> callable = asCallable(instance);
 
