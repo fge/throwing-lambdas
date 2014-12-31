@@ -2,12 +2,12 @@ package com.github.fge.lambdas.comparators;
 
 import com.github.fge.lambdas.ThrowingInterfaceTest;
 import com.github.fge.lambdas.helpers.Type1;
-import org.mockito.Mockito;
 
 import java.util.Comparator;
 import java.util.concurrent.Callable;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @SuppressWarnings({"AutoBoxing", "ProhibitedExceptionDeclared",
@@ -21,7 +21,7 @@ public final class ThrowingComparatorTest
     public ThrowingComparatorTest()
     {
         super(SpiedThrowingComparator::newSpy,
-            () -> Mockito.mock(Comparator.class), 42, 24);
+            () -> mock(Comparator.class), 42, 24);
     }
 
     @Override
