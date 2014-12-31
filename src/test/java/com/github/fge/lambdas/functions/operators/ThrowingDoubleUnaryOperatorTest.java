@@ -1,8 +1,6 @@
 package com.github.fge.lambdas.functions.operators;
 
-import com.github.fge.lambdas.ThrowingInterfaceBaseTest;
-import com.github.fge.lambdas.ThrownByLambdaException;
-import com.github.fge.lambdas.helpers.MyException;
+import com.github.fge.lambdas.ThrowingInterfaceTest;
 
 import java.util.concurrent.Callable;
 import java.util.function.DoubleUnaryOperator;
@@ -14,134 +12,47 @@ import static org.mockito.Mockito.when;
 @SuppressWarnings({"ProhibitedExceptionDeclared", "AutoBoxing",
     "OverlyBroadThrowsClause"})
 public final class ThrowingDoubleUnaryOperatorTest
-    extends ThrowingInterfaceBaseTest<ThrowingDoubleUnaryOperator, DoubleUnaryOperator, Double>
+    extends ThrowingInterfaceTest<ThrowingDoubleUnaryOperator, ThrowingDoubleUnaryOperator, DoubleUnaryOperator, Double>
 {
-    private final double arg = 1.0;
+    private final double operand = 1.0;
 
     public ThrowingDoubleUnaryOperatorTest()
     {
-        super(0.5, 2.0);
+        super(SpiedThrowingDoubleUnaryOperator::newSpy,
+            () -> mock(DoubleUnaryOperator.class), 0.5, 2.0);
     }
 
     @Override
-    protected ThrowingDoubleUnaryOperator getAlternate()
+    protected void setupFull(final ThrowingDoubleUnaryOperator instance)
         throws Throwable
     {
-        final ThrowingDoubleUnaryOperator spy =
-            SpiedThrowingDoubleUnaryOperator.newSpy();
-
-        when(spy.doApplyAsDouble(arg)).thenReturn(ret2);
-
-        return spy;
+        when(instance.doApplyAsDouble(operand)).thenReturn(ret1)
+            .thenThrow(checked).thenThrow(unchecked).thenThrow(error);
     }
 
     @Override
-    protected ThrowingDoubleUnaryOperator getTestInstance()
+    protected void setupAlternate(final ThrowingDoubleUnaryOperator instance)
         throws Throwable
     {
-        final ThrowingDoubleUnaryOperator spy
-            = SpiedThrowingDoubleUnaryOperator.newSpy();
-
-        when(spy.doApplyAsDouble(arg)).thenReturn(ret1).thenThrow(checked)
-            .thenThrow(unchecked).thenThrow(error);
-
-        return spy;
+        when(instance.doApplyAsDouble(operand)).thenReturn(ret2);
     }
 
     @Override
-    protected DoubleUnaryOperator getFallback()
+    protected void setupFallback(final DoubleUnaryOperator instance)
     {
-        final DoubleUnaryOperator mock = mock(DoubleUnaryOperator.class);
-
-        when(mock.applyAsDouble(arg)).thenReturn(ret2);
-
-        return mock;
+        when(instance.applyAsDouble(operand)).thenReturn(ret2);
     }
 
     @Override
     protected Callable<Double> asCallable(final DoubleUnaryOperator instance)
     {
-        return () -> instance.applyAsDouble(arg);
-    }
-
-    @Override
-    public void testUnchained()
-        throws Throwable
-    {
-        final DoubleUnaryOperator instance = getTestInstance();
-
-        final Callable<Double> callable = asCallable(instance);
-
-        assertThat(callable.call()).isEqualTo(ret1);
-
-        verifyCheckedRethrow(callable, ThrownByLambdaException.class);
-
-        verifyUncheckedThrow(callable);
-
-        verifyErrorThrow(callable);
-    }
-
-    @Override
-    public void testChainedWithOrThrow()
-        throws Throwable
-    {
-        final DoubleUnaryOperator instance
-            = getTestInstance().orThrow(MyException.class);
-
-        final Callable<Double> callable = asCallable(instance);
-
-        assertThat(callable.call()).isEqualTo(ret1);
-
-        verifyCheckedRethrow(callable, MyException.class);
-
-        verifyUncheckedThrow(callable);
-
-        verifyErrorThrow(callable);
-    }
-
-    @Override
-    public void testChainedWithOrTryWith()
-        throws Throwable
-    {
-        final ThrowingDoubleUnaryOperator first = getTestInstance();
-        final ThrowingDoubleUnaryOperator second = getAlternate();
-
-        final DoubleUnaryOperator instance = first.orTryWith(second);
-
-        final Callable<Double> callable = asCallable(instance);
-
-        assertThat(callable.call()).isEqualTo(ret1);
-        assertThat(callable.call()).isEqualTo(ret2);
-
-        verifyUncheckedThrow(callable);
-
-        verifyErrorThrow(callable);
-    }
-
-    @Override
-    public void testChainedWithFallbackTo()
-        throws Throwable
-    {
-        final ThrowingDoubleUnaryOperator first = getTestInstance();
-        final DoubleUnaryOperator second = getFallback();
-
-        final DoubleUnaryOperator instance = first.fallbackTo(second);
-
-        final Callable<Double> callable = asCallable(instance);
-
-        assertThat(callable.call()).isEqualTo(ret1);
-        assertThat(callable.call()).isEqualTo(ret2);
-
-        verifyUncheckedThrow(callable);
-
-        verifyErrorThrow(callable);
+        return () -> instance.applyAsDouble(operand);
     }
 
     public void testChainedWithOrReturn()
         throws Throwable
     {
-        final DoubleUnaryOperator instance
-            = getTestInstance().orReturn(ret2);
+        final DoubleUnaryOperator instance = getFullInstance().orReturn(ret2);
 
         final Callable<Double> callable = asCallable(instance);
 
@@ -156,13 +67,12 @@ public final class ThrowingDoubleUnaryOperatorTest
     public void testChainedWithOrReturnSelf()
         throws Throwable
     {
-        final DoubleUnaryOperator instance
-            = getTestInstance().orReturnSelf();
+        final DoubleUnaryOperator instance = getFullInstance().orReturnSelf();
 
         final Callable<Double> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
-        assertThat(callable.call()).isEqualTo(arg);
+        assertThat(callable.call()).isEqualTo(operand);
 
         verifyUncheckedThrow(callable);
 

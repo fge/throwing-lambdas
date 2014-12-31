@@ -1,8 +1,6 @@
 package com.github.fge.lambdas.functions.operators;
 
-import com.github.fge.lambdas.ThrowingInterfaceBaseTest;
-import com.github.fge.lambdas.ThrownByLambdaException;
-import com.github.fge.lambdas.helpers.MyException;
+import com.github.fge.lambdas.ThrowingInterfaceTest;
 
 import java.util.concurrent.Callable;
 import java.util.function.LongBinaryOperator;
@@ -14,49 +12,36 @@ import static org.mockito.Mockito.when;
 @SuppressWarnings({"ProhibitedExceptionDeclared", "AutoBoxing",
     "OverlyBroadThrowsClause"})
 public final class ThrowingLongBinaryOperatorTest
-    extends ThrowingInterfaceBaseTest<ThrowingLongBinaryOperator, LongBinaryOperator, Long>
+    extends ThrowingInterfaceTest<ThrowingLongBinaryOperator, ThrowingLongBinaryOperator, LongBinaryOperator, Long>
 {
     private final long left = 398098L;
     private final long right = 125L;
 
     public ThrowingLongBinaryOperatorTest()
     {
-        super(2L, 625L);
+        super(SpiedThrowingLongBinaryOperator::newSpy,
+            () -> mock(LongBinaryOperator.class), 2L, 625L);
     }
 
     @Override
-    protected ThrowingLongBinaryOperator getAlternate()
+    protected void setupFull(final ThrowingLongBinaryOperator instance)
         throws Throwable
     {
-        final ThrowingLongBinaryOperator spy =
-            SpiedThrowingLongBinaryOperator.newSpy();
-
-        when(spy.doApplyAsLong(left, right)).thenReturn(ret2);
-
-        return spy;
-    }
-
-    @Override
-    protected ThrowingLongBinaryOperator getTestInstance()
-        throws Throwable
-    {
-        final ThrowingLongBinaryOperator spy
-            = SpiedThrowingLongBinaryOperator.newSpy();
-
-        when(spy.doApplyAsLong(left, right)).thenReturn(ret1)
+        when(instance.doApplyAsLong(left, right)).thenReturn(ret1)
             .thenThrow(checked).thenThrow(unchecked).thenThrow(error);
-
-        return spy;
     }
 
     @Override
-    protected LongBinaryOperator getFallback()
+    protected void setupAlternate(final ThrowingLongBinaryOperator instance)
+        throws Throwable
     {
-        final LongBinaryOperator mock = mock(LongBinaryOperator.class);
+        when(instance.doApplyAsLong(left, right)).thenReturn(ret2);
+    }
 
-        when(mock.applyAsLong(left, right)).thenReturn(ret2);
-
-        return mock;
+    @Override
+    protected void setupFallback(final LongBinaryOperator instance)
+    {
+        when(instance.applyAsLong(left, right)).thenReturn(ret2);
     }
 
     @Override
@@ -65,84 +50,10 @@ public final class ThrowingLongBinaryOperatorTest
         return () -> instance.applyAsLong(left, right);
     }
 
-    @Override
-    public void testUnchained()
-        throws Throwable
-    {
-        final LongBinaryOperator instance = getTestInstance();
-
-        final Callable<Long> callable = asCallable(instance);
-
-        assertThat(callable.call()).isEqualTo(ret1);
-
-        verifyCheckedRethrow(callable, ThrownByLambdaException.class);
-
-        verifyUncheckedThrow(callable);
-
-        verifyErrorThrow(callable);
-    }
-
-    @Override
-    public void testChainedWithOrThrow()
-        throws Throwable
-    {
-        final LongBinaryOperator instance
-            = getTestInstance().orThrow(MyException.class);
-
-        final Callable<Long> callable = asCallable(instance);
-
-        assertThat(callable.call()).isEqualTo(ret1);
-
-        verifyCheckedRethrow(callable, MyException.class);
-
-        verifyUncheckedThrow(callable);
-
-        verifyErrorThrow(callable);
-    }
-
-    @Override
-    public void testChainedWithOrTryWith()
-        throws Throwable
-    {
-        final ThrowingLongBinaryOperator first = getTestInstance();
-        final ThrowingLongBinaryOperator second = getAlternate();
-
-        final LongBinaryOperator instance = first.orTryWith(second);
-
-        final Callable<Long> callable = asCallable(instance);
-
-        assertThat(callable.call()).isEqualTo(ret1);
-        assertThat(callable.call()).isEqualTo(ret2);
-
-        verifyUncheckedThrow(callable);
-
-        verifyErrorThrow(callable);
-    }
-
-    @Override
-    public void testChainedWithFallbackTo()
-        throws Throwable
-    {
-        final ThrowingLongBinaryOperator first = getTestInstance();
-        final LongBinaryOperator second = getFallback();
-
-        final LongBinaryOperator instance = first.fallbackTo(second);
-
-        final Callable<Long> callable = asCallable(instance);
-
-        assertThat(callable.call()).isEqualTo(ret1);
-        assertThat(callable.call()).isEqualTo(ret2);
-
-        verifyUncheckedThrow(callable);
-
-        verifyErrorThrow(callable);
-    }
-
     public void testChainedWithOrReturn()
         throws Throwable
     {
-        final LongBinaryOperator instance
-            = getTestInstance().orReturn(ret2);
+        final LongBinaryOperator instance = getFullInstance().orReturn(ret2);
 
         final Callable<Long> callable = asCallable(instance);
 
@@ -157,8 +68,7 @@ public final class ThrowingLongBinaryOperatorTest
     public void testChainedWithOrReturnLeft()
         throws Throwable
     {
-        final LongBinaryOperator instance
-            = getTestInstance().orReturnLeft();
+        final LongBinaryOperator instance = getFullInstance().orReturnLeft();
 
         final Callable<Long> callable = asCallable(instance);
 
@@ -173,8 +83,7 @@ public final class ThrowingLongBinaryOperatorTest
     public void testChainedWithOrReturnRight()
         throws Throwable
     {
-        final LongBinaryOperator instance
-            = getTestInstance().orReturnRight();
+        final LongBinaryOperator instance = getFullInstance().orReturnRight();
 
         final Callable<Long> callable = asCallable(instance);
 

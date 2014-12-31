@@ -1,8 +1,6 @@
 package com.github.fge.lambdas.functions.operators;
 
-import com.github.fge.lambdas.ThrowingInterfaceBaseTest;
-import com.github.fge.lambdas.ThrownByLambdaException;
-import com.github.fge.lambdas.helpers.MyException;
+import com.github.fge.lambdas.ThrowingInterfaceTest;
 
 import java.util.concurrent.Callable;
 import java.util.function.IntUnaryOperator;
@@ -14,134 +12,47 @@ import static org.mockito.Mockito.when;
 @SuppressWarnings({"ProhibitedExceptionDeclared", "AutoBoxing",
     "OverlyBroadThrowsClause"})
 public final class ThrowingIntUnaryOperatorTest
-    extends ThrowingInterfaceBaseTest<ThrowingIntUnaryOperator, IntUnaryOperator, Integer>
+    extends ThrowingInterfaceTest<ThrowingIntUnaryOperator, ThrowingIntUnaryOperator, IntUnaryOperator, Integer>
 {
-    private final int arg = 1;
+    private final int operand = 1;
 
     public ThrowingIntUnaryOperatorTest()
     {
-        super(5, 20);
+        super(SpiedThrowingIntUnaryOperator::newSpy,
+            () -> mock(IntUnaryOperator.class), 5, 20);
     }
 
     @Override
-    protected ThrowingIntUnaryOperator getAlternate()
+    protected void setupFull(final ThrowingIntUnaryOperator instance)
         throws Throwable
     {
-        final ThrowingIntUnaryOperator spy =
-            SpiedThrowingIntUnaryOperator.newSpy();
-
-        when(spy.doApplyAsInt(arg)).thenReturn(ret2);
-
-        return spy;
-    }
-
-    @Override
-    protected ThrowingIntUnaryOperator getTestInstance()
-        throws Throwable
-    {
-        final ThrowingIntUnaryOperator spy
-            = SpiedThrowingIntUnaryOperator.newSpy();
-
-        when(spy.doApplyAsInt(arg)).thenReturn(ret1).thenThrow(checked)
+        when(instance.doApplyAsInt(operand)).thenReturn(ret1).thenThrow(checked)
             .thenThrow(unchecked).thenThrow(error);
-
-        return spy;
     }
 
     @Override
-    protected IntUnaryOperator getFallback()
+    protected void setupAlternate(final ThrowingIntUnaryOperator instance)
+        throws Throwable
     {
-        final IntUnaryOperator mock = mock(IntUnaryOperator.class);
+        when(instance.doApplyAsInt(operand)).thenReturn(ret2);
+    }
 
-        when(mock.applyAsInt(arg)).thenReturn(ret2);
-
-        return mock;
+    @Override
+    protected void setupFallback(final IntUnaryOperator instance)
+    {
+        when(instance.applyAsInt(operand)).thenReturn(ret2);
     }
 
     @Override
     protected Callable<Integer> asCallable(final IntUnaryOperator instance)
     {
-        return () -> instance.applyAsInt(arg);
-    }
-
-    @Override
-    public void testUnchained()
-        throws Throwable
-    {
-        final IntUnaryOperator instance = getTestInstance();
-
-        final Callable<Integer> callable = asCallable(instance);
-
-        assertThat(callable.call()).isEqualTo(ret1);
-
-        verifyCheckedRethrow(callable, ThrownByLambdaException.class);
-
-        verifyUncheckedThrow(callable);
-
-        verifyErrorThrow(callable);
-    }
-
-    @Override
-    public void testChainedWithOrThrow()
-        throws Throwable
-    {
-        final IntUnaryOperator instance
-            = getTestInstance().orThrow(MyException.class);
-
-        final Callable<Integer> callable = asCallable(instance);
-
-        assertThat(callable.call()).isEqualTo(ret1);
-
-        verifyCheckedRethrow(callable, MyException.class);
-
-        verifyUncheckedThrow(callable);
-
-        verifyErrorThrow(callable);
-    }
-
-    @Override
-    public void testChainedWithOrTryWith()
-        throws Throwable
-    {
-        final ThrowingIntUnaryOperator first = getTestInstance();
-        final ThrowingIntUnaryOperator second = getAlternate();
-
-        final IntUnaryOperator instance = first.orTryWith(second);
-
-        final Callable<Integer> callable = asCallable(instance);
-
-        assertThat(callable.call()).isEqualTo(ret1);
-        assertThat(callable.call()).isEqualTo(ret2);
-
-        verifyUncheckedThrow(callable);
-
-        verifyErrorThrow(callable);
-    }
-
-    @Override
-    public void testChainedWithFallbackTo()
-        throws Throwable
-    {
-        final ThrowingIntUnaryOperator first = getTestInstance();
-        final IntUnaryOperator second = getFallback();
-
-        final IntUnaryOperator instance = first.fallbackTo(second);
-
-        final Callable<Integer> callable = asCallable(instance);
-
-        assertThat(callable.call()).isEqualTo(ret1);
-        assertThat(callable.call()).isEqualTo(ret2);
-
-        verifyUncheckedThrow(callable);
-
-        verifyErrorThrow(callable);
+        return () -> instance.applyAsInt(operand);
     }
 
     public void testChainedWithOrReturn()
         throws Throwable
     {
-        final IntUnaryOperator instance
-            = getTestInstance().orReturn(ret2);
+        final IntUnaryOperator instance = getFullInstance().orReturn(ret2);
 
         final Callable<Integer> callable = asCallable(instance);
 
@@ -156,13 +67,12 @@ public final class ThrowingIntUnaryOperatorTest
     public void testChainedWithOrReturnSelf()
         throws Throwable
     {
-        final IntUnaryOperator instance
-            = getTestInstance().orReturnSelf();
+        final IntUnaryOperator instance = getFullInstance().orReturnSelf();
 
         final Callable<Integer> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
-        assertThat(callable.call()).isEqualTo(arg);
+        assertThat(callable.call()).isEqualTo(operand);
 
         verifyUncheckedThrow(callable);
 

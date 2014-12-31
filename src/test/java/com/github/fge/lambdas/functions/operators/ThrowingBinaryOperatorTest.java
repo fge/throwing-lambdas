@@ -1,8 +1,6 @@
 package com.github.fge.lambdas.functions.operators;
 
-import com.github.fge.lambdas.ThrowingInterfaceBaseTest;
-import com.github.fge.lambdas.ThrownByLambdaException;
-import com.github.fge.lambdas.helpers.MyException;
+import com.github.fge.lambdas.ThrowingInterfaceTest;
 import com.github.fge.lambdas.helpers.Type1;
 
 import java.util.concurrent.Callable;
@@ -14,136 +12,48 @@ import static org.mockito.Mockito.when;
 
 @SuppressWarnings({"ProhibitedExceptionDeclared", "OverlyBroadThrowsClause"})
 public final class ThrowingBinaryOperatorTest
-    extends ThrowingInterfaceBaseTest<ThrowingBinaryOperator<Type1>, BinaryOperator<Type1>, Type1>
+    extends ThrowingInterfaceTest<ThrowingBinaryOperator<Type1>, ThrowingBinaryOperator<Type1>, BinaryOperator<Type1>, Type1>
 {
-    private final Type1 left = Type1.mock();
-    private final Type1 right = Type1.mock();
+    private final Type1 t = Type1.mock();
+    private final Type1 u = Type1.mock();
 
     public ThrowingBinaryOperatorTest()
     {
-        super(Type1.mock(), Type1.mock());
+        super(SpiedThrowingBinaryOperator::newSpy,
+            () -> mock(BinaryOperator.class), Type1.mock(), Type1.mock());
     }
 
     @Override
-    protected ThrowingBinaryOperator<Type1> getAlternate()
+    protected void setupFull(final ThrowingBinaryOperator<Type1> instance)
         throws Throwable
     {
-        final ThrowingBinaryOperator<Type1> spy =
-            SpiedThrowingBinaryOperator.newSpy();
-
-        when(spy.doApply(left, right)).thenReturn(ret2);
-
-        return spy;
-    }
-
-    @Override
-    protected ThrowingBinaryOperator<Type1> getTestInstance()
-        throws Throwable
-    {
-        final ThrowingBinaryOperator<Type1> spy
-            = SpiedThrowingBinaryOperator.newSpy();
-
-        when(spy.doApply(left, right)).thenReturn(ret1).thenThrow(checked)
+        when(instance.doApply(t, u)).thenReturn(ret1).thenThrow(checked)
             .thenThrow(unchecked).thenThrow(error);
-
-        return spy;
     }
 
     @Override
-    protected BinaryOperator<Type1> getFallback()
+    protected void setupAlternate(final ThrowingBinaryOperator<Type1> instance)
+        throws Throwable
     {
-        @SuppressWarnings("unchecked")
-        final BinaryOperator<Type1> mock = mock(BinaryOperator.class);
+        when(instance.doApply(t, u)).thenReturn(ret2);
+    }
 
-        when(mock.apply(left, right)).thenReturn(ret2);
-
-        return mock;
+    @Override
+    protected void setupFallback(final BinaryOperator<Type1> instance)
+    {
+        when(instance.apply(t, u)).thenReturn(ret2);
     }
 
     @Override
     protected Callable<Type1> asCallable(final BinaryOperator<Type1> instance)
     {
-        return () -> instance.apply(left, right);
-    }
-
-    @Override
-    public void testUnchained()
-        throws Throwable
-    {
-        final ThrowingBinaryOperator<Type1> instance = getTestInstance();
-
-        final Callable<Type1> callable = asCallable(instance);
-
-        assertThat(callable.call()).isEqualTo(ret1);
-
-        verifyCheckedRethrow(callable, ThrownByLambdaException.class);
-
-        verifyUncheckedThrow(callable);
-
-        verifyErrorThrow(callable);
-    }
-
-    @Override
-    public void testChainedWithOrThrow()
-        throws Throwable
-    {
-        final BinaryOperator<Type1> instance
-            = getTestInstance().orThrow(MyException.class);
-
-        final Callable<Type1> callable = asCallable(instance);
-
-        assertThat(callable.call()).isEqualTo(ret1);
-
-        verifyCheckedRethrow(callable, MyException.class);
-
-        verifyUncheckedThrow(callable);
-
-        verifyErrorThrow(callable);
-    }
-
-    @Override
-    public void testChainedWithOrTryWith()
-        throws Throwable
-    {
-        final ThrowingBinaryOperator<Type1> first = getTestInstance();
-        final ThrowingBinaryOperator<Type1> second = getAlternate();
-
-        final BinaryOperator<Type1> instance = first.orTryWith(second);
-
-        final Callable<Type1> callable = asCallable(instance);
-
-        assertThat(callable.call()).isEqualTo(ret1);
-        assertThat(callable.call()).isEqualTo(ret2);
-
-        verifyUncheckedThrow(callable);
-
-        verifyErrorThrow(callable);
-    }
-
-    @Override
-    public void testChainedWithFallbackTo()
-        throws Throwable
-    {
-        final ThrowingBinaryOperator<Type1> first = getTestInstance();
-        final BinaryOperator<Type1> second = getFallback();
-
-        final BinaryOperator<Type1> instance = first.fallbackTo(second);
-
-        final Callable<Type1> callable = asCallable(instance);
-
-        assertThat(callable.call()).isEqualTo(ret1);
-        assertThat(callable.call()).isEqualTo(ret2);
-
-        verifyUncheckedThrow(callable);
-
-        verifyErrorThrow(callable);
+        return () -> instance.apply(t, u);
     }
 
     public void testChainedWithOrReturn()
         throws Throwable
     {
-        final BinaryOperator<Type1> instance
-            = getTestInstance().orReturn(ret2);
+        final BinaryOperator<Type1> instance = getFullInstance().orReturn(ret2);
 
         final Callable<Type1> callable = asCallable(instance);
 
@@ -158,13 +68,12 @@ public final class ThrowingBinaryOperatorTest
     public void testChainedWithOrReturnLeft()
         throws Throwable
     {
-        final BinaryOperator<Type1> instance
-            = getTestInstance().orReturnLeft();
+        final BinaryOperator<Type1> instance = getFullInstance().orReturnLeft();
 
         final Callable<Type1> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
-        assertThat(callable.call()).isEqualTo(left);
+        assertThat(callable.call()).isEqualTo(t);
 
         verifyUncheckedThrow(callable);
 
@@ -175,12 +84,12 @@ public final class ThrowingBinaryOperatorTest
         throws Throwable
     {
         final BinaryOperator<Type1> instance
-            = getTestInstance().orReturnRight();
+            = getFullInstance().orReturnRight();
 
         final Callable<Type1> callable = asCallable(instance);
 
         assertThat(callable.call()).isEqualTo(ret1);
-        assertThat(callable.call()).isEqualTo(right);
+        assertThat(callable.call()).isEqualTo(u);
 
         verifyUncheckedThrow(callable);
 
