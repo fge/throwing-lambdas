@@ -29,6 +29,8 @@ buildscript {
             name: "propdeps-plugin", version: "0.0.7");
         classpath(group: "info.solidsoft.gradle.pitest",
             name: "gradle-pitest-plugin", version: "1.1.2");
+        classpath(group: "com.github.aliteralmind",
+            name: "codelet", version: "0.1.4.1");
     }
 };
 
@@ -79,6 +81,21 @@ test {
     useTestNG() {
         useDefaultListeners = true;
     };
+}
+
+/*
+ * Javadoc: codelet taglets
+ */
+javadoc {
+    def tagList = [
+        "com.github.aliteralmind.codelet.taglet.CodeletTaglet",
+        "com.github.aliteralmind.codelet.taglet.ConsoleOutTaglet",
+        "com.github.aliteralmind.codelet.taglet.FileTextTaglet",
+        "com.github.aliteralmind.codelet.taglet.SourceAndOutTaglet"
+    ];
+    options.setTaglets(tagList);
+    options.addStringOption("tagletpath",
+        sourceSets.main.output.classesDir.path);
 }
 
 pitest {
