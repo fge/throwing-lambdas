@@ -2,48 +2,47 @@ package com.github.fge.lambdas.v2;
 
 import com.github.fge.lambdas.ThrowablesFactory;
 
-import java.util.function.Function;
+import java.util.function.Consumer;
 
-public final class ThrowingFunctionChain<T, R>
-    extends Chain<Function<T, R>, ThrowingFunction<T, R>, ThrowingFunctionChain<T, R>>
-    implements ThrowingFunction<T, R>
+public final class ThrowingConsumerChain<T>
+    extends Chain<Consumer<T>, ThrowingConsumer<T>, ThrowingConsumerChain<T>>
+    implements ThrowingConsumer<T>
 {
-    public ThrowingFunctionChain(final ThrowingFunction<T, R> function)
+    public ThrowingConsumerChain(final ThrowingConsumer<T> throwing)
     {
-        super(function);
+        super(throwing);
     }
 
     @Override
-    public R doApply(final T t)
+    public void doAccept(final T t)
         throws Throwable
     {
-        return throwing.doApply(t);
+        throwing.doAccept(t);
     }
 
     @Override
-    public ThrowingFunctionChain<T, R> orTryWith(
-        final ThrowingFunction<T, R> other)
+    public ThrowingConsumerChain<T> orTryWith(final ThrowingConsumer<T> other)
     {
-        final ThrowingFunction<T, R> function = t -> {
+        final ThrowingConsumer<T> consumer = t -> {
             try {
-                return throwing.doApply(t);
+                throwing.doAccept(t);
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                return other.doApply(t);
+                other.doAccept(t);
             }
         };
 
-        return new ThrowingFunctionChain<>(function);
+        return new ThrowingConsumerChain<>(consumer);
     }
 
     @Override
-    public <E extends RuntimeException> ThrowingFunction<T, R> orThrow(
+    public <E extends RuntimeException> ThrowingConsumer<T> orThrow(
         final Class<E> exclass)
     {
         return t -> {
             try {
-                return throwing.doApply(t);
+                throwing.doAccept(t);
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable throwable) {
@@ -53,28 +52,28 @@ public final class ThrowingFunctionChain<T, R>
     }
 
     @Override
-    public Function<T, R> fallbackTo(final Function<T, R> fallback)
+    public Consumer<T> fallbackTo(final Consumer<T> fallback)
     {
         return t -> {
             try {
-                return doApply(t);
+                throwing.doAccept(t);
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                return fallback.apply(t);
+                fallback.accept(t);
             }
         };
     }
 
-    public Function<T, R> orReturn(final R value)
+    public Consumer<T> orDoNothing()
     {
         return t -> {
             try {
-                return doApply(t);
+                throwing.doAccept(t);
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                return value;
+                // nothing
             }
         };
     }
