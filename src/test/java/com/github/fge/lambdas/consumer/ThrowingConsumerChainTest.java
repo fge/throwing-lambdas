@@ -1,5 +1,6 @@
-package com.github.fge.lambdas.v2;
+package com.github.fge.lambdas.consumer;
 
+import com.github.fge.lambdas.ChainTest;
 import com.github.fge.lambdas.helpers.Type1;
 import com.github.fge.lambdas.helpers.Type2;
 import org.testng.annotations.BeforeMethod;

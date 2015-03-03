@@ -1,6 +1,5 @@
-package com.github.fge.lambdas.v2;
+package com.github.fge.lambdas;
 
-import com.github.fge.lambdas.ThrownByLambdaException;
 import com.github.fge.lambdas.helpers.MyException;
 import org.testng.annotations.Test;
 

@@ -1,4 +1,4 @@
-package com.github.fge.lambdas.v2;
+package com.github.fge.lambdas;
 
 public abstract class Chain<N, T extends N, C extends Chain<N, T, C>>
 {

@@ -1,6 +1,7 @@
-package com.github.fge.lambdas.v2;
+package com.github.fge.lambdas.function;
 
 import com.github.fge.lambdas.ThrowablesFactory;
+import com.github.fge.lambdas.Chain;
 
 import java.util.function.Function;
 

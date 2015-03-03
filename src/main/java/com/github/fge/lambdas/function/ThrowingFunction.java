@@ -1,4 +1,4 @@
-package com.github.fge.lambdas.v2;
+package com.github.fge.lambdas.function;
 
 import com.github.fge.lambdas.ThrownByLambdaException;
 

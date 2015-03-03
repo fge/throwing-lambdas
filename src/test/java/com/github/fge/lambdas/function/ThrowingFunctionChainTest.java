@@ -1,5 +1,6 @@
-package com.github.fge.lambdas.v2;
+package com.github.fge.lambdas.function;
 
+import com.github.fge.lambdas.ChainTest;
 import com.github.fge.lambdas.helpers.Type1;
 import com.github.fge.lambdas.helpers.Type2;
 import org.testng.annotations.Test;
@@ -13,7 +14,7 @@ import static org.mockito.Mockito.when;
 
 public final class ThrowingFunctionChainTest
     extends ChainTest<Function<Type1, Type2>, ThrowingFunction<Type1, Type2>,
-            ThrowingFunctionChain<Type1, Type2>, Type2>
+        ThrowingFunctionChain<Type1, Type2>, Type2>
 {
     private final Type1 t = Type1.mock();
 
