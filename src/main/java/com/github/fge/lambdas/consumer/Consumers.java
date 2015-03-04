@@ -3,6 +3,8 @@ package com.github.fge.lambdas.consumer;
 import com.github.fge.lambdas.Throwing;
 
 import java.util.function.DoubleConsumer;
+import java.util.function.IntConsumer;
+import java.util.function.LongConsumer;
 
 /**
  * @deprecated use {@link Throwing} instead
@@ -119,7 +121,7 @@ public final class Consumers
      * @param consumer the consumer
      * @return a new chain
      *
-     * @deprecated use {@link Throwing#consumer(ThrowingDoubleConsumer)}
+     * @deprecated use {@link Throwing#doubleConsumer(ThrowingDoubleConsumer)}
      * instead
      */
     @Deprecated
@@ -135,7 +137,7 @@ public final class Consumers
      * @param consumer the consumer
      * @return a new chain
      *
-     * @deprecated use {@link Throwing#consumer(ThrowingDoubleConsumer)}
+     * @deprecated use {@link Throwing#doubleConsumer(ThrowingDoubleConsumer)}
      * instead
      */
     @Deprecated
@@ -151,12 +153,105 @@ public final class Consumers
      * @param consumer the consumer
      * @return a new chain
      *
-     * @deprecated use {@link Throwing#consumer(ThrowingDoubleConsumer)}
+     * @deprecated use {@link Throwing#doubleConsumer(ThrowingDoubleConsumer)}
      * instead
      */
     @Deprecated
     public static DoubleConsumerChain rethrow(
         final ThrowingDoubleConsumer consumer)
+    {
+        return wrap(consumer);
+    }
+
+    /**
+     * Return a new throwing {@link IntConsumer} chain
+     *
+     * @param consumer the consumer
+     * @return a new chain
+     *
+     * @deprecated use {@link Throwing#intConsumer(ThrowingIntConsumer)}
+     * instead
+     */
+    @Deprecated
+    public static IntConsumerChain wrap(final ThrowingIntConsumer consumer)
+    {
+        return new IntConsumerChain(consumer);
+    }
+
+    /**
+     * Return a new throwing {@link IntConsumer} chain
+     *
+     * @param consumer the consumer
+     * @return a new chain
+     *
+     * @deprecated use {@link Throwing#intConsumer(ThrowingIntConsumer)}
+     * instead
+     */
+    @Deprecated
+    public static IntConsumerChain tryWith(final ThrowingIntConsumer consumer)
+    {
+        return wrap(consumer);
+    }
+
+    /**
+     * Return a new throwing {@link IntConsumer} chain
+     *
+     * @param consumer the consumer
+     * @return a new chain
+     *
+     * @deprecated use {@link Throwing#intConsumer(ThrowingIntConsumer)}
+     * instead
+     */
+    @Deprecated
+    public static IntConsumerChain rethrow(final ThrowingIntConsumer consumer)
+    {
+        return wrap(consumer);
+    }
+
+    /**
+     * Return a new throwing {@link LongConsumer} chain
+     *
+     * @param consumer the consumer
+     * @return a new chain
+     *
+     * @deprecated use {@link Throwing#longConsumer(ThrowingLongConsumer)}
+     * instead
+     */
+    @Deprecated
+    public static LongConsumerChain wrap(
+        final ThrowingLongConsumer consumer)
+    {
+        return new LongConsumerChain(consumer);
+    }
+
+    /**
+     * Return a new throwing {@link LongConsumer} chain
+     *
+     * @param consumer the consumer
+     * @return a new chain
+     *
+     * @deprecated use {@link Throwing#longConsumer(ThrowingLongConsumer)}
+     * instead
+     */
+    @Deprecated
+    public static LongConsumerChain tryWith(
+        final ThrowingLongConsumer consumer)
+    {
+        return wrap(consumer);
+    }
+
+    /**
+     * Return a new throwing {@link LongConsumer} chain
+     *
+     * @param consumer the consumer
+     * @return a new chain
+     *
+     * @deprecated use {@link Throwing#longConsumer(ThrowingLongConsumer)}
+     * instead
+     */
+    @Deprecated
+    public static LongConsumerChain rethrow(
+        final ThrowingLongConsumer consumer)
     {
         return wrap(consumer);
     }

@@ -7,8 +7,8 @@ import java.util.function.BiConsumer;
 /**
  * A throwing {@link BiConsumer}
  *
- * @param <T> parameter type of the first argument of the biconsumer
- * @param <U> parameter type of the second argument of the biconsumer
+ * @param <T> type parameter of the first argument
+ * @param <U> type parameter of the second argument
  */
 @FunctionalInterface
 public interface ThrowingBiConsumer<T, U>

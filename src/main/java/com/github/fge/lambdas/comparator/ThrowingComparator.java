@@ -7,7 +7,7 @@ import java.util.Comparator;
 /**
  * A throwing {@link Comparator}
  *
- * @param <T> the type argument of the comparator
+ * @param <T> type parameter of the argument
  */
 @FunctionalInterface
 public interface ThrowingComparator<T>

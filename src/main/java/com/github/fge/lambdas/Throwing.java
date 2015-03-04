@@ -1,15 +1,19 @@
 package com.github.fge.lambdas;
 
-import com.github.fge.lambdas.comparator.ThrowingComparator;
 import com.github.fge.lambdas.comparator.ComparatorChain;
-import com.github.fge.lambdas.consumer.ThrowingBiConsumer;
+import com.github.fge.lambdas.comparator.ThrowingComparator;
 import com.github.fge.lambdas.consumer.BiConsumerChain;
-import com.github.fge.lambdas.consumer.ThrowingConsumer;
 import com.github.fge.lambdas.consumer.ConsumerChain;
-import com.github.fge.lambdas.consumer.ThrowingDoubleConsumer;
 import com.github.fge.lambdas.consumer.DoubleConsumerChain;
-import com.github.fge.lambdas.function.ThrowingFunction;
+import com.github.fge.lambdas.consumer.IntConsumerChain;
+import com.github.fge.lambdas.consumer.LongConsumerChain;
+import com.github.fge.lambdas.consumer.ThrowingBiConsumer;
+import com.github.fge.lambdas.consumer.ThrowingConsumer;
+import com.github.fge.lambdas.consumer.ThrowingDoubleConsumer;
+import com.github.fge.lambdas.consumer.ThrowingIntConsumer;
+import com.github.fge.lambdas.consumer.ThrowingLongConsumer;
 import com.github.fge.lambdas.function.FunctionChain;
+import com.github.fge.lambdas.function.ThrowingFunction;
 
 public final class Throwing
 {
@@ -36,10 +40,22 @@ public final class Throwing
         return new BiConsumerChain<>(consumer);
     }
 
-    public static DoubleConsumerChain consumer(
+    public static DoubleConsumerChain doubleConsumer(
         final ThrowingDoubleConsumer consumer)
     {
         return new DoubleConsumerChain(consumer);
+    }
+
+    public static IntConsumerChain intConsumer(
+        final ThrowingIntConsumer consumer)
+    {
+        return new IntConsumerChain(consumer);
+    }
+
+    public static LongConsumerChain longConsumer(
+        final ThrowingLongConsumer consumer)
+    {
+        return new LongConsumerChain(consumer);
     }
 
     public static <T, R> FunctionChain<T, R> function(

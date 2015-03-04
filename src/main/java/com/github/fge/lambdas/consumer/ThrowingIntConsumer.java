@@ -2,24 +2,23 @@ package com.github.fge.lambdas.consumer;
 
 import com.github.fge.lambdas.ThrownByLambdaException;
 
-import java.util.function.Consumer;
+import java.util.function.IntConsumer;
 
 /**
- * A throwing {@link Consumer}
- *
- * @param <T> type parameter of the consumer
+ * A throwing {@link IntConsumer}
  */
 @FunctionalInterface
-public interface ThrowingConsumer<T>
-    extends Consumer<T>
+public interface ThrowingIntConsumer
+    extends IntConsumer
 {
-    void doAccept(T t)
+    void doAccept(int value)
         throws Throwable;
 
-    default void accept(T t)
+    @Override
+    default void accept(int value)
     {
         try {
-            doAccept(t);
+            doAccept(value);
         } catch (Error | RuntimeException e) {
             throw e;
         } catch (Throwable throwable) {

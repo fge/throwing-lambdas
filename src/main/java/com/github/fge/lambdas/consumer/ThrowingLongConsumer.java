@@ -2,24 +2,23 @@ package com.github.fge.lambdas.consumer;
 
 import com.github.fge.lambdas.ThrownByLambdaException;
 
-import java.util.function.Consumer;
+import java.util.function.LongConsumer;
 
 /**
- * A throwing {@link Consumer}
- *
- * @param <T> type parameter of the consumer
+ * A throwing {@link LongConsumer}
  */
 @FunctionalInterface
-public interface ThrowingConsumer<T>
-    extends Consumer<T>
+public interface ThrowingLongConsumer
+    extends LongConsumer
 {
-    void doAccept(T t)
+    void doAccept(long value)
         throws Throwable;
 
-    default void accept(T t)
+    @Override
+    default void accept(long value)
     {
         try {
-            doAccept(t);
+            doAccept(value);
         } catch (Error | RuntimeException e) {
             throw e;
         } catch (Throwable throwable) {

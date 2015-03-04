@@ -21,8 +21,8 @@ public interface ThrowingDoubleConsumer
             doAccept(value);
         } catch (Error | RuntimeException e) {
             throw e;
-        } catch (Throwable tooBad) {
-            throw new ThrownByLambdaException(tooBad);
+        } catch (Throwable throwable) {
+            throw new ThrownByLambdaException(throwable);
         }
     }
 }
