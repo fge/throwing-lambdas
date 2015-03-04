@@ -1,6 +1,7 @@
 package com.github.fge.lambdas.consumers;
 
 import com.github.fge.lambdas.ChainTest;
+import com.github.fge.lambdas.Throwing;
 import com.github.fge.lambdas.helpers.Type1;
 import com.github.fge.lambdas.helpers.Type2;
 import com.github.fge.lambdas.helpers.Type3;
@@ -52,7 +53,7 @@ public final class BiConsumerChainTest
     protected BiConsumerChain<Type1, Type2> getChain(
         final ThrowingBiConsumer<Type1, Type2> throwing)
     {
-        return new BiConsumerChain<>(throwing);
+        return Throwing.biConsumer(throwing);
     }
 
     @Override

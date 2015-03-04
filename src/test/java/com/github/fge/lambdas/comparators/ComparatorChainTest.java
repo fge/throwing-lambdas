@@ -1,6 +1,7 @@
 package com.github.fge.lambdas.comparators;
 
 import com.github.fge.lambdas.ChainTest;
+import com.github.fge.lambdas.Throwing;
 import com.github.fge.lambdas.helpers.Type1;
 import org.testng.annotations.Test;
 
@@ -38,7 +39,7 @@ public final class ComparatorChainTest
     protected ComparatorChain<Type1> getChain(
         final ThrowingComparator<Type1> throwing)
     {
-        return new ComparatorChain<>(throwing);
+        return Throwing.comparator(throwing);
     }
 
     @Override

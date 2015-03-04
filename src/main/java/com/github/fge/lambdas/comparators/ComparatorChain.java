@@ -66,7 +66,7 @@ public final class ComparatorChain<T>
         };
     }
 
-    public Comparator<T> orReturn(final int value)
+    public Comparator<T> orReturn(final int retval)
     {
         return (o1, o2) -> {
             try {
@@ -74,7 +74,7 @@ public final class ComparatorChain<T>
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                return value;
+                return retval;
             }
         };
     }

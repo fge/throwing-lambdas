@@ -1,6 +1,7 @@
 package com.github.fge.lambdas.function;
 
 import com.github.fge.lambdas.ChainTest;
+import com.github.fge.lambdas.Throwing;
 import com.github.fge.lambdas.helpers.Type1;
 import com.github.fge.lambdas.helpers.Type2;
 import org.testng.annotations.Test;
@@ -41,7 +42,7 @@ public final class FunctionChainTest
     protected FunctionChain<Type1, Type2> getChain(
         final ThrowingFunction<Type1, Type2> throwing)
     {
-        return new FunctionChain<>(throwing);
+        return Throwing.function(throwing);
     }
 
     @Override

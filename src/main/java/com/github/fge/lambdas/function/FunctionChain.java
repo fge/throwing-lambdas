@@ -67,7 +67,7 @@ public final class FunctionChain<T, R>
         };
     }
 
-    public Function<T, R> orReturn(final R value)
+    public Function<T, R> orReturn(final R retval)
     {
         return t -> {
             try {
@@ -75,7 +75,7 @@ public final class FunctionChain<T, R>
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                return value;
+                return retval;
             }
         };
     }

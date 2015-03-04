@@ -50,7 +50,7 @@ public abstract class ChainTest<N, T extends N, C extends Chain<N, T, C>, R>
 
         final Callable<R> callable = toCallable((N) chain);
 
-        assertThat(callable.call()).isSameAs(ret1);
+        assertThat(callable.call()).isEqualTo(ret1);
 
         verifyCheckedRethrow(callable, ThrownByLambdaException.class);
 
@@ -72,9 +72,9 @@ public abstract class ChainTest<N, T extends N, C extends Chain<N, T, C>, R>
 
         final Callable<R> callable = toCallable((N) chain);
 
-        assertThat(callable.call()).isSameAs(ret1);
+        assertThat(callable.call()).isEqualTo(ret1);
 
-        assertThat(callable.call()).isSameAs(ret2);
+        assertThat(callable.call()).isEqualTo(ret2);
 
         verifyUncheckedThrow(callable);
 
@@ -94,9 +94,9 @@ public abstract class ChainTest<N, T extends N, C extends Chain<N, T, C>, R>
 
         final Callable<R> callable = toCallable(chain);
 
-        assertThat(callable.call()).isSameAs(ret1);
+        assertThat(callable.call()).isEqualTo(ret1);
 
-        assertThat(callable.call()).isSameAs(ret2);
+        assertThat(callable.call()).isEqualTo(ret2);
 
         verifyUncheckedThrow(callable);
 
@@ -114,7 +114,7 @@ public abstract class ChainTest<N, T extends N, C extends Chain<N, T, C>, R>
 
         final Callable<R> callable = toCallable(chain);
 
-        assertThat(callable.call()).isSameAs(ret1);
+        assertThat(callable.call()).isEqualTo(ret1);
 
         verifyCheckedRethrow(callable, MyException.class);
 

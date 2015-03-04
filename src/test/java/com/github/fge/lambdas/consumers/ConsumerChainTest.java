@@ -1,6 +1,7 @@
 package com.github.fge.lambdas.consumers;
 
 import com.github.fge.lambdas.ChainTest;
+import com.github.fge.lambdas.Throwing;
 import com.github.fge.lambdas.helpers.Type1;
 import com.github.fge.lambdas.helpers.Type2;
 import org.testng.annotations.BeforeMethod;
@@ -50,7 +51,7 @@ public final class ConsumerChainTest
     protected ConsumerChain<Type1> getChain(
         final ThrowingConsumer<Type1> throwing)
     {
-        return new ConsumerChain<>(throwing);
+        return Throwing.consumer(throwing);
     }
 
     @Override

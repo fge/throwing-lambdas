@@ -18,8 +18,14 @@ import com.github.fge.lambdas.consumers.ThrowingLongConsumer;
 import com.github.fge.lambdas.consumers.ThrowingObjDoubleConsumer;
 import com.github.fge.lambdas.consumers.ThrowingObjIntConsumer;
 import com.github.fge.lambdas.consumers.ThrowingObjLongConsumer;
+import com.github.fge.lambdas.function.BiFunctionChain;
 import com.github.fge.lambdas.function.FunctionChain;
+import com.github.fge.lambdas.function.ThrowingBiFunction;
 import com.github.fge.lambdas.function.ThrowingFunction;
+import com.github.fge.lambdas.function.ThrowingToDoubleFunction;
+import com.github.fge.lambdas.function.ThrowingToIntFunction;
+import com.github.fge.lambdas.function.ToDoubleFunctionChain;
+import com.github.fge.lambdas.function.ToIntFunctionChain;
 
 public final class Throwing
 {
@@ -96,5 +102,23 @@ public final class Throwing
         final ThrowingFunction<T, R> function)
     {
         return new FunctionChain<>(function);
+    }
+
+    public static <T, U, R> BiFunctionChain<T, U, R> biFunction(
+        final ThrowingBiFunction<T, U, R> biFunction)
+    {
+        return new BiFunctionChain<>(biFunction);
+    }
+
+    public static <T> ToDoubleFunctionChain<T> toDoubleFunction(
+        final ThrowingToDoubleFunction<T> toDoubleFunction)
+    {
+        return new ToDoubleFunctionChain<>(toDoubleFunction);
+    }
+
+    public static <T> ToIntFunctionChain<T> toIntFunction(
+        final ThrowingToIntFunction<T> intFunction)
+    {
+        return new ToIntFunctionChain<>(intFunction);
     }
 }
