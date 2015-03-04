@@ -24,8 +24,10 @@ import com.github.fge.lambdas.function.ThrowingBiFunction;
 import com.github.fge.lambdas.function.ThrowingFunction;
 import com.github.fge.lambdas.function.ThrowingToDoubleFunction;
 import com.github.fge.lambdas.function.ThrowingToIntFunction;
+import com.github.fge.lambdas.function.ThrowingToLongFunction;
 import com.github.fge.lambdas.function.ToDoubleFunctionChain;
 import com.github.fge.lambdas.function.ToIntFunctionChain;
+import com.github.fge.lambdas.function.ToLongFunctionChain;
 
 public final class Throwing
 {
@@ -120,5 +122,11 @@ public final class Throwing
         final ThrowingToIntFunction<T> intFunction)
     {
         return new ToIntFunctionChain<>(intFunction);
+    }
+
+    public static <T> ToLongFunctionChain<T> toLongFunction(
+        final ThrowingToLongFunction<T> throwing)
+    {
+        return new ToLongFunctionChain<>(throwing);
     }
 }
