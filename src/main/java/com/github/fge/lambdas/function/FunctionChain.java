@@ -5,11 +5,11 @@ import com.github.fge.lambdas.Chain;
 
 import java.util.function.Function;
 
-public final class ThrowingFunctionChain<T, R>
-    extends Chain<Function<T, R>, ThrowingFunction<T, R>, ThrowingFunctionChain<T, R>>
+public final class FunctionChain<T, R>
+    extends Chain<Function<T, R>, ThrowingFunction<T, R>, FunctionChain<T, R>>
     implements ThrowingFunction<T, R>
 {
-    public ThrowingFunctionChain(final ThrowingFunction<T, R> function)
+    public FunctionChain(final ThrowingFunction<T, R> function)
     {
         super(function);
     }
@@ -22,7 +22,7 @@ public final class ThrowingFunctionChain<T, R>
     }
 
     @Override
-    public ThrowingFunctionChain<T, R> orTryWith(
+    public FunctionChain<T, R> orTryWith(
         final ThrowingFunction<T, R> other)
     {
         final ThrowingFunction<T, R> function = t -> {
@@ -35,7 +35,7 @@ public final class ThrowingFunctionChain<T, R>
             }
         };
 
-        return new ThrowingFunctionChain<>(function);
+        return new FunctionChain<>(function);
     }
 
     @Override

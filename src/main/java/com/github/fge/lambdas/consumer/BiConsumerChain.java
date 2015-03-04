@@ -5,11 +5,11 @@ import com.github.fge.lambdas.ThrowablesFactory;
 
 import java.util.function.BiConsumer;
 
-public final class ThrowingBiConsumerChain<T, U>
-    extends Chain<BiConsumer<T, U>, ThrowingBiConsumer<T, U>, ThrowingBiConsumerChain<T, U>>
+public final class BiConsumerChain<T, U>
+    extends Chain<BiConsumer<T, U>, ThrowingBiConsumer<T, U>, BiConsumerChain<T, U>>
     implements ThrowingBiConsumer<T, U>
 {
-    public ThrowingBiConsumerChain(final ThrowingBiConsumer<T, U> throwing)
+    public BiConsumerChain(final ThrowingBiConsumer<T, U> throwing)
     {
         super(throwing);
     }
@@ -22,8 +22,7 @@ public final class ThrowingBiConsumerChain<T, U>
     }
 
     @Override
-    public ThrowingBiConsumerChain<T, U> orTryWith(
-        final ThrowingBiConsumer<T, U> other)
+    public BiConsumerChain<T, U> orTryWith(final ThrowingBiConsumer<T, U> other)
     {
         final ThrowingBiConsumer<T, U> consumer = (t, u) -> {
             try {
@@ -35,7 +34,7 @@ public final class ThrowingBiConsumerChain<T, U>
             }
         };
 
-        return new ThrowingBiConsumerChain<>(consumer);
+        return new BiConsumerChain<>(consumer);
     }
 
     @Override

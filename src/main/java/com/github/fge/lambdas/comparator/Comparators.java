@@ -23,10 +23,10 @@ public final class Comparators
      * @deprecated use {@link Throwing#comparator(ThrowingComparator)} instead
      */
     @Deprecated
-    public static <T> ThrowingComparatorChain<T> wrap(
+    public static <T> ComparatorChain<T> wrap(
         final ThrowingComparator<T> comparator)
     {
-        return new ThrowingComparatorChain<>(comparator);
+        return new ComparatorChain<>(comparator);
     }
 
     /**
@@ -39,7 +39,7 @@ public final class Comparators
      * @deprecated use {@link Throwing#comparator(ThrowingComparator)} instead
      */
     @Deprecated
-    public static <T> ThrowingComparatorChain<T> tryWith(
+    public static <T> ComparatorChain<T> tryWith(
         final ThrowingComparator<T> comparator)
     {
         return wrap(comparator);
@@ -55,7 +55,7 @@ public final class Comparators
      * @deprecated use {@link Throwing#comparator(ThrowingComparator)} instead
      */
     @Deprecated
-    public static <T> ThrowingComparatorChain<T> rethrow(
+    public static <T> ComparatorChain<T> rethrow(
         final ThrowingComparator<T> comparator)
     {
         return wrap(comparator);

@@ -11,13 +11,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public final class ThrowingComparatorChainTest
-    extends ChainTest<Comparator<Type1>, ThrowingComparator<Type1>, ThrowingComparatorChain<Type1>, Integer>
+public final class ComparatorChainTest
+    extends ChainTest<Comparator<Type1>, ThrowingComparator<Type1>, ComparatorChain<Type1>, Integer>
 {
     private final Type1 o1 = Type1.mock();
     private final Type1 o2 = Type1.mock();
 
-    public ThrowingComparatorChainTest()
+    public ComparatorChainTest()
     {
         super(42, 24);
     }
@@ -35,10 +35,10 @@ public final class ThrowingComparatorChainTest
     }
 
     @Override
-    protected ThrowingComparatorChain<Type1> getChain(
+    protected ComparatorChain<Type1> getChain(
         final ThrowingComparator<Type1> throwing)
     {
-        return new ThrowingComparatorChain<>(throwing);
+        return new ComparatorChain<>(throwing);
     }
 
     @Override

@@ -1,13 +1,15 @@
 package com.github.fge.lambdas;
 
 import com.github.fge.lambdas.comparator.ThrowingComparator;
-import com.github.fge.lambdas.comparator.ThrowingComparatorChain;
+import com.github.fge.lambdas.comparator.ComparatorChain;
 import com.github.fge.lambdas.consumer.ThrowingBiConsumer;
-import com.github.fge.lambdas.consumer.ThrowingBiConsumerChain;
+import com.github.fge.lambdas.consumer.BiConsumerChain;
 import com.github.fge.lambdas.consumer.ThrowingConsumer;
-import com.github.fge.lambdas.consumer.ThrowingConsumerChain;
+import com.github.fge.lambdas.consumer.ConsumerChain;
+import com.github.fge.lambdas.consumer.ThrowingDoubleConsumer;
+import com.github.fge.lambdas.consumer.DoubleConsumerChain;
 import com.github.fge.lambdas.function.ThrowingFunction;
-import com.github.fge.lambdas.function.ThrowingFunctionChain;
+import com.github.fge.lambdas.function.FunctionChain;
 
 public final class Throwing
 {
@@ -16,27 +18,33 @@ public final class Throwing
         throw new Error("nice try!");
     }
 
-    public static <T> ThrowingComparatorChain<T> comparator(
+    public static <T> ComparatorChain<T> comparator(
         final ThrowingComparator<T> comparator)
     {
-        return new ThrowingComparatorChain<>(comparator);
+        return new ComparatorChain<>(comparator);
     }
 
-    public static <T> ThrowingConsumerChain<T> consumer(
+    public static <T> ConsumerChain<T> consumer(
         final ThrowingConsumer<T> consumer)
     {
-        return new ThrowingConsumerChain<>(consumer);
+        return new ConsumerChain<>(consumer);
     }
 
-    public static <T, U> ThrowingBiConsumerChain<T, U> biConsumer(
+    public static <T, U> BiConsumerChain<T, U> biConsumer(
         final ThrowingBiConsumer<T, U> consumer)
     {
-        return new ThrowingBiConsumerChain<>(consumer);
+        return new BiConsumerChain<>(consumer);
     }
 
-    public static <T, R> ThrowingFunctionChain<T, R> function(
+    public static DoubleConsumerChain consumer(
+        final ThrowingDoubleConsumer consumer)
+    {
+        return new DoubleConsumerChain(consumer);
+    }
+
+    public static <T, R> FunctionChain<T, R> function(
         final ThrowingFunction<T, R> function)
     {
-        return new ThrowingFunctionChain<>(function);
+        return new FunctionChain<>(function);
     }
 }

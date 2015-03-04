@@ -3,47 +3,48 @@ package com.github.fge.lambdas.consumer;
 import com.github.fge.lambdas.Chain;
 import com.github.fge.lambdas.ThrowablesFactory;
 
-import java.util.function.Consumer;
+import java.util.function.DoubleConsumer;
 
-public final class ThrowingConsumerChain<T>
-    extends Chain<Consumer<T>, ThrowingConsumer<T>, ThrowingConsumerChain<T>>
-    implements ThrowingConsumer<T>
+public final class DoubleConsumerChain
+    extends Chain<DoubleConsumer, ThrowingDoubleConsumer, DoubleConsumerChain>
+    implements ThrowingDoubleConsumer
 {
-    public ThrowingConsumerChain(final ThrowingConsumer<T> throwing)
+    public DoubleConsumerChain(final ThrowingDoubleConsumer throwing)
     {
         super(throwing);
     }
 
     @Override
-    public void doAccept(final T t)
+    public void doAccept(final double value)
         throws Throwable
     {
-        throwing.doAccept(t);
+        throwing.doAccept(value);
     }
 
     @Override
-    public ThrowingConsumerChain<T> orTryWith(final ThrowingConsumer<T> other)
+    public DoubleConsumerChain orTryWith(
+        final ThrowingDoubleConsumer other)
     {
-        final ThrowingConsumer<T> consumer = t -> {
+        final ThrowingDoubleConsumer consumer = value -> {
             try {
-                throwing.doAccept(t);
+                throwing.doAccept(value);
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                other.doAccept(t);
+                other.doAccept(value);
             }
         };
 
-        return new ThrowingConsumerChain<>(consumer);
+        return new DoubleConsumerChain(consumer);
     }
 
     @Override
-    public <E extends RuntimeException> ThrowingConsumer<T> orThrow(
+    public <E extends RuntimeException> ThrowingDoubleConsumer orThrow(
         final Class<E> exclass)
     {
-        return t -> {
+        return value -> {
             try {
-                throwing.doAccept(t);
+                throwing.doAccept(value);
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable throwable) {
@@ -53,24 +54,24 @@ public final class ThrowingConsumerChain<T>
     }
 
     @Override
-    public Consumer<T> fallbackTo(final Consumer<T> fallback)
+    public DoubleConsumer fallbackTo(final DoubleConsumer fallback)
     {
-        return t -> {
+        return value -> {
             try {
-                throwing.doAccept(t);
+                throwing.doAccept(value);
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                fallback.accept(t);
+                fallback.accept(value);
             }
         };
     }
 
-    public Consumer<T> orDoNothing()
+    public DoubleConsumer orDoNothing()
     {
-        return t -> {
+        return value -> {
             try {
-                throwing.doAccept(t);
+                throwing.doAccept(value);
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {

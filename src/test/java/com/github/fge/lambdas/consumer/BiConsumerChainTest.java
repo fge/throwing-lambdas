@@ -15,8 +15,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 
-public final class ThrowingBiConsumerChainTest
-    extends ChainTest<BiConsumer<Type1, Type2>, ThrowingBiConsumer<Type1, Type2>, ThrowingBiConsumerChain<Type1, Type2>, Type3>
+public final class BiConsumerChainTest
+    extends ChainTest<BiConsumer<Type1, Type2>, ThrowingBiConsumer<Type1, Type2>, BiConsumerChain<Type1, Type2>, Type3>
 {
     private final Type1 t = Type1.mock();
     private final Type2 u = Type2.mock();
@@ -25,7 +25,7 @@ public final class ThrowingBiConsumerChainTest
 
     private final AtomicReference<Type3> sentinel = new AtomicReference<>();
 
-    public ThrowingBiConsumerChainTest()
+    public BiConsumerChainTest()
     {
         super(Type3.mock(), Type3.mock());
     }
@@ -49,10 +49,10 @@ public final class ThrowingBiConsumerChainTest
     }
 
     @Override
-    protected ThrowingBiConsumerChain<Type1, Type2> getChain(
+    protected BiConsumerChain<Type1, Type2> getChain(
         final ThrowingBiConsumer<Type1, Type2> throwing)
     {
-        return new ThrowingBiConsumerChain<>(throwing);
+        return new BiConsumerChain<>(throwing);
     }
 
     @Override

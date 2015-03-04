@@ -15,6 +15,7 @@ public abstract class Chain<N, T extends N, C extends Chain<N, T, C>>
 
     public abstract N fallbackTo(N fallback);
 
+    @Deprecated
     public final <E extends RuntimeException> T as(final Class<E> exclass)
     {
         return orThrow(exclass);

@@ -12,14 +12,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public final class ThrowingFunctionChainTest
+public final class FunctionChainTest
     extends ChainTest<Function<Type1, Type2>, ThrowingFunction<Type1, Type2>,
-        ThrowingFunctionChain<Type1, Type2>, Type2>
+    FunctionChain<Type1, Type2>, Type2>
 {
     private final Type1 t = Type1.mock();
 
 
-    public ThrowingFunctionChainTest()
+    public FunctionChainTest()
         throws NoSuchMethodException, IllegalAccessException
     {
         super(Type2.mock(), Type2.mock());
@@ -38,10 +38,10 @@ public final class ThrowingFunctionChainTest
     }
 
     @Override
-    protected ThrowingFunctionChain<Type1, Type2> getChain(
+    protected FunctionChain<Type1, Type2> getChain(
         final ThrowingFunction<Type1, Type2> throwing)
     {
-        return new ThrowingFunctionChain<>(throwing);
+        return new FunctionChain<>(throwing);
     }
 
     @Override

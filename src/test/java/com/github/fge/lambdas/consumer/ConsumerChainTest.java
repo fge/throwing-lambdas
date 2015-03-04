@@ -14,8 +14,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 
-public final class ThrowingConsumerChainTest
-    extends ChainTest<Consumer<Type1>, ThrowingConsumer<Type1>, ThrowingConsumerChain<Type1>, Type2>
+public final class ConsumerChainTest
+    extends ChainTest<Consumer<Type1>, ThrowingConsumer<Type1>, ConsumerChain<Type1>, Type2>
 {
     private final Type1 t = Type1.mock();
 
@@ -23,7 +23,7 @@ public final class ThrowingConsumerChainTest
 
     private final AtomicReference<Type2> sentinel = new AtomicReference<>();
 
-    public ThrowingConsumerChainTest()
+    public ConsumerChainTest()
     {
         super(Type2.mock(), Type2.mock());
     }
@@ -47,10 +47,10 @@ public final class ThrowingConsumerChainTest
     }
 
     @Override
-    protected ThrowingConsumerChain<Type1> getChain(
+    protected ConsumerChain<Type1> getChain(
         final ThrowingConsumer<Type1> throwing)
     {
-        return new ThrowingConsumerChain<>(throwing);
+        return new ConsumerChain<>(throwing);
     }
 
     @Override

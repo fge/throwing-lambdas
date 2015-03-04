@@ -5,11 +5,11 @@ import com.github.fge.lambdas.ThrowablesFactory;
 
 import java.util.Comparator;
 
-public final class ThrowingComparatorChain<T>
-    extends Chain<Comparator<T>, ThrowingComparator<T>, ThrowingComparatorChain<T>>
+public final class ComparatorChain<T>
+    extends Chain<Comparator<T>, ThrowingComparator<T>, ComparatorChain<T>>
     implements ThrowingComparator<T>
 {
-    public ThrowingComparatorChain(final ThrowingComparator<T> throwing)
+    public ComparatorChain(final ThrowingComparator<T> throwing)
     {
         super(throwing);
     }
@@ -22,8 +22,7 @@ public final class ThrowingComparatorChain<T>
     }
 
     @Override
-    public ThrowingComparatorChain<T> orTryWith(
-        final ThrowingComparator<T> other)
+    public ComparatorChain<T> orTryWith(final ThrowingComparator<T> other)
     {
         final ThrowingComparator<T> comparator = (o1, o2) -> {
             try {
@@ -35,7 +34,7 @@ public final class ThrowingComparatorChain<T>
             }
         };
 
-        return new ThrowingComparatorChain<>(comparator);
+        return new ComparatorChain<>(comparator);
     }
 
     @Override

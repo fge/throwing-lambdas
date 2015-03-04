@@ -24,10 +24,10 @@ public final class Functions
      * @deprecated use {@link Throwing#function(ThrowingFunction)} instead
      */
     @Deprecated
-    public static <T, R> ThrowingFunctionChain<T, R> wrap(
+    public static <T, R> FunctionChain<T, R> wrap(
         final ThrowingFunction<T, R> function)
     {
-        return new ThrowingFunctionChain<>(function);
+        return new FunctionChain<>(function);
     }
 
     /**
@@ -41,7 +41,7 @@ public final class Functions
      * @deprecated use {@link Throwing#function(ThrowingFunction)} instead
      */
     @Deprecated
-    public static <T, R> ThrowingFunctionChain<T, R> rethrow(
+    public static <T, R> FunctionChain<T, R> rethrow(
         final ThrowingFunction<T, R> function)
     {
         return wrap(function);
@@ -58,7 +58,7 @@ public final class Functions
      * @deprecated use {@link Throwing#function(ThrowingFunction)} instead
      */
     @Deprecated
-    public static <T, R> ThrowingFunctionChain<T, R> tryWith(
+    public static <T, R> FunctionChain<T, R> tryWith(
         final ThrowingFunction<T, R> function)
     {
         return wrap(function);
