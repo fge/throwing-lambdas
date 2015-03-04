@@ -1,4 +1,4 @@
-package com.github.fge.lambdas.consumer;
+package com.github.fge.lambdas.consumers;
 
 import com.github.fge.lambdas.ChainTest;
 import com.github.fge.lambdas.helpers.Type1;
@@ -7,22 +7,22 @@ import org.testng.annotations.Test;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.IntConsumer;
+import java.util.function.DoubleConsumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 
-public final class IntConsumerChainTest
-    extends ChainTest<IntConsumer, ThrowingIntConsumer, IntConsumerChain, Type1>
+public final class DoubleConsumerChainTest
+    extends ChainTest<DoubleConsumer, ThrowingDoubleConsumer, DoubleConsumerChain, Type1>
 {
-    private final int value = 42;
+    private final double value = 42.0;
 
     private final Type1 noValue = Type1.mock();
 
     private final AtomicReference<Type1> sentinel = new AtomicReference<>();
 
-    public IntConsumerChainTest()
+    public DoubleConsumerChainTest()
     {
         super(Type1.mock(), Type1.mock());
     }
@@ -34,32 +34,32 @@ public final class IntConsumerChainTest
     }
 
     @Override
-    protected IntConsumer getFallback()
+    protected DoubleConsumer getFallback()
     {
-        return mock(IntConsumer.class);
+        return mock(DoubleConsumer.class);
     }
 
     @Override
-    protected ThrowingIntConsumer getThrowing()
+    protected ThrowingDoubleConsumer getThrowing()
     {
-        return mock(ThrowingIntConsumer.class);
+        return mock(ThrowingDoubleConsumer.class);
     }
 
     @Override
-    protected IntConsumerChain getChain(
-        final ThrowingIntConsumer throwing)
+    protected DoubleConsumerChain getChain(
+        final ThrowingDoubleConsumer throwing)
     {
-        return new IntConsumerChain(throwing);
+        return new DoubleConsumerChain(throwing);
     }
 
     @Override
-    protected Callable<Type1> toCallable(final IntConsumer chain)
+    protected Callable<Type1> toCallable(final DoubleConsumer chain)
     {
         return () -> { chain.accept(value); return sentinel.get(); };
     }
 
     @Override
-    protected void configureFull(final ThrowingIntConsumer throwing)
+    protected void configureFull(final ThrowingDoubleConsumer throwing)
         throws Throwable
     {
         doAnswer(ignored -> { sentinel.set(ret1); return null; })
@@ -70,7 +70,7 @@ public final class IntConsumerChainTest
     }
 
     @Override
-    protected void configureAlternate(final ThrowingIntConsumer throwing)
+    protected void configureAlternate(final ThrowingDoubleConsumer throwing)
         throws Throwable
     {
         doAnswer(ignored -> { sentinel.set(ret2); return null; })
@@ -78,7 +78,7 @@ public final class IntConsumerChainTest
     }
 
     @Override
-    protected void configureFallback(final IntConsumer fallback)
+    protected void configureFallback(final DoubleConsumer fallback)
     {
         doAnswer(ignored -> { sentinel.set(ret2); return null; })
             .when(fallback).accept(value);
@@ -88,10 +88,10 @@ public final class IntConsumerChainTest
     public void orDoNothingTest()
         throws Throwable
     {
-        final ThrowingIntConsumer throwing = getThrowing();
+        final ThrowingDoubleConsumer throwing = getThrowing();
         configureFull(throwing);
 
-        final IntConsumer chain = getChain(throwing).orDoNothing();
+        final DoubleConsumer chain = getChain(throwing).orDoNothing();
 
         final Callable<Type1> callable = toCallable(chain);
 

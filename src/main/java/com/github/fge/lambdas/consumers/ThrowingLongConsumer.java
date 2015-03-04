@@ -1,7 +1,5 @@
 package com.github.fge.lambdas.consumers;
 
-import com.github.fge.lambdas.ThrowablesFactory;
-import com.github.fge.lambdas.ThrowingFunctionalInterface;
 import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.LongConsumer;
@@ -11,8 +9,7 @@ import java.util.function.LongConsumer;
  */
 @FunctionalInterface
 public interface ThrowingLongConsumer
-    extends LongConsumer,
-    ThrowingFunctionalInterface<ThrowingLongConsumer, LongConsumer>
+    extends LongConsumer
 {
     void doAccept(long value)
         throws Throwable;
@@ -24,64 +21,8 @@ public interface ThrowingLongConsumer
             doAccept(value);
         } catch (Error | RuntimeException e) {
             throw e;
-        } catch (Throwable tooBad) {
-            throw new ThrownByLambdaException(tooBad);
+        } catch (Throwable throwable) {
+            throw new ThrownByLambdaException(throwable);
         }
-    }
-
-    @Override
-    default ThrowingLongConsumer orTryWith(ThrowingLongConsumer other)
-    {
-        return value -> {
-            try {
-                doAccept(value);
-            } catch (Error | RuntimeException e) {
-                throw e;
-            } catch (Throwable ignored) {
-                other.accept(value);
-            }
-        };
-    }
-
-    @Override
-    default LongConsumer fallbackTo(LongConsumer fallback)
-    {
-        return value -> {
-            try {
-                doAccept(value);
-            } catch (Error | RuntimeException e) {
-                throw e;
-            } catch (Throwable ignored) {
-                fallback.accept(value);
-            }
-        };
-    }
-
-    @Override
-    default <E extends RuntimeException> LongConsumer orThrow(
-        Class<E> exceptionClass)
-    {
-        return value -> {
-            try {
-                doAccept(value);
-            } catch (Error | RuntimeException e) {
-                throw e;
-            } catch (Throwable tooBad) {
-                throw ThrowablesFactory.INSTANCE.get(exceptionClass, tooBad);
-            }
-        };
-    }
-
-    default LongConsumer orDoNothing()
-    {
-        return value -> {
-            try {
-                doAccept(value);
-            } catch (Error | RuntimeException e) {
-                throw e;
-            } catch (Throwable ignored) {
-                // Does nothing.
-            }
-        };
     }
 }

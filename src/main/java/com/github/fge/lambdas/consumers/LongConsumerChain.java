@@ -1,31 +1,31 @@
-package com.github.fge.lambdas.consumer;
+package com.github.fge.lambdas.consumers;
 
 import com.github.fge.lambdas.Chain;
 import com.github.fge.lambdas.ThrowablesFactory;
 
-import java.util.function.DoubleConsumer;
+import java.util.function.LongConsumer;
 
-public final class DoubleConsumerChain
-    extends Chain<DoubleConsumer, ThrowingDoubleConsumer, DoubleConsumerChain>
-    implements ThrowingDoubleConsumer
+public final class LongConsumerChain
+    extends Chain<LongConsumer, ThrowingLongConsumer, LongConsumerChain>
+    implements ThrowingLongConsumer
 {
-    public DoubleConsumerChain(final ThrowingDoubleConsumer throwing)
+    public LongConsumerChain(final ThrowingLongConsumer throwing)
     {
         super(throwing);
     }
 
     @Override
-    public void doAccept(final double value)
+    public void doAccept(final long value)
         throws Throwable
     {
         throwing.doAccept(value);
     }
 
     @Override
-    public DoubleConsumerChain orTryWith(
-        final ThrowingDoubleConsumer other)
+    public LongConsumerChain orTryWith(
+        final ThrowingLongConsumer other)
     {
-        final ThrowingDoubleConsumer consumer = value -> {
+        final ThrowingLongConsumer consumer = value -> {
             try {
                 throwing.doAccept(value);
             } catch (Error | RuntimeException e) {
@@ -35,11 +35,11 @@ public final class DoubleConsumerChain
             }
         };
 
-        return new DoubleConsumerChain(consumer);
+        return new LongConsumerChain(consumer);
     }
 
     @Override
-    public <E extends RuntimeException> ThrowingDoubleConsumer orThrow(
+    public <E extends RuntimeException> ThrowingLongConsumer orThrow(
         final Class<E> exclass)
     {
         return value -> {
@@ -54,7 +54,7 @@ public final class DoubleConsumerChain
     }
 
     @Override
-    public DoubleConsumer fallbackTo(final DoubleConsumer fallback)
+    public LongConsumer fallbackTo(final LongConsumer fallback)
     {
         return value -> {
             try {
@@ -67,7 +67,7 @@ public final class DoubleConsumerChain
         };
     }
 
-    public DoubleConsumer orDoNothing()
+    public LongConsumer orDoNothing()
     {
         return value -> {
             try {

@@ -1,32 +1,32 @@
-package com.github.fge.lambdas.consumer;
+package com.github.fge.lambdas.consumers;
 
 import com.github.fge.lambdas.Chain;
 import com.github.fge.lambdas.ThrowablesFactory;
 
-import java.util.function.ObjDoubleConsumer;
+import java.util.function.ObjLongConsumer;
 
-public final class ObjDoubleConsumerChain<T>
-    extends Chain<ObjDoubleConsumer<T>, ThrowingObjDoubleConsumer<T>, ObjDoubleConsumerChain<T>>
-    implements ThrowingObjDoubleConsumer<T>
+public final class ObjLongConsumerChain<T>
+    extends Chain<ObjLongConsumer<T>, ThrowingObjLongConsumer<T>, ObjLongConsumerChain<T>>
+    implements ThrowingObjLongConsumer<T>
 {
-    public ObjDoubleConsumerChain(
-        final ThrowingObjDoubleConsumer<T> throwing)
+    public ObjLongConsumerChain(
+        final ThrowingObjLongConsumer<T> throwing)
     {
         super(throwing);
     }
 
     @Override
-    public void doAccept(final T t, final double value)
+    public void doAccept(final T t, final long value)
         throws Throwable
     {
         throwing.doAccept(t, value);
     }
 
     @Override
-    public ObjDoubleConsumerChain<T> orTryWith(
-        final ThrowingObjDoubleConsumer<T> other)
+    public ObjLongConsumerChain<T> orTryWith(
+        final ThrowingObjLongConsumer<T> other)
     {
-        final ThrowingObjDoubleConsumer<T> consumer = (t, value) -> {
+        final ThrowingObjLongConsumer<T> consumer = (t, value) -> {
             try {
                 throwing.doAccept(t, value);
             } catch (Error | RuntimeException e) {
@@ -36,11 +36,11 @@ public final class ObjDoubleConsumerChain<T>
             }
         };
 
-        return new ObjDoubleConsumerChain<>(consumer);
+        return new ObjLongConsumerChain<>(consumer);
     }
 
     @Override
-    public <E extends RuntimeException> ThrowingObjDoubleConsumer<T> orThrow(
+    public <E extends RuntimeException> ThrowingObjLongConsumer<T> orThrow(
         final Class<E> exclass)
     {
         return (t, value) -> {
@@ -55,7 +55,7 @@ public final class ObjDoubleConsumerChain<T>
     }
 
     @Override
-    public ObjDoubleConsumer<T> fallbackTo(final ObjDoubleConsumer<T> fallback)
+    public ObjLongConsumer<T> fallbackTo(final ObjLongConsumer<T> fallback)
     {
         return (t, value) -> {
             try {
@@ -68,7 +68,7 @@ public final class ObjDoubleConsumerChain<T>
         };
     }
 
-    public ObjDoubleConsumer<T> orDoNothing()
+    public ObjLongConsumer<T> orDoNothing()
     {
         return (t, value) -> {
             try {

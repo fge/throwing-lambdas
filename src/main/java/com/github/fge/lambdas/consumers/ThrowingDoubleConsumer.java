@@ -1,7 +1,5 @@
 package com.github.fge.lambdas.consumers;
 
-import com.github.fge.lambdas.ThrowablesFactory;
-import com.github.fge.lambdas.ThrowingFunctionalInterface;
 import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.DoubleConsumer;
@@ -11,8 +9,7 @@ import java.util.function.DoubleConsumer;
  */
 @FunctionalInterface
 public interface ThrowingDoubleConsumer
-    extends DoubleConsumer,
-    ThrowingFunctionalInterface<ThrowingDoubleConsumer, DoubleConsumer>
+    extends DoubleConsumer
 {
     void doAccept(double value)
         throws Throwable;
@@ -24,64 +21,8 @@ public interface ThrowingDoubleConsumer
             doAccept(value);
         } catch (Error | RuntimeException e) {
             throw e;
-        } catch (Throwable tooBad) {
-            throw new ThrownByLambdaException(tooBad);
+        } catch (Throwable throwable) {
+            throw new ThrownByLambdaException(throwable);
         }
-    }
-
-    @Override
-    default <E extends RuntimeException> DoubleConsumer orThrow(
-        Class<E> exceptionClass)
-    {
-        return value -> {
-            try {
-                doAccept(value);
-            } catch (Error | RuntimeException e) {
-                throw e;
-            } catch (Throwable tooBad) {
-                throw ThrowablesFactory.INSTANCE.get(exceptionClass, tooBad);
-            }
-        };
-    }
-
-    @Override
-    default ThrowingDoubleConsumer orTryWith(ThrowingDoubleConsumer other)
-    {
-        return value -> {
-            try {
-                doAccept(value);
-            } catch (Error | RuntimeException e) {
-                throw e;
-            } catch (Throwable ignored) {
-                other.doAccept(value);
-            }
-        };
-    }
-
-    @Override
-    default DoubleConsumer fallbackTo(DoubleConsumer fallback)
-    {
-        return value -> {
-            try {
-                doAccept(value);
-            } catch (Error | RuntimeException e) {
-                throw e;
-            } catch (Throwable ignored) {
-                fallback.accept(value);
-            }
-        };
-    }
-
-    default DoubleConsumer orDoNothing()
-    {
-        return value -> {
-            try {
-                doAccept(value);
-            } catch (Error | RuntimeException e) {
-                throw e;
-            } catch (Throwable ignored) {
-                // Does nothing.
-            }
-        };
     }
 }

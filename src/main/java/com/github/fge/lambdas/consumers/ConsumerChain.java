@@ -1,4 +1,4 @@
-package com.github.fge.lambdas.consumer;
+package com.github.fge.lambdas.consumers;
 
 import com.github.fge.lambdas.Chain;
 import com.github.fge.lambdas.ThrowablesFactory;

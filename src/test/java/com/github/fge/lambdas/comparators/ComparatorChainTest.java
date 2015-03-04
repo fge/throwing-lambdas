@@ -1,4 +1,4 @@
-package com.github.fge.lambdas.comparator;
+package com.github.fge.lambdas.comparators;
 
 import com.github.fge.lambdas.ChainTest;
 import com.github.fge.lambdas.helpers.Type1;

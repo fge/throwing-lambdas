@@ -1,31 +1,31 @@
-package com.github.fge.lambdas.consumer;
+package com.github.fge.lambdas.consumers;
 
 import com.github.fge.lambdas.Chain;
 import com.github.fge.lambdas.ThrowablesFactory;
 
-import java.util.function.LongConsumer;
+import java.util.function.IntConsumer;
 
-public final class LongConsumerChain
-    extends Chain<LongConsumer, ThrowingLongConsumer, LongConsumerChain>
-    implements ThrowingLongConsumer
+public final class IntConsumerChain
+    extends Chain<IntConsumer, ThrowingIntConsumer, IntConsumerChain>
+    implements ThrowingIntConsumer
 {
-    public LongConsumerChain(final ThrowingLongConsumer throwing)
+    public IntConsumerChain(final ThrowingIntConsumer throwing)
     {
         super(throwing);
     }
 
     @Override
-    public void doAccept(final long value)
+    public void doAccept(final int value)
         throws Throwable
     {
         throwing.doAccept(value);
     }
 
     @Override
-    public LongConsumerChain orTryWith(
-        final ThrowingLongConsumer other)
+    public IntConsumerChain orTryWith(
+        final ThrowingIntConsumer other)
     {
-        final ThrowingLongConsumer consumer = value -> {
+        final ThrowingIntConsumer consumer = value -> {
             try {
                 throwing.doAccept(value);
             } catch (Error | RuntimeException e) {
@@ -35,11 +35,11 @@ public final class LongConsumerChain
             }
         };
 
-        return new LongConsumerChain(consumer);
+        return new IntConsumerChain(consumer);
     }
 
     @Override
-    public <E extends RuntimeException> ThrowingLongConsumer orThrow(
+    public <E extends RuntimeException> ThrowingIntConsumer orThrow(
         final Class<E> exclass)
     {
         return value -> {
@@ -54,7 +54,7 @@ public final class LongConsumerChain
     }
 
     @Override
-    public LongConsumer fallbackTo(final LongConsumer fallback)
+    public IntConsumer fallbackTo(final IntConsumer fallback)
     {
         return value -> {
             try {
@@ -67,7 +67,7 @@ public final class LongConsumerChain
         };
     }
 
-    public LongConsumer orDoNothing()
+    public IntConsumer orDoNothing()
     {
         return value -> {
             try {
