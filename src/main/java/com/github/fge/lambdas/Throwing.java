@@ -37,6 +37,19 @@ import com.github.fge.lambdas.function.doublefunctions
     .ThrowingDoubleToIntFunction;
 import com.github.fge.lambdas.function.doublefunctions
     .ThrowingDoubleToLongFunction;
+import com.github.fge.lambdas.function.intfunctions.IntFunctionChain;
+import com.github.fge.lambdas.function.intfunctions.IntToDoubleFunctionChain;
+import com.github.fge.lambdas.function.intfunctions.IntToLongFunctionChain;
+import com.github.fge.lambdas.function.intfunctions.ThrowingIntFunction;
+import com.github.fge.lambdas.function.intfunctions.ThrowingIntToDoubleFunction;
+import com.github.fge.lambdas.function.intfunctions.ThrowingIntToLongFunction;
+import com.github.fge.lambdas.function.longfunctions.LongFunctionChain;
+import com.github.fge.lambdas.function.longfunctions.LongToDoubleFunctionChain;
+import com.github.fge.lambdas.function.longfunctions.LongToIntFunctionChain;
+import com.github.fge.lambdas.function.longfunctions.ThrowingLongFunction;
+import com.github.fge.lambdas.function.longfunctions
+    .ThrowingLongToDoubleFunction;
+import com.github.fge.lambdas.function.longfunctions.ThrowingLongToIntFunction;
 
 public final class Throwing
 {
@@ -139,8 +152,8 @@ public final class Throwing
         return new ToLongFunctionChain<>(toLongFunction);
     }
 
-    public static <T> DoubleFunctionChain<T> doubleFunction(
-        final ThrowingDoubleFunction<T> doubleFunction)
+    public static <R> DoubleFunctionChain<R> doubleFunction(
+        final ThrowingDoubleFunction<R> doubleFunction)
     {
         return new DoubleFunctionChain<>(doubleFunction);
     }
@@ -155,5 +168,41 @@ public final class Throwing
         final ThrowingDoubleToLongFunction doubleToLongFunction)
     {
         return new DoubleToLongFunctionChain(doubleToLongFunction);
+    }
+
+    public static <R> IntFunctionChain<R> intFunction(
+        final ThrowingIntFunction<R> intFunction)
+    {
+        return new IntFunctionChain<>(intFunction);
+    }
+
+    public static IntToDoubleFunctionChain intToDoubleFunction(
+        final ThrowingIntToDoubleFunction intToDoubleFunction)
+    {
+        return new IntToDoubleFunctionChain(intToDoubleFunction);
+    }
+
+    public static IntToLongFunctionChain intToLongFunction(
+        final ThrowingIntToLongFunction intToLongFunction)
+    {
+        return new IntToLongFunctionChain(intToLongFunction);
+    }
+
+    public static <R> LongFunctionChain<R> longFunction(
+        final ThrowingLongFunction<R> longFunction)
+    {
+        return new LongFunctionChain<>(longFunction);
+    }
+
+    public static LongToDoubleFunctionChain longToDoubleFunction(
+        final ThrowingLongToDoubleFunction longToDoubleFunction)
+    {
+        return new LongToDoubleFunctionChain(longToDoubleFunction);
+    }
+
+    public static LongToIntFunctionChain longToIntFunction(
+        final ThrowingLongToIntFunction longToIntFunction)
+    {
+        return new LongToIntFunctionChain(longToIntFunction);
     }
 }

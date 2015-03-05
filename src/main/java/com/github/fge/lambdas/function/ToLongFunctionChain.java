@@ -5,7 +5,7 @@ import com.github.fge.lambdas.ThrowablesFactory;
 
 import java.util.function.ToLongFunction;
 
-public final class ToLongFunctionChain<T>
+public class ToLongFunctionChain<T>
     extends Chain<ToLongFunction<T>, ThrowingToLongFunction<T>, ToLongFunctionChain<T>>
     implements ThrowingToLongFunction<T>
 {

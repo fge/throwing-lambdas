@@ -5,7 +5,7 @@ import com.github.fge.lambdas.ThrowablesFactory;
 
 import java.util.Comparator;
 
-public final class ComparatorChain<T>
+public class ComparatorChain<T>
     extends Chain<Comparator<T>, ThrowingComparator<T>, ComparatorChain<T>>
     implements ThrowingComparator<T>
 {

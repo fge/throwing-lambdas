@@ -5,7 +5,7 @@ import com.github.fge.lambdas.ThrowablesFactory;
 
 import java.util.function.IntConsumer;
 
-public final class IntConsumerChain
+public class IntConsumerChain
     extends Chain<IntConsumer, ThrowingIntConsumer, IntConsumerChain>
     implements ThrowingIntConsumer
 {

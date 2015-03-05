@@ -5,7 +5,7 @@ import com.github.fge.lambdas.ThrowablesFactory;
 
 import java.util.function.DoubleFunction;
 
-public final class DoubleFunctionChain<R>
+public class DoubleFunctionChain<R>
     extends Chain<DoubleFunction<R>, ThrowingDoubleFunction<R>, DoubleFunctionChain<R>>
     implements ThrowingDoubleFunction<R>
 {

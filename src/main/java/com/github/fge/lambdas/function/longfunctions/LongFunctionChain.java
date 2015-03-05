@@ -1,51 +1,50 @@
-package com.github.fge.lambdas.function;
+package com.github.fge.lambdas.function.longfunctions;
 
 import com.github.fge.lambdas.Chain;
 import com.github.fge.lambdas.ThrowablesFactory;
 
-import java.util.function.ToIntFunction;
+import java.util.function.LongFunction;
 
-public class ToIntFunctionChain<T>
-    extends Chain<ToIntFunction<T>, ThrowingToIntFunction<T>, ToIntFunctionChain<T>>
-    implements ThrowingToIntFunction<T>
+public class LongFunctionChain<R>
+    extends Chain<LongFunction<R>, ThrowingLongFunction<R>, LongFunctionChain<R>>
+    implements ThrowingLongFunction<R>
 {
-    public ToIntFunctionChain(
-        final ThrowingToIntFunction<T> throwing)
+    public LongFunctionChain(
+        final ThrowingLongFunction<R> throwing)
     {
         super(throwing);
     }
 
     @Override
-    public int doApplyAsInt(final T value)
+    public R doApply(final long value)
         throws Throwable
     {
-        return throwing.doApplyAsInt(value);
+        return throwing.doApply(value);
     }
 
     @Override
-    public ToIntFunctionChain<T> orTryWith(
-        final ThrowingToIntFunction<T> other)
+    public LongFunctionChain<R> orTryWith(final ThrowingLongFunction<R> other)
     {
-        final ThrowingToIntFunction<T> toIntFunction = value -> {
+        final ThrowingLongFunction<R> longFunction = value -> {
             try {
-                return throwing.doApplyAsInt(value);
+                return throwing.doApply(value);
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                return other.doApplyAsInt(value);
+                return other.doApply(value);
             }
         };
 
-        return new ToIntFunctionChain<>(toIntFunction);
+        return new LongFunctionChain<>(longFunction);
     }
 
     @Override
-    public <E extends RuntimeException> ThrowingToIntFunction<T> orThrow(
+    public <E extends RuntimeException> ThrowingLongFunction<R> orThrow(
         final Class<E> exclass)
     {
         return value -> {
             try {
-                return throwing.doApplyAsInt(value);
+                return throwing.doApply(value);
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable throwable) {
@@ -55,24 +54,24 @@ public class ToIntFunctionChain<T>
     }
 
     @Override
-    public ToIntFunction<T> fallbackTo(final ToIntFunction<T> fallback)
+    public LongFunction<R> fallbackTo(final LongFunction<R> fallback)
     {
         return value -> {
             try {
-                return throwing.doApplyAsInt(value);
+                return throwing.doApply(value);
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                return fallback.applyAsInt(value);
+                return fallback.apply(value);
             }
         };
     }
 
-    public ToIntFunction<T> orReturn(final int retval)
+    public LongFunction<R> orReturn(final R retval)
     {
         return value -> {
             try {
-                return throwing.doApplyAsInt(value);
+                return throwing.doApply(value);
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {

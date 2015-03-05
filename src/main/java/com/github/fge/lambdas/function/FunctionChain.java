@@ -5,7 +5,7 @@ import com.github.fge.lambdas.Chain;
 
 import java.util.function.Function;
 
-public final class FunctionChain<T, R>
+public class FunctionChain<T, R>
     extends Chain<Function<T, R>, ThrowingFunction<T, R>, FunctionChain<T, R>>
     implements ThrowingFunction<T, R>
 {

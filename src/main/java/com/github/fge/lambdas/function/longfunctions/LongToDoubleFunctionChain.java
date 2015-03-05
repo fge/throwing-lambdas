@@ -1,32 +1,32 @@
-package com.github.fge.lambdas.function;
+package com.github.fge.lambdas.function.longfunctions;
 
 import com.github.fge.lambdas.Chain;
 import com.github.fge.lambdas.ThrowablesFactory;
 
-import java.util.function.ToDoubleFunction;
+import java.util.function.LongToDoubleFunction;
 
-public class ToDoubleFunctionChain<T>
-    extends Chain<ToDoubleFunction<T>, ThrowingToDoubleFunction<T>, ToDoubleFunctionChain<T>>
-    implements ThrowingToDoubleFunction<T>
+public class LongToDoubleFunctionChain
+    extends Chain<LongToDoubleFunction, ThrowingLongToDoubleFunction, LongToDoubleFunctionChain>
+    implements ThrowingLongToDoubleFunction
 {
-    public ToDoubleFunctionChain(
-        final ThrowingToDoubleFunction<T> throwing)
+    public LongToDoubleFunctionChain(
+        final ThrowingLongToDoubleFunction throwing)
     {
         super(throwing);
     }
 
     @Override
-    public double doApplyAsDouble(final T value)
+    public double doApplyAsDouble(final long value)
         throws Throwable
     {
         return throwing.doApplyAsDouble(value);
     }
 
     @Override
-    public ToDoubleFunctionChain<T> orTryWith(
-        final ThrowingToDoubleFunction<T> other)
+    public LongToDoubleFunctionChain orTryWith(
+        final ThrowingLongToDoubleFunction other)
     {
-        final ThrowingToDoubleFunction<T> toDoubleFunction = value -> {
+        final ThrowingLongToDoubleFunction longToDoubleFunction = value -> {
             try {
                 return throwing.doApplyAsDouble(value);
             } catch (Error | RuntimeException e) {
@@ -36,11 +36,11 @@ public class ToDoubleFunctionChain<T>
             }
         };
 
-        return new ToDoubleFunctionChain<>(toDoubleFunction);
+        return new LongToDoubleFunctionChain(longToDoubleFunction);
     }
 
     @Override
-    public <E extends RuntimeException> ThrowingToDoubleFunction<T> orThrow(
+    public <E extends RuntimeException> ThrowingLongToDoubleFunction orThrow(
         final Class<E> exclass)
     {
         return value -> {
@@ -55,7 +55,7 @@ public class ToDoubleFunctionChain<T>
     }
 
     @Override
-    public ToDoubleFunction<T> fallbackTo(final ToDoubleFunction<T> fallback)
+    public LongToDoubleFunction fallbackTo(final LongToDoubleFunction fallback)
     {
         return value -> {
             try {
@@ -68,8 +68,7 @@ public class ToDoubleFunctionChain<T>
         };
     }
 
-    public ToDoubleFunction<T> orReturn(final double retval)
-    {
+    public LongToDoubleFunction orReturn(final double retval) {
         return value -> {
             try {
                 return throwing.doApplyAsDouble(value);

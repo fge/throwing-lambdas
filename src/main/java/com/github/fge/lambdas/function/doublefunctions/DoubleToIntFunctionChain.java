@@ -5,7 +5,7 @@ import com.github.fge.lambdas.ThrowablesFactory;
 
 import java.util.function.DoubleToIntFunction;
 
-public final class DoubleToIntFunctionChain
+public class DoubleToIntFunctionChain
     extends Chain<DoubleToIntFunction, ThrowingDoubleToIntFunction, DoubleToIntFunctionChain>
     implements ThrowingDoubleToIntFunction
 {

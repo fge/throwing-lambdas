@@ -5,7 +5,7 @@ import com.github.fge.lambdas.ThrowablesFactory;
 
 import java.util.function.BiConsumer;
 
-public final class BiConsumerChain<T, U>
+public class BiConsumerChain<T, U>
     extends Chain<BiConsumer<T, U>, ThrowingBiConsumer<T, U>, BiConsumerChain<T, U>>
     implements ThrowingBiConsumer<T, U>
 {

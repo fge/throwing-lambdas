@@ -5,7 +5,7 @@ import com.github.fge.lambdas.ThrowablesFactory;
 
 import java.util.function.ObjLongConsumer;
 
-public final class ObjLongConsumerChain<T>
+public class ObjLongConsumerChain<T>
     extends Chain<ObjLongConsumer<T>, ThrowingObjLongConsumer<T>, ObjLongConsumerChain<T>>
     implements ThrowingObjLongConsumer<T>
 {

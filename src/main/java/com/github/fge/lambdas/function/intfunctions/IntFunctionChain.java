@@ -1,50 +1,51 @@
-package com.github.fge.lambdas.consumers;
+package com.github.fge.lambdas.function.intfunctions;
 
 import com.github.fge.lambdas.Chain;
 import com.github.fge.lambdas.ThrowablesFactory;
 
-import java.util.function.LongConsumer;
+import java.util.function.IntFunction;
 
-public class LongConsumerChain
-    extends Chain<LongConsumer, ThrowingLongConsumer, LongConsumerChain>
-    implements ThrowingLongConsumer
+public class IntFunctionChain<R>
+    extends Chain<IntFunction<R>, ThrowingIntFunction<R>, IntFunctionChain<R>>
+    implements ThrowingIntFunction<R>
 {
-    public LongConsumerChain(final ThrowingLongConsumer throwing)
+    public IntFunctionChain(
+        final ThrowingIntFunction<R> throwing)
     {
         super(throwing);
     }
 
     @Override
-    public void doAccept(final long value)
+    public R doApply(final int value)
         throws Throwable
     {
-        throwing.doAccept(value);
+        return throwing.doApply(value);
     }
 
     @Override
-    public LongConsumerChain orTryWith(
-        final ThrowingLongConsumer other)
+    public IntFunctionChain<R> orTryWith(
+        final ThrowingIntFunction<R> other)
     {
-        final ThrowingLongConsumer consumer = value -> {
+        final ThrowingIntFunction doubleFunction = value -> {
             try {
-                throwing.doAccept(value);
+                return throwing.doApply(value);
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                other.doAccept(value);
+                return other.doApply(value);
             }
         };
 
-        return new LongConsumerChain(consumer);
+        return new IntFunctionChain<>(doubleFunction);
     }
 
     @Override
-    public <E extends RuntimeException> ThrowingLongConsumer orThrow(
+    public <E extends RuntimeException> ThrowingIntFunction<R> orThrow(
         final Class<E> exclass)
     {
         return value -> {
             try {
-                throwing.doAccept(value);
+                return throwing.doApply(value);
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable throwable) {
@@ -54,28 +55,28 @@ public class LongConsumerChain
     }
 
     @Override
-    public LongConsumer fallbackTo(final LongConsumer fallback)
+    public IntFunction<R> fallbackTo(final IntFunction<R> fallback)
     {
         return value -> {
             try {
-                throwing.doAccept(value);
+                return throwing.doApply(value);
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                fallback.accept(value);
+                return fallback.apply(value);
             }
         };
     }
 
-    public LongConsumer orDoNothing()
+    public IntFunction<R> orReturn(final R retval)
     {
         return value -> {
             try {
-                throwing.doAccept(value);
+                return throwing.doApply(value);
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable ignored) {
-                // nothing
+                return retval;
             }
         };
     }

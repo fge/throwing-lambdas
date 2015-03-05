@@ -1,32 +1,32 @@
-package com.github.fge.lambdas.function.doublefunctions;
+package com.github.fge.lambdas.function.intfunctions;
 
 import com.github.fge.lambdas.Chain;
 import com.github.fge.lambdas.ThrowablesFactory;
 
-import java.util.function.DoubleToLongFunction;
+import java.util.function.IntToLongFunction;
 
-public class DoubleToLongFunctionChain
-    extends Chain<DoubleToLongFunction, ThrowingDoubleToLongFunction, DoubleToLongFunctionChain>
-    implements ThrowingDoubleToLongFunction
+public class IntToLongFunctionChain
+    extends Chain<IntToLongFunction, ThrowingIntToLongFunction, IntToLongFunctionChain>
+    implements ThrowingIntToLongFunction
 {
-    public DoubleToLongFunctionChain(
-        final ThrowingDoubleToLongFunction throwing)
+    public IntToLongFunctionChain(
+        final ThrowingIntToLongFunction throwing)
     {
         super(throwing);
     }
 
     @Override
-    public long doApplyAsLong(final double value)
+    public long doApplyAsLong(final int value)
         throws Throwable
     {
         return throwing.doApplyAsLong(value);
     }
 
     @Override
-    public DoubleToLongFunctionChain orTryWith(
-        final ThrowingDoubleToLongFunction other)
+    public IntToLongFunctionChain orTryWith(
+        final ThrowingIntToLongFunction other)
     {
-        final ThrowingDoubleToLongFunction doubleToLongFunction = value -> {
+        final ThrowingIntToLongFunction intToLongFunction = value -> {
             try {
                 return throwing.doApplyAsLong(value);
             } catch (Error | RuntimeException e) {
@@ -36,11 +36,11 @@ public class DoubleToLongFunctionChain
             }
         };
 
-        return new DoubleToLongFunctionChain(doubleToLongFunction);
+        return new IntToLongFunctionChain(intToLongFunction);
     }
 
     @Override
-    public <E extends RuntimeException> ThrowingDoubleToLongFunction orThrow(
+    public <E extends RuntimeException> ThrowingIntToLongFunction orThrow(
         final Class<E> exclass)
     {
         return value -> {
@@ -55,7 +55,7 @@ public class DoubleToLongFunctionChain
     }
 
     @Override
-    public DoubleToLongFunction fallbackTo(final DoubleToLongFunction fallback)
+    public IntToLongFunction fallbackTo(final IntToLongFunction fallback)
     {
         return value -> {
             try {
@@ -68,7 +68,7 @@ public class DoubleToLongFunctionChain
         };
     }
 
-    public DoubleToLongFunction orReturn(final long retval)
+    public IntToLongFunction orReturn(final long retval)
     {
         return value -> {
             try {
