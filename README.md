@@ -16,76 +16,70 @@ that they throw one or more exception(s).
 All functional interfaces used in
 [`Stream`](http://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html)s are covered.
 
-The current version is **0.3.0**. It is available on Maven central:
+The current version is **0.4.0**. It is available on Maven central:
 
-* group: `com.github.fge`;
-* artifact: `throwing-lambdas`.
+```groovy
+    compile(group: "com.github.fge", name: "throwing-lambdas", version: "0.4.0");
+```
 
 ## Sample usage
 
-For instance, let's take
-[`Path.toRealPath()`](http://docs.oracle.com/javase/8/docs/api/java/nio/file/Path.html#toRealPath-java.nio.file.LinkOption...-);
-provided you don't supply any link option, it is pretty close to being a `Function<Path, Path>` or
-even a `UnaryOperator<Path>`... Except that it can throw `IOException`!
+For instance, let's suppose you want to sum the size of all regular files in a file tree.
 
-Therefore, using it as a mapping function in
-[`Stream.map()`](http://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html#map-java.util.function.Function-),
-for instance, requires that you write some nasty-looking lambda:
+The JDK provides
+[`Files.walk()`](http://docs.oracle.com/javase/8/docs/api/java/nio/file/Files.html#walk-java.nio.file.Path-java.nio.file.FileVisitOption...-)
+to walk a file tree; you can therefore filter that stream to list only regular files and obtain the
+size using
+[`Files.size()`](http://docs.oracle.com/javase/8/docs/api/java/nio/file/Files.html#size-java.nio.file.Path-)...
+
+Except no you cannot; `Files.size()` throws an IOException... Therefore you have to write this:
 
 ```java
-// Try and resolve all paths in some directory, following symlinks:
-Files.list(someDirectory).map(path -> {
-    try {
-        return path.toRealPath();
-    } catch (IOException e) {
-        throw new RuntimeException(e); // or something else
+public static long totalSize(final Path baseDir)
+    throws IOException
+{
+    try (
+        final Stream<Path> stream = Files.walk(baseDir);
+    ) {
+        return stream.filter(Files::isRegularFile)
+            .mapToLong(path -> {
+                try {
+                    return Files.size(path);
+                } catch (IOException e) {
+                    throw new RuntimeException e;
+                }
+            })
+            .sum();
     }
-}).etc().etc()
+}
 ```
 
-With this package, instead, you can do this:
+You cannot throw checked exceptions from stream and this means writing a lot of boilerplate code
+like this, which can quickly become unmaintainable. This package, instead, allows you to write this:
 
 ```java
-// Declare it as a ThrowingFunction
-final ThrowingFunction<Path, Path> function = Path::toRealPath;
-
-// Since the argument type and return type are the same, this is also a unary operator:
-final ThrowingUnaryOperator<Path> operator = Path::toRealPath;
+public static long totalSize(final Path baseDir)
+    throws IOException
+{
+    try (
+        final Stream<Path> stream = Files.walk(baseDir);
+    ) {
+        return stream.filter(Files::isRegularFile)
+            .mapToLong(Throwing.toLongFunction(Files::size))
+            .sum();
+    }
+}
 ```
 
-For all functional interfaces used in streams, this package defines a throwing equivalent which
-extends the base interface; therefore you can use the variables above directly in streams:
-
-```java
-// Since ThrowingFunction extends Function...
-Files.list(somedir).map(function).forEach(System.out::println);
-
-// Since ThrowingUnaryOperator extends Operator...
-Files.list(somedir).map(operator).forEach(System.out::println);
-```
-
-Wrapper also exist so that you don't even need to declare variables before using such methods:
-
-```java
-// Function...
-Files.list(someDirectory).map(Functions.wrap(Path::toRealPath)).etc().etc()
-
-// UnaryOperator...
-Files.list(someDirectory).map(Operators.wrap(Path::toRealPath)).etc().etc()
-```
-
-But you can do more; for instance:
+You can do more; for instance:
 
 ```java
 // Throw a custom RuntimeException instead of the default ThrownByLambdaException:
-Functions.rethrow(Statement::executeQuery).as(MyException.class);
-
-// Fall back to a non throwing version of the interface:
-Operators.wrap(Path::toRealPath).fallbackTo(Path::toAbsolutePath);
+Throwing.function(Statement::executeQuery).orThrow(MyException.class);
 
 // Try with another throwing lambda if the first throws an exception, and if both fail launch a
 // custom exception. Both methods below "are" BinaryOperator<Path>s:
-Operators.tryWith(Files::createLink).orTryWith(Files::copy)
+Throwing.binaryOperator(Files::createLink).orTryWith(Files::copy)
     .orThrow(UncheckedIOException.class);
 ```
 
@@ -96,8 +90,6 @@ page](https://github.com/fge/throwing-lambdas/wiki/How-to-use) for more informat
 
 If you want to see how this works, see [this
 page](https://github.com/fge/throwing-lambdas/wiki/How-it-works).
-
-Future plans [here](https://github.com/fge/throwing-lambdas/wiki/Future-plans).
 
 There is also a [FAQ](https://github.com/fge/throwing-lambdas/wiki/FAQ) available.
 
