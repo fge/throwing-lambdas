@@ -1,7 +1,6 @@
 package com.github.fge.lambdas.comparators;
 
 import com.github.fge.lambdas.Chainer;
-import com.github.fge.lambdas.ThrowablesFactory;
 
 import java.util.Comparator;
 

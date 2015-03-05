@@ -1,7 +1,6 @@
 package com.github.fge.lambdas.functions.longfunctions;
 
 import com.github.fge.lambdas.Chainer;
-import com.github.fge.lambdas.ThrowablesFactory;
 
 import java.util.function.LongFunction;
 

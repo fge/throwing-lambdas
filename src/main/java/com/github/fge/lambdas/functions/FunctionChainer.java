@@ -1,6 +1,5 @@
 package com.github.fge.lambdas.functions;
 
-import com.github.fge.lambdas.ThrowablesFactory;
 import com.github.fge.lambdas.Chainer;
 
 import java.util.function.Function;
