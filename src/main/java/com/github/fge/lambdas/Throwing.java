@@ -79,7 +79,20 @@ import com.github.fge.lambdas.supplier.ThrowingIntSupplier;
 import com.github.fge.lambdas.supplier.ThrowingLongSupplier;
 import com.github.fge.lambdas.supplier.ThrowingSupplier;
 
-public final class Throwing
+/**
+ * Class to invoke throwing instance chains
+ *
+ * <p>You may instantiate this class if you wish, for instance, to add your own
+ * throwing instances of existing functional interfaces (either your own, or
+ * those of the JDK not covered by this package).</p>
+ *
+ * <p>All method names are defined after the non throwing instance they provide
+ * a chain for (for instance, {@code Throwing.function()}, {@code
+ * Throwing.consumer()}, etc etc).</p>
+ *
+ * @see Chainer
+ */
+public class Throwing
 {
     private Throwing()
     {
