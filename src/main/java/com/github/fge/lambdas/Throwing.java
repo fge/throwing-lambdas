@@ -28,6 +28,15 @@ import com.github.fge.lambdas.function.ThrowingToLongFunction;
 import com.github.fge.lambdas.function.ToDoubleFunctionChain;
 import com.github.fge.lambdas.function.ToIntFunctionChain;
 import com.github.fge.lambdas.function.ToLongFunctionChain;
+import com.github.fge.lambdas.function.doublefunctions.DoubleFunctionChain;
+import com.github.fge.lambdas.function.doublefunctions.DoubleToIntFunctionChain;
+import com.github.fge.lambdas.function.doublefunctions
+    .DoubleToLongFunctionChain;
+import com.github.fge.lambdas.function.doublefunctions.ThrowingDoubleFunction;
+import com.github.fge.lambdas.function.doublefunctions
+    .ThrowingDoubleToIntFunction;
+import com.github.fge.lambdas.function.doublefunctions
+    .ThrowingDoubleToLongFunction;
 
 public final class Throwing
 {
@@ -125,8 +134,26 @@ public final class Throwing
     }
 
     public static <T> ToLongFunctionChain<T> toLongFunction(
-        final ThrowingToLongFunction<T> throwing)
+        final ThrowingToLongFunction<T> toLongFunction)
     {
-        return new ToLongFunctionChain<>(throwing);
+        return new ToLongFunctionChain<>(toLongFunction);
+    }
+
+    public static <T> DoubleFunctionChain<T> doubleFunction(
+        final ThrowingDoubleFunction<T> doubleFunction)
+    {
+        return new DoubleFunctionChain<>(doubleFunction);
+    }
+
+    public static DoubleToIntFunctionChain doubleToIntFunction(
+        final ThrowingDoubleToIntFunction doubleToIntFunction)
+    {
+        return new DoubleToIntFunctionChain(doubleToIntFunction);
+    }
+
+    public static DoubleToLongFunctionChain doubleToLongFunction(
+        final ThrowingDoubleToLongFunction doubleToLongFunction)
+    {
+        return new DoubleToLongFunctionChain(doubleToLongFunction);
     }
 }
