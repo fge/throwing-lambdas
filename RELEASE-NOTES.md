@@ -1,3 +1,10 @@
+## 0.4.0
+
+* Refactor to use an abstract class as the base.
+* ThrowingFunctionalInterface has disappeared: it is now up to the abstract
+  class to chain.
+* Introduce Throwing.*() to replace Functions, Comparators etc etc.
+
 ## 0.3.0
 
 * Add new .tryWith() methods.
