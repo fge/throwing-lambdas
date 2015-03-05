@@ -28,7 +28,7 @@ buildscript {
         classpath(group: "org.springframework.build.gradle",
             name: "propdeps-plugin", version: "0.0.7");
         classpath(group: "info.solidsoft.gradle.pitest",
-            name: "gradle-pitest-plugin", version: "1.1.2");
+            name: "gradle-pitest-plugin", version: "1.1.4");
     }
 };
 
@@ -54,13 +54,15 @@ targetCompatibility = "1.8"; // defaults to sourceCompatibility
  * List of dependencies
  */
 dependencies {
-    testCompile(group: "org.testng", name: "testng", version: "6.8.13") {
+    testCompile(group: "org.testng", name: "testng", version: "6.8.21") {
+        exclude(group: "org.apache.ant", module: "ant");
+        exclude(group: "com.google.inject", module: "guice");
         exclude(group: "junit", module: "junit");
         exclude(group: "org.beanshell", module: "bsh");
         exclude(group: "org.yaml", module: "snakeyaml");
     };
-    testCompile(group: "org.mockito", name: "mockito-core", version: "1.10.17");
-    testCompile(group: "org.assertj", name: "assertj-core", version: "1.7.0");
+    testCompile(group: "org.mockito", name: "mockito-core", version: "1.10.19");
+    testCompile(group: "org.assertj", name: "assertj-core", version: "1.7.1");
 }
 
 javadoc.options.links("http://docs.oracle.com/javase/8/docs/api/");
@@ -79,10 +81,6 @@ test {
     useTestNG() {
         useDefaultListeners = true;
     };
-}
-
-pitest {
-    pitestVersion = "1.1.3"; // see https://github.com/hcoles/pitest/issues/150
 }
 
 /*
@@ -105,7 +103,7 @@ artifacts {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = "2.2.1";
+    gradleVersion = "2.3";
     distributionUrl = "http://services.gradle.org/distributions/gradle-${gradleVersion}-all.zip";
 }
 
