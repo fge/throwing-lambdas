@@ -66,6 +66,20 @@ public class SupplierChainer<T>
         };
     }
 
+    @Override
+    public Supplier<T> sneakyThrow()
+    {
+        return () -> {
+            try {
+                return throwing.doGet();
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable throwable) {
+                throw doSneakyThrow(throwable);
+            }
+        };
+    }
+
     public Supplier<T> orReturn(final T retval)
     {
         return () -> {

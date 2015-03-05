@@ -65,6 +65,20 @@ public class ConsumerChainer<T>
         };
     }
 
+    @Override
+    public Consumer<T> sneakyThrow()
+    {
+        return t -> {
+            try {
+                throwing.doAccept(t);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable throwable) {
+                throw doSneakyThrow(throwable);
+            }
+        };
+    }
+
     public Consumer<T> orDoNothing()
     {
         return t -> {

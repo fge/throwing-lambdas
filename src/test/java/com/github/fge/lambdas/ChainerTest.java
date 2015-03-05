@@ -123,6 +123,26 @@ public abstract class ChainerTest<N, T extends N, C extends Chainer<N, T, C>, R>
         verifyErrorThrow(callable);
     }
 
+    @Test
+    public final void sneakyThrowTest()
+        throws Throwable
+    {
+        final T throwing = getThrowing();
+        configureFull(throwing);
+
+        final N chain = getChain(throwing).sneakyThrow();
+
+        final Callable<R> callable = toCallable(chain);
+
+        assertThat(callable.call()).isEqualTo(ret1);
+
+        verifySneakyThrow(callable);
+
+        verifyUncheckedThrow(callable);
+
+        verifyErrorThrow(callable);
+    }
+
     @SuppressWarnings("OverlyBroadCatchBlock")
     protected final void verifyCheckedRethrow(final Callable<R> callable,
         final Class<? extends Throwable> exceptionClass)
@@ -158,6 +178,16 @@ public abstract class ChainerTest<N, T extends N, C extends Chainer<N, T, C>, R>
             shouldHaveThrown(Error.class);
         } catch (Error e) {
             assertThat(e).isSameAs(error);
+        }
+    }
+
+    protected final void verifySneakyThrow(final Callable<R> callable)
+    {
+        try {
+            callable.call();
+            shouldHaveThrown(Exception.class);
+        } catch (Exception e) {
+            assertThat(e).isSameAs(checked);
         }
     }
 }

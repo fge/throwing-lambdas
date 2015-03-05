@@ -66,6 +66,20 @@ public class DoublePredicateChainer
         };
     }
 
+    @Override
+    public DoublePredicate sneakyThrow()
+    {
+        return value -> {
+            try {
+                return throwing.doTest(value);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable throwable) {
+                throw doSneakyThrow(throwable);
+            }
+        };
+    }
+
     public DoublePredicate orReturnTrue()
     {
         return value -> {

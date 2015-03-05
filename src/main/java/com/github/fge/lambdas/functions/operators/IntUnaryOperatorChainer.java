@@ -67,6 +67,20 @@ public class IntUnaryOperatorChainer
         };
     }
 
+    @Override
+    public IntUnaryOperator sneakyThrow()
+    {
+        return operand -> {
+            try {
+                return throwing.doApplyAsInt(operand);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable throwable) {
+                throw doSneakyThrow(throwable);
+            }
+        };
+    }
+
     public IntUnaryOperator orReturn(final int retval)
     {
         return operand -> {

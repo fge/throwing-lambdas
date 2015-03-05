@@ -66,6 +66,20 @@ public class LongPredicateChainer
         };
     }
 
+    @Override
+    public LongPredicate sneakyThrow()
+    {
+        return value -> {
+            try {
+                return throwing.doTest(value);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable throwable) {
+                throw doSneakyThrow(throwable);
+            }
+        };
+    }
+
     public LongPredicate orReturnTrue()
     {
         return value -> {

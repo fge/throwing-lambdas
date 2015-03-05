@@ -2,6 +2,7 @@ package com.github.fge.lambdas.functions.longfunctions;
 
 import com.github.fge.lambdas.Chainer;
 
+import java.util.function.LongToDoubleFunction;
 import java.util.function.LongToIntFunction;
 
 public class LongToIntFunctionChainer
@@ -63,6 +64,20 @@ public class LongToIntFunctionChainer
                 throw e;
             } catch (Throwable ignored) {
                 return fallback.applyAsInt(value);
+            }
+        };
+    }
+
+    @Override
+    public LongToIntFunction sneakyThrow()
+    {
+        return value -> {
+            try {
+                return throwing.doApplyAsInt(value);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable throwable) {
+                throw doSneakyThrow(throwable);
             }
         };
     }

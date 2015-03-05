@@ -65,6 +65,20 @@ public class LongSupplierChainer
         };
     }
 
+    @Override
+    public LongSupplier sneakyThrow()
+    {
+        return () -> {
+            try {
+                return throwing.doGetAsLong();
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable throwable) {
+                throw doSneakyThrow(throwable);
+            }
+        };
+    }
+
     public LongSupplier orReturn(final long retval)
     {
         return () -> {

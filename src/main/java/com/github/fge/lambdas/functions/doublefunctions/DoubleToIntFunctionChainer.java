@@ -67,6 +67,20 @@ public class DoubleToIntFunctionChainer
         };
     }
 
+    @Override
+    public DoubleToIntFunction sneakyThrow()
+    {
+        return value -> {
+            try {
+                return throwing.doApplyAsInt(value);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable throwable) {
+                throw doSneakyThrow(throwable);
+            }
+        };
+    }
+
     public DoubleToIntFunction orReturn(final int retval)
     {
         return value -> {

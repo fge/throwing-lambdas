@@ -67,6 +67,20 @@ public class LongBinaryOperatorChainer
         };
     }
 
+    @Override
+    public LongBinaryOperator sneakyThrow()
+    {
+        return (left, right) -> {
+            try {
+                return throwing.doApplyAsLong(left, right);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable throwable) {
+                throw doSneakyThrow(throwable);
+            }
+        };
+    }
+
     public LongBinaryOperator orReturn(final long retval)
     {
         return (left, right) -> {

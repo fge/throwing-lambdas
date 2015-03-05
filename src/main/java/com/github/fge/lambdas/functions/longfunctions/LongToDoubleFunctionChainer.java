@@ -67,6 +67,20 @@ public class LongToDoubleFunctionChainer
         };
     }
 
+    @Override
+    public LongToDoubleFunction sneakyThrow()
+    {
+        return value -> {
+            try {
+                return throwing.doApplyAsDouble(value);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable throwable) {
+                throw doSneakyThrow(throwable);
+            }
+        };
+    }
+
     public LongToDoubleFunction orReturn(final double retval) {
         return value -> {
             try {

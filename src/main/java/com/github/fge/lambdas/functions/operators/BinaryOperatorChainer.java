@@ -67,6 +67,20 @@ public class BinaryOperatorChainer<T>
         };
     }
 
+    @Override
+    public BinaryOperator<T> sneakyThrow()
+    {
+        return (t, u) -> {
+            try {
+                return throwing.doApply(t, u);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable throwable) {
+                throw doSneakyThrow(throwable);
+            }
+        };
+    }
+
     public BinaryOperator<T> orReturn(final T retval)
     {
         return (t, u) -> {

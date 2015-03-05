@@ -67,6 +67,20 @@ public class IntToDoubleFunctionChainer
         };
     }
 
+    @Override
+    public IntToDoubleFunction sneakyThrow()
+    {
+        return value -> {
+            try {
+                return throwing.doApplyAsDouble(value);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable throwable) {
+                throw doSneakyThrow(throwable);
+            }
+        };
+    }
+
     public IntToDoubleFunction orReturn(final double retval)
     {
         return value -> {

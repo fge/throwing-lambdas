@@ -65,6 +65,20 @@ public class BiConsumerChainer<T, U>
         };
     }
 
+    @Override
+    public BiConsumer<T, U> sneakyThrow()
+    {
+        return (t, u) -> {
+            try {
+                throwing.doAccept(t, u);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable throwable) {
+                throw doSneakyThrow(throwable);
+            }
+        };
+    }
+
     public BiConsumer<T, U> orDoNothing()
     {
         return (t, u) -> {

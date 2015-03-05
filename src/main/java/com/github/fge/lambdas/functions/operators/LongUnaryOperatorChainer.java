@@ -67,6 +67,20 @@ public class LongUnaryOperatorChainer
         };
     }
 
+    @Override
+    public LongUnaryOperator sneakyThrow()
+    {
+        return operand -> {
+            try {
+                return throwing.doApplyAsLong(operand);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable throwable) {
+                throw doSneakyThrow(throwable);
+            }
+        };
+    }
+
     public LongUnaryOperator orReturn(final long retval)
     {
         return operand -> {

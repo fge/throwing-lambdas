@@ -67,6 +67,20 @@ public class ToIntFunctionChainer<T>
         };
     }
 
+    @Override
+    public ToIntFunction<T> sneakyThrow()
+    {
+        return value -> {
+            try {
+                return throwing.doApplyAsInt(value);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable throwable) {
+                throw doSneakyThrow(throwable);
+            }
+        };
+    }
+
     public ToIntFunction<T> orReturn(final int retval)
     {
         return value -> {

@@ -67,6 +67,20 @@ public class DoubleUnaryOperatorChainer
         };
     }
 
+    @Override
+    public DoubleUnaryOperator sneakyThrow()
+    {
+        return operand -> {
+            try {
+                return throwing.doApplyAsDouble(operand);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable throwable) {
+                throw doSneakyThrow(throwable);
+            }
+        };
+    }
+
     public DoubleUnaryOperator orReturn(final double retval)
     {
         return operand -> {

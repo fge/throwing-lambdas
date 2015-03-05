@@ -67,6 +67,20 @@ public class IntFunctionChainer<R>
         };
     }
 
+    @Override
+    public IntFunction<R> sneakyThrow()
+    {
+        return value -> {
+            try {
+                return throwing.doApply(value);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable throwable) {
+                throw doSneakyThrow(throwable);
+            }
+        };
+    }
+
     public IntFunction<R> orReturn(final R retval)
     {
         return value -> {

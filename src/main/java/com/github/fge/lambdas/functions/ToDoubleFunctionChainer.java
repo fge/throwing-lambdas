@@ -67,6 +67,20 @@ public class ToDoubleFunctionChainer<T>
         };
     }
 
+    @Override
+    public ToDoubleFunction<T> sneakyThrow()
+    {
+        return value -> {
+            try {
+                return throwing.doApplyAsDouble(value);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable throwable) {
+                throw doSneakyThrow(throwable);
+            }
+        };
+    }
+
     public ToDoubleFunction<T> orReturn(final double retval)
     {
         return value -> {

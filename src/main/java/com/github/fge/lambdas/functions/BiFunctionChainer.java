@@ -66,6 +66,20 @@ public class BiFunctionChainer<T, U, R>
         };
     }
 
+    @Override
+    public BiFunction<T, U, R> sneakyThrow()
+    {
+        return (t, u) -> {
+            try {
+                return throwing.doApply(t, u);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable throwable) {
+                throw doSneakyThrow(throwable);
+            }
+        };
+    }
+
     public BiFunction<T, U, R> orReturn(final R retval)
     {
         return (t, u) -> {

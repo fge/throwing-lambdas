@@ -65,6 +65,20 @@ public class ComparatorChainer<T>
         };
     }
 
+    @Override
+    public Comparator<T> sneakyThrow()
+    {
+        return (o1, o2) -> {
+            try {
+                return throwing.doCompare(o1, o2);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable throwable) {
+                throw doSneakyThrow(throwable);
+            }
+        };
+    }
+
     public Comparator<T> orReturn(final int retval)
     {
         return (o1, o2) -> {

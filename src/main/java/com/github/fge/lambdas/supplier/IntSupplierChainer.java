@@ -65,6 +65,20 @@ public class IntSupplierChainer
         };
     }
 
+    @Override
+    public IntSupplier sneakyThrow()
+    {
+        return () -> {
+            try {
+                return throwing.doGetAsInt();
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable throwable) {
+                throw doSneakyThrow(throwable);
+            }
+        };
+    }
+
     public IntSupplier orReturn(final int retval)
     {
         return () -> {

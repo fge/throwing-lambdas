@@ -66,6 +66,20 @@ public class IntConsumerChainer
         };
     }
 
+    @Override
+    public IntConsumer sneakyThrow()
+    {
+        return value -> {
+            try {
+                throwing.doAccept(value);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable throwable) {
+                throw doSneakyThrow(throwable);
+            }
+        };
+    }
+
     public IntConsumer orDoNothing()
     {
         return value -> {

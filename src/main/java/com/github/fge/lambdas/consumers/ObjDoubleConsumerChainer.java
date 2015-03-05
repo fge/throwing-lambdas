@@ -67,6 +67,20 @@ public class ObjDoubleConsumerChainer<T>
         };
     }
 
+    @Override
+    public ObjDoubleConsumer<T> sneakyThrow()
+    {
+        return (t, value) -> {
+            try {
+                throwing.doAccept(t, value);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable throwable) {
+                throw doSneakyThrow(throwable);
+            }
+        };
+    }
+
     public ObjDoubleConsumer<T> orDoNothing()
     {
         return (t, value) -> {

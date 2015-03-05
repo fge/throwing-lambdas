@@ -66,6 +66,20 @@ public class DoubleConsumerChainer
         };
     }
 
+    @Override
+    public DoubleConsumer sneakyThrow()
+    {
+        return value -> {
+            try {
+                throwing.doAccept(value);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable throwable) {
+                throw doSneakyThrow(throwable);
+            }
+        };
+    }
+
     public DoubleConsumer orDoNothing()
     {
         return value -> {

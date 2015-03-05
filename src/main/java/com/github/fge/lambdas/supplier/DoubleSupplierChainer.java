@@ -65,6 +65,20 @@ public class DoubleSupplierChainer
         };
     }
 
+    @Override
+    public DoubleSupplier sneakyThrow()
+    {
+        return () -> {
+            try {
+                return throwing.doGetAsDouble();
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable throwable) {
+                throw doSneakyThrow(throwable);
+            }
+        };
+    }
+
     public DoubleSupplier orReturn(final double retval)
     {
         return () -> {

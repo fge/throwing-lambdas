@@ -67,6 +67,20 @@ public class ObjLongConsumerChainer<T>
         };
     }
 
+    @Override
+    public ObjLongConsumer<T> sneakyThrow()
+    {
+        return (t, value) -> {
+            try {
+                throwing.doAccept(t, value);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable throwable) {
+                throw doSneakyThrow(throwable);
+            }
+        };
+    }
+
     public ObjLongConsumer<T> orDoNothing()
     {
         return (t, value) -> {

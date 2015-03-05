@@ -67,6 +67,20 @@ public class DoubleFunctionChainer<R>
         };
     }
 
+    @Override
+    public DoubleFunction<R> sneakyThrow()
+    {
+        return value -> {
+            try {
+                return throwing.doApply(value);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable throwable) {
+                throw doSneakyThrow(throwable);
+            }
+        };
+    }
+
     public DoubleFunction<R> orReturn(final R retval)
     {
         return value -> {

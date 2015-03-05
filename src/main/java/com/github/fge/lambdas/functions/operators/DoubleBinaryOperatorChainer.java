@@ -68,6 +68,20 @@ public class DoubleBinaryOperatorChainer
         };
     }
 
+    @Override
+    public DoubleBinaryOperator sneakyThrow()
+    {
+        return (left, right) -> {
+            try {
+                return throwing.doApplyAsDouble(left, right);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable throwable) {
+                throw doSneakyThrow(throwable);
+            }
+        };
+    }
+
     public DoubleBinaryOperator orReturn(final double retval)
     {
         return (left, right) -> {

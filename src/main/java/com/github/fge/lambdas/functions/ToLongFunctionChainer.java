@@ -67,6 +67,20 @@ public class ToLongFunctionChainer<T>
         };
     }
 
+    @Override
+    public ToLongFunction<T> sneakyThrow()
+    {
+        return value -> {
+            try {
+                return throwing.doApplyAsLong(value);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable throwable) {
+                throw doSneakyThrow(throwable);
+            }
+        };
+    }
+
     public ToLongFunction<T> orReturn(final long retval)
     {
         return value -> {

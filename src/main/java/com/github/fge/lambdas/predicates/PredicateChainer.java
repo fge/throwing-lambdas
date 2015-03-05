@@ -66,6 +66,20 @@ public class PredicateChainer<T>
         };
     }
 
+    @Override
+    public Predicate<T> sneakyThrow()
+    {
+        return t -> {
+            try {
+                return throwing.doTest(t);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable throwable) {
+                throw doSneakyThrow(throwable);
+            }
+        };
+    }
+
     public Predicate<T> orReturnTrue()
     {
         return t -> {

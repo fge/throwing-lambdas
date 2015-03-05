@@ -67,6 +67,20 @@ public class IntBinaryOperatorChainer
         };
     }
 
+    @Override
+    public IntBinaryOperator sneakyThrow()
+    {
+        return (left, right) -> {
+            try {
+                return throwing.doApplyAsInt(left, right);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable throwable) {
+                throw doSneakyThrow(throwable);
+            }
+        };
+    }
+
     public IntBinaryOperator orReturn(final int retval)
     {
         return (left, right) -> {

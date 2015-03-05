@@ -66,6 +66,20 @@ public class FunctionChainer<T, R>
         };
     }
 
+    @Override
+    public Function<T, R> sneakyThrow()
+    {
+        return t -> {
+            try {
+                return throwing.doApply(t);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable throwable) {
+                throw doSneakyThrow(throwable);
+            }
+        };
+    }
+
     public Function<T, R> orReturn(final R retval)
     {
         return t -> {

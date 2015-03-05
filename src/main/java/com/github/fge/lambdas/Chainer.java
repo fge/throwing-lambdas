@@ -5,6 +5,7 @@ import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodHandles.Lookup;
 import java.lang.invoke.MethodType;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -71,6 +72,20 @@ public abstract class Chainer<N, T extends N, C extends Chainer<N, T, C>>
         }
     }
 
+    protected static RuntimeException doSneakyThrow(final Throwable throwable)
+    {
+        Objects.requireNonNull(throwable);
+        Chainer.<RuntimeException>doSneakyThrow0(throwable);
+        return null;
+    }
+
+    private static <T extends Throwable> T doSneakyThrow0(
+        final Throwable throwable)
+        throws T
+    {
+        throw (T) throwable;
+    }
+
     protected final T throwing;
 
     protected Chainer(final T throwing)
@@ -112,6 +127,14 @@ public abstract class Chainer<N, T extends N, C extends Chainer<N, T, C>>
      * @return a non throwing instance
      */
     public abstract N fallbackTo(N fallback);
+
+    /**
+     * Sneaky throw of the exception thrown by the instance
+     *
+     * <p>This code was inspited by the <a
+     * href="https://github.com/rzwitserloot/lombok">Lombok project</a>.</p>
+     */
+    public abstract N sneakyThrow();
 
     /**
      * Exception thrown when an instance of an exception class cannot be built

@@ -66,6 +66,20 @@ public class LongFunctionChainer<R>
         };
     }
 
+    @Override
+    public LongFunction<R> sneakyThrow()
+    {
+        return value -> {
+            try {
+                return throwing.doApply(value);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable throwable) {
+                throw doSneakyThrow(throwable);
+            }
+        };
+    }
+
     public LongFunction<R> orReturn(final R retval)
     {
         return value -> {

@@ -66,6 +66,20 @@ public class LongConsumerChainer
         };
     }
 
+    @Override
+    public LongConsumer sneakyThrow()
+    {
+        return value -> {
+            try {
+                throwing.doAccept(value);
+            } catch (Error | RuntimeException e) {
+                throw e;
+            } catch (Throwable throwable) {
+                throw doSneakyThrow(throwable);
+            }
+        };
+    }
+
     public LongConsumer orDoNothing()
     {
         return value -> {
