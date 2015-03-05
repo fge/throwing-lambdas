@@ -1,7 +1,5 @@
 package com.github.fge.lambdas.functions.longfunctions;
 
-import com.github.fge.lambdas.ThrowablesFactory;
-import com.github.fge.lambdas.ThrowingFunctionalInterface;
 import com.github.fge.lambdas.ThrownByLambdaException;
 
 import java.util.function.LongFunction;
@@ -13,8 +11,7 @@ import java.util.function.LongFunction;
  */
 @FunctionalInterface
 public interface ThrowingLongFunction<R>
-    extends LongFunction<R>,
-    ThrowingFunctionalInterface<ThrowingLongFunction<R>, LongFunction<R>>
+    extends LongFunction<R>
 {
     R doApply(long value)
         throws Throwable;
@@ -26,65 +23,8 @@ public interface ThrowingLongFunction<R>
             return doApply(value);
         } catch (Error | RuntimeException e) {
             throw e;
-        } catch (Throwable tooBad) {
-            throw new ThrownByLambdaException(tooBad);
+        } catch (Throwable throwable) {
+            throw new ThrownByLambdaException(throwable);
         }
-    }
-
-    @Override
-    default ThrowingLongFunction<R> orTryWith(
-        ThrowingLongFunction<R> other)
-    {
-        return value -> {
-            try {
-                return doApply(value);
-            } catch (Error | RuntimeException e) {
-                throw e;
-            } catch (Throwable ignored) {
-                return other.apply(value);
-            }
-        };
-    }
-
-    @Override
-    default LongFunction<R> fallbackTo(LongFunction<R> fallback)
-    {
-        return value -> {
-            try {
-                return doApply(value);
-            } catch (Error | RuntimeException e) {
-                throw e;
-            } catch (Throwable ignored) {
-                return fallback.apply(value);
-            }
-        };
-    }
-
-    @Override
-    default <E extends RuntimeException> LongFunction<R> orThrow(
-        Class<E> exceptionClass)
-    {
-        return value -> {
-            try {
-                return doApply(value);
-            } catch (Error | RuntimeException e) {
-                throw e;
-            } catch (Throwable tooBad) {
-                throw ThrowablesFactory.INSTANCE.get(exceptionClass, tooBad);
-            }
-        };
-    }
-
-    default LongFunction<R> orReturn(R defaultValue)
-    {
-        return value -> {
-            try {
-                return doApply(value);
-            } catch (Error | RuntimeException e) {
-                throw e;
-            } catch (Throwable ignored) {
-                return defaultValue;
-            }
-        };
     }
 }

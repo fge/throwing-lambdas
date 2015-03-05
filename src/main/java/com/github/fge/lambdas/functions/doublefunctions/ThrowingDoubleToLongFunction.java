@@ -1,18 +1,16 @@
 package com.github.fge.lambdas.functions.doublefunctions;
 
-import com.github.fge.lambdas.ThrowablesFactory;
-import com.github.fge.lambdas.ThrowingFunctionalInterface;
 import com.github.fge.lambdas.ThrownByLambdaException;
 
+import java.util.function.DoubleToIntFunction;
 import java.util.function.DoubleToLongFunction;
 
 /**
- * A throwing {@link DoubleToLongFunction}
+ * A throwing {@link DoubleToIntFunction}
  */
 @FunctionalInterface
 public interface ThrowingDoubleToLongFunction
-    extends DoubleToLongFunction,
-    ThrowingFunctionalInterface<ThrowingDoubleToLongFunction, DoubleToLongFunction>
+    extends DoubleToLongFunction
 {
     long doApplyAsLong(double value)
         throws Throwable;
@@ -24,65 +22,8 @@ public interface ThrowingDoubleToLongFunction
             return doApplyAsLong(value);
         } catch (Error | RuntimeException e) {
             throw e;
-        } catch (Throwable tooBad) {
-            throw new ThrownByLambdaException(tooBad);
+        } catch (Throwable throwable) {
+            throw new ThrownByLambdaException(throwable);
         }
-    }
-
-    @Override
-    default ThrowingDoubleToLongFunction orTryWith(
-        ThrowingDoubleToLongFunction other)
-    {
-        return value -> {
-            try {
-                return doApplyAsLong(value);
-            } catch (Error | RuntimeException e) {
-                throw e;
-            } catch (Throwable ignored) {
-                return other.applyAsLong(value);
-            }
-        };
-    }
-
-    @Override
-    default DoubleToLongFunction fallbackTo(DoubleToLongFunction fallback)
-    {
-        return value -> {
-            try {
-                return doApplyAsLong(value);
-            } catch (Error | RuntimeException e) {
-                throw e;
-            } catch (Throwable ignored) {
-                return fallback.applyAsLong(value);
-            }
-        };
-    }
-
-    @Override
-    default <E extends RuntimeException> DoubleToLongFunction orThrow(
-        Class<E> exceptionClass)
-    {
-        return value -> {
-            try {
-                return doApplyAsLong(value);
-            } catch (Error | RuntimeException e) {
-                throw e;
-            } catch (Throwable tooBad) {
-                throw ThrowablesFactory.INSTANCE.get(exceptionClass, tooBad);
-            }
-        };
-    }
-
-    default DoubleToLongFunction orReturn(long defaultValue)
-    {
-        return value -> {
-            try {
-                return doApplyAsLong(value);
-            } catch (Error | RuntimeException e) {
-                throw e;
-            } catch (Throwable ignored) {
-                return defaultValue;
-            }
-        };
     }
 }
