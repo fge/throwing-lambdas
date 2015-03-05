@@ -30,13 +30,10 @@ import com.github.fge.lambdas.function.ToIntFunctionChain;
 import com.github.fge.lambdas.function.ToLongFunctionChain;
 import com.github.fge.lambdas.function.doublefunctions.DoubleFunctionChain;
 import com.github.fge.lambdas.function.doublefunctions.DoubleToIntFunctionChain;
-import com.github.fge.lambdas.function.doublefunctions
-    .DoubleToLongFunctionChain;
+import com.github.fge.lambdas.function.doublefunctions.DoubleToLongFunctionChain;
 import com.github.fge.lambdas.function.doublefunctions.ThrowingDoubleFunction;
-import com.github.fge.lambdas.function.doublefunctions
-    .ThrowingDoubleToIntFunction;
-import com.github.fge.lambdas.function.doublefunctions
-    .ThrowingDoubleToLongFunction;
+import com.github.fge.lambdas.function.doublefunctions.ThrowingDoubleToIntFunction;
+import com.github.fge.lambdas.function.doublefunctions.ThrowingDoubleToLongFunction;
 import com.github.fge.lambdas.function.intfunctions.IntFunctionChain;
 import com.github.fge.lambdas.function.intfunctions.IntToDoubleFunctionChain;
 import com.github.fge.lambdas.function.intfunctions.IntToLongFunctionChain;
@@ -47,9 +44,24 @@ import com.github.fge.lambdas.function.longfunctions.LongFunctionChain;
 import com.github.fge.lambdas.function.longfunctions.LongToDoubleFunctionChain;
 import com.github.fge.lambdas.function.longfunctions.LongToIntFunctionChain;
 import com.github.fge.lambdas.function.longfunctions.ThrowingLongFunction;
-import com.github.fge.lambdas.function.longfunctions
-    .ThrowingLongToDoubleFunction;
+import com.github.fge.lambdas.function.longfunctions.ThrowingLongToDoubleFunction;
 import com.github.fge.lambdas.function.longfunctions.ThrowingLongToIntFunction;
+import com.github.fge.lambdas.function.operators.BinaryOperatorChain;
+import com.github.fge.lambdas.function.operators.DoubleBinaryOperatorChain;
+import com.github.fge.lambdas.function.operators.DoubleUnaryOperatorChain;
+import com.github.fge.lambdas.function.operators.IntBinaryOperatorChain;
+import com.github.fge.lambdas.function.operators.IntUnaryOperatorChain;
+import com.github.fge.lambdas.function.operators.LongBinaryOperatorChain;
+import com.github.fge.lambdas.function.operators.LongUnaryOperatorChain;
+import com.github.fge.lambdas.function.operators.ThrowingBinaryOperator;
+import com.github.fge.lambdas.function.operators.ThrowingDoubleBinaryOperator;
+import com.github.fge.lambdas.function.operators.ThrowingDoubleUnaryOperator;
+import com.github.fge.lambdas.function.operators.ThrowingIntBinaryOperator;
+import com.github.fge.lambdas.function.operators.ThrowingIntUnaryOperator;
+import com.github.fge.lambdas.function.operators.ThrowingLongBinaryOperator;
+import com.github.fge.lambdas.function.operators.ThrowingLongUnaryOperator;
+import com.github.fge.lambdas.function.operators.ThrowingUnaryOperator;
+import com.github.fge.lambdas.function.operators.UnaryOperatorChain;
 
 public final class Throwing
 {
@@ -204,5 +216,53 @@ public final class Throwing
         final ThrowingLongToIntFunction longToIntFunction)
     {
         return new LongToIntFunctionChain(longToIntFunction);
+    }
+
+    public static <T> BinaryOperatorChain<T> binaryOperator(
+        final ThrowingBinaryOperator<T> binaryOperator)
+    {
+        return new BinaryOperatorChain<>(binaryOperator);
+    }
+
+    public static DoubleBinaryOperatorChain doubleBinaryOperator(
+        final ThrowingDoubleBinaryOperator doubleBinaryOperator)
+    {
+        return new DoubleBinaryOperatorChain(doubleBinaryOperator);
+    }
+
+    public static DoubleUnaryOperatorChain doubleUnaryOperator(
+        final ThrowingDoubleUnaryOperator doubleUnaryOperator)
+    {
+        return new DoubleUnaryOperatorChain(doubleUnaryOperator);
+    }
+
+    public static IntBinaryOperatorChain intBinaryOperator(
+        final ThrowingIntBinaryOperator intBinaryOperator)
+    {
+        return new IntBinaryOperatorChain(intBinaryOperator);
+    }
+
+    public static IntUnaryOperatorChain intUnaryOperator(
+        final ThrowingIntUnaryOperator intUnaryOperator)
+    {
+        return new IntUnaryOperatorChain(intUnaryOperator);
+    }
+
+    public static LongBinaryOperatorChain longBinaryOperator(
+        final ThrowingLongBinaryOperator longBinaryOperator)
+    {
+        return new LongBinaryOperatorChain(longBinaryOperator);
+    }
+
+    public static LongUnaryOperatorChain longUnaryOperator(
+        final ThrowingLongUnaryOperator longUnaryOperator)
+    {
+        return new LongUnaryOperatorChain(longUnaryOperator);
+    }
+
+    public static <T> UnaryOperatorChain<T> unaryOperator(
+        final ThrowingUnaryOperator<T> unaryOperator)
+    {
+        return new UnaryOperatorChain<>(unaryOperator);
     }
 }
