@@ -1,15 +1,15 @@
 package com.github.fge.lambdas;
 
-import com.github.fge.lambdas.comparators.ComparatorChain;
+import com.github.fge.lambdas.comparators.ComparatorChainer;
 import com.github.fge.lambdas.comparators.ThrowingComparator;
-import com.github.fge.lambdas.consumers.BiConsumerChain;
-import com.github.fge.lambdas.consumers.ConsumerChain;
-import com.github.fge.lambdas.consumers.DoubleConsumerChain;
-import com.github.fge.lambdas.consumers.IntConsumerChain;
-import com.github.fge.lambdas.consumers.LongConsumerChain;
-import com.github.fge.lambdas.consumers.ObjDoubleConsumerChain;
-import com.github.fge.lambdas.consumers.ObjIntConsumerChain;
-import com.github.fge.lambdas.consumers.ObjLongConsumerChain;
+import com.github.fge.lambdas.consumers.BiConsumerChainer;
+import com.github.fge.lambdas.consumers.ConsumerChainer;
+import com.github.fge.lambdas.consumers.DoubleConsumerChainer;
+import com.github.fge.lambdas.consumers.IntConsumerChainer;
+import com.github.fge.lambdas.consumers.LongConsumerChainer;
+import com.github.fge.lambdas.consumers.ObjDoubleConsumerChainer;
+import com.github.fge.lambdas.consumers.ObjIntConsumerChainer;
+import com.github.fge.lambdas.consumers.ObjLongConsumerChainer;
 import com.github.fge.lambdas.consumers.ThrowingBiConsumer;
 import com.github.fge.lambdas.consumers.ThrowingConsumer;
 import com.github.fge.lambdas.consumers.ThrowingDoubleConsumer;
@@ -18,41 +18,41 @@ import com.github.fge.lambdas.consumers.ThrowingLongConsumer;
 import com.github.fge.lambdas.consumers.ThrowingObjDoubleConsumer;
 import com.github.fge.lambdas.consumers.ThrowingObjIntConsumer;
 import com.github.fge.lambdas.consumers.ThrowingObjLongConsumer;
-import com.github.fge.lambdas.functions.BiFunctionChain;
-import com.github.fge.lambdas.functions.FunctionChain;
+import com.github.fge.lambdas.functions.BiFunctionChainer;
+import com.github.fge.lambdas.functions.FunctionChainer;
 import com.github.fge.lambdas.functions.ThrowingBiFunction;
 import com.github.fge.lambdas.functions.ThrowingFunction;
 import com.github.fge.lambdas.functions.ThrowingToDoubleFunction;
 import com.github.fge.lambdas.functions.ThrowingToIntFunction;
 import com.github.fge.lambdas.functions.ThrowingToLongFunction;
-import com.github.fge.lambdas.functions.ToDoubleFunctionChain;
-import com.github.fge.lambdas.functions.ToIntFunctionChain;
-import com.github.fge.lambdas.functions.ToLongFunctionChain;
-import com.github.fge.lambdas.functions.doublefunctions.DoubleFunctionChain;
-import com.github.fge.lambdas.functions.doublefunctions.DoubleToIntFunctionChain;
-import com.github.fge.lambdas.functions.doublefunctions.DoubleToLongFunctionChain;
+import com.github.fge.lambdas.functions.ToDoubleFunctionChainer;
+import com.github.fge.lambdas.functions.ToIntFunctionChainer;
+import com.github.fge.lambdas.functions.ToLongFunctionChainer;
+import com.github.fge.lambdas.functions.doublefunctions.DoubleFunctionChainer;
+import com.github.fge.lambdas.functions.doublefunctions.DoubleToIntFunctionChainer;
+import com.github.fge.lambdas.functions.doublefunctions.DoubleToLongFunctionChainer;
 import com.github.fge.lambdas.functions.doublefunctions.ThrowingDoubleFunction;
 import com.github.fge.lambdas.functions.doublefunctions.ThrowingDoubleToIntFunction;
 import com.github.fge.lambdas.functions.doublefunctions.ThrowingDoubleToLongFunction;
-import com.github.fge.lambdas.functions.intfunctions.IntFunctionChain;
-import com.github.fge.lambdas.functions.intfunctions.IntToDoubleFunctionChain;
-import com.github.fge.lambdas.functions.intfunctions.IntToLongFunctionChain;
+import com.github.fge.lambdas.functions.intfunctions.IntFunctionChainer;
+import com.github.fge.lambdas.functions.intfunctions.IntToDoubleFunctionChainer;
+import com.github.fge.lambdas.functions.intfunctions.IntToLongFunctionChainer;
 import com.github.fge.lambdas.functions.intfunctions.ThrowingIntFunction;
 import com.github.fge.lambdas.functions.intfunctions.ThrowingIntToDoubleFunction;
 import com.github.fge.lambdas.functions.intfunctions.ThrowingIntToLongFunction;
-import com.github.fge.lambdas.functions.longfunctions.LongFunctionChain;
-import com.github.fge.lambdas.functions.longfunctions.LongToDoubleFunctionChain;
-import com.github.fge.lambdas.functions.longfunctions.LongToIntFunctionChain;
+import com.github.fge.lambdas.functions.longfunctions.LongFunctionChainer;
+import com.github.fge.lambdas.functions.longfunctions.LongToDoubleFunctionChainer;
+import com.github.fge.lambdas.functions.longfunctions.LongToIntFunctionChainer;
 import com.github.fge.lambdas.functions.longfunctions.ThrowingLongFunction;
 import com.github.fge.lambdas.functions.longfunctions.ThrowingLongToDoubleFunction;
 import com.github.fge.lambdas.functions.longfunctions.ThrowingLongToIntFunction;
-import com.github.fge.lambdas.functions.operators.BinaryOperatorChain;
-import com.github.fge.lambdas.functions.operators.DoubleBinaryOperatorChain;
-import com.github.fge.lambdas.functions.operators.DoubleUnaryOperatorChain;
-import com.github.fge.lambdas.functions.operators.IntBinaryOperatorChain;
-import com.github.fge.lambdas.functions.operators.IntUnaryOperatorChain;
-import com.github.fge.lambdas.functions.operators.LongBinaryOperatorChain;
-import com.github.fge.lambdas.functions.operators.LongUnaryOperatorChain;
+import com.github.fge.lambdas.functions.operators.BinaryOperatorChainer;
+import com.github.fge.lambdas.functions.operators.DoubleBinaryOperatorChainer;
+import com.github.fge.lambdas.functions.operators.DoubleUnaryOperatorChainer;
+import com.github.fge.lambdas.functions.operators.IntBinaryOperatorChainer;
+import com.github.fge.lambdas.functions.operators.IntUnaryOperatorChainer;
+import com.github.fge.lambdas.functions.operators.LongBinaryOperatorChainer;
+import com.github.fge.lambdas.functions.operators.LongUnaryOperatorChainer;
 import com.github.fge.lambdas.functions.operators.ThrowingBinaryOperator;
 import com.github.fge.lambdas.functions.operators.ThrowingDoubleBinaryOperator;
 import com.github.fge.lambdas.functions.operators.ThrowingDoubleUnaryOperator;
@@ -61,19 +61,19 @@ import com.github.fge.lambdas.functions.operators.ThrowingIntUnaryOperator;
 import com.github.fge.lambdas.functions.operators.ThrowingLongBinaryOperator;
 import com.github.fge.lambdas.functions.operators.ThrowingLongUnaryOperator;
 import com.github.fge.lambdas.functions.operators.ThrowingUnaryOperator;
-import com.github.fge.lambdas.functions.operators.UnaryOperatorChain;
-import com.github.fge.lambdas.predicates.DoublePredicateChain;
-import com.github.fge.lambdas.predicates.IntPredicateChain;
-import com.github.fge.lambdas.predicates.LongPredicateChain;
-import com.github.fge.lambdas.predicates.PredicateChain;
+import com.github.fge.lambdas.functions.operators.UnaryOperatorChainer;
+import com.github.fge.lambdas.predicates.DoublePredicateChainer;
+import com.github.fge.lambdas.predicates.IntPredicateChainer;
+import com.github.fge.lambdas.predicates.LongPredicateChainer;
+import com.github.fge.lambdas.predicates.PredicateChainer;
 import com.github.fge.lambdas.predicates.ThrowingDoublePredicate;
 import com.github.fge.lambdas.predicates.ThrowingIntPredicate;
 import com.github.fge.lambdas.predicates.ThrowingLongPredicate;
 import com.github.fge.lambdas.predicates.ThrowingPredicate;
-import com.github.fge.lambdas.supplier.DoubleSupplierChain;
-import com.github.fge.lambdas.supplier.IntSupplierChain;
-import com.github.fge.lambdas.supplier.LongSupplierChain;
-import com.github.fge.lambdas.supplier.SupplierChain;
+import com.github.fge.lambdas.supplier.DoubleSupplierChainer;
+import com.github.fge.lambdas.supplier.IntSupplierChainer;
+import com.github.fge.lambdas.supplier.LongSupplierChainer;
+import com.github.fge.lambdas.supplier.SupplierChainer;
 import com.github.fge.lambdas.supplier.ThrowingDoubleSupplier;
 import com.github.fge.lambdas.supplier.ThrowingIntSupplier;
 import com.github.fge.lambdas.supplier.ThrowingLongSupplier;
@@ -89,249 +89,249 @@ public final class Throwing
     /*
      * Comparators
      */
-    public static <T> ComparatorChain<T> comparator(
+    public static <T> ComparatorChainer<T> comparator(
         final ThrowingComparator<T> comparator)
     {
-        return new ComparatorChain<>(comparator);
+        return new ComparatorChainer<>(comparator);
     }
 
     /*
      * Consumers
      */
-    public static <T> ConsumerChain<T> consumer(
+    public static <T> ConsumerChainer<T> consumer(
         final ThrowingConsumer<T> consumer)
     {
-        return new ConsumerChain<>(consumer);
+        return new ConsumerChainer<>(consumer);
     }
 
-    public static <T, U> BiConsumerChain<T, U> biConsumer(
+    public static <T, U> BiConsumerChainer<T, U> biConsumer(
         final ThrowingBiConsumer<T, U> consumer)
     {
-        return new BiConsumerChain<>(consumer);
+        return new BiConsumerChainer<>(consumer);
     }
 
-    public static DoubleConsumerChain doubleConsumer(
+    public static DoubleConsumerChainer doubleConsumer(
         final ThrowingDoubleConsumer consumer)
     {
-        return new DoubleConsumerChain(consumer);
+        return new DoubleConsumerChainer(consumer);
     }
 
-    public static IntConsumerChain intConsumer(
+    public static IntConsumerChainer intConsumer(
         final ThrowingIntConsumer consumer)
     {
-        return new IntConsumerChain(consumer);
+        return new IntConsumerChainer(consumer);
     }
 
-    public static LongConsumerChain longConsumer(
+    public static LongConsumerChainer longConsumer(
         final ThrowingLongConsumer consumer)
     {
-        return new LongConsumerChain(consumer);
+        return new LongConsumerChainer(consumer);
     }
 
-    public static <T>ObjDoubleConsumerChain<T> objDoubleConsumer(
+    public static <T>ObjDoubleConsumerChainer<T> objDoubleConsumer(
         final ThrowingObjDoubleConsumer<T> consumer)
     {
-        return new ObjDoubleConsumerChain<>(consumer);
+        return new ObjDoubleConsumerChainer<>(consumer);
     }
 
-    public static <T>ObjIntConsumerChain<T> objIntConsumer(
+    public static <T>ObjIntConsumerChainer<T> objIntConsumer(
         final ThrowingObjIntConsumer<T> consumer)
     {
-        return new ObjIntConsumerChain<>(consumer);
+        return new ObjIntConsumerChainer<>(consumer);
     }
 
-    public static <T>ObjLongConsumerChain<T> objLongConsumer(
+    public static <T>ObjLongConsumerChainer<T> objLongConsumer(
         final ThrowingObjLongConsumer<T> consumer)
     {
-        return new ObjLongConsumerChain<>(consumer);
+        return new ObjLongConsumerChainer<>(consumer);
     }
 
     /*
      * Functions
      */
-    public static <T, R> FunctionChain<T, R> function(
+    public static <T, R> FunctionChainer<T, R> function(
         final ThrowingFunction<T, R> function)
     {
-        return new FunctionChain<>(function);
+        return new FunctionChainer<>(function);
     }
 
-    public static <T, U, R> BiFunctionChain<T, U, R> biFunction(
+    public static <T, U, R> BiFunctionChainer<T, U, R> biFunction(
         final ThrowingBiFunction<T, U, R> biFunction)
     {
-        return new BiFunctionChain<>(biFunction);
+        return new BiFunctionChainer<>(biFunction);
     }
 
-    public static <T> ToDoubleFunctionChain<T> toDoubleFunction(
+    public static <T> ToDoubleFunctionChainer<T> toDoubleFunction(
         final ThrowingToDoubleFunction<T> toDoubleFunction)
     {
-        return new ToDoubleFunctionChain<>(toDoubleFunction);
+        return new ToDoubleFunctionChainer<>(toDoubleFunction);
     }
 
-    public static <T> ToIntFunctionChain<T> toIntFunction(
+    public static <T> ToIntFunctionChainer<T> toIntFunction(
         final ThrowingToIntFunction<T> intFunction)
     {
-        return new ToIntFunctionChain<>(intFunction);
+        return new ToIntFunctionChainer<>(intFunction);
     }
 
-    public static <T> ToLongFunctionChain<T> toLongFunction(
+    public static <T> ToLongFunctionChainer<T> toLongFunction(
         final ThrowingToLongFunction<T> toLongFunction)
     {
-        return new ToLongFunctionChain<>(toLongFunction);
+        return new ToLongFunctionChainer<>(toLongFunction);
     }
 
-    public static <R> DoubleFunctionChain<R> doubleFunction(
+    public static <R> DoubleFunctionChainer<R> doubleFunction(
         final ThrowingDoubleFunction<R> doubleFunction)
     {
-        return new DoubleFunctionChain<>(doubleFunction);
+        return new DoubleFunctionChainer<>(doubleFunction);
     }
 
-    public static DoubleToIntFunctionChain doubleToIntFunction(
+    public static DoubleToIntFunctionChainer doubleToIntFunction(
         final ThrowingDoubleToIntFunction doubleToIntFunction)
     {
-        return new DoubleToIntFunctionChain(doubleToIntFunction);
+        return new DoubleToIntFunctionChainer(doubleToIntFunction);
     }
 
-    public static DoubleToLongFunctionChain doubleToLongFunction(
+    public static DoubleToLongFunctionChainer doubleToLongFunction(
         final ThrowingDoubleToLongFunction doubleToLongFunction)
     {
-        return new DoubleToLongFunctionChain(doubleToLongFunction);
+        return new DoubleToLongFunctionChainer(doubleToLongFunction);
     }
 
-    public static <R> IntFunctionChain<R> intFunction(
+    public static <R> IntFunctionChainer<R> intFunction(
         final ThrowingIntFunction<R> intFunction)
     {
-        return new IntFunctionChain<>(intFunction);
+        return new IntFunctionChainer<>(intFunction);
     }
 
-    public static IntToDoubleFunctionChain intToDoubleFunction(
+    public static IntToDoubleFunctionChainer intToDoubleFunction(
         final ThrowingIntToDoubleFunction intToDoubleFunction)
     {
-        return new IntToDoubleFunctionChain(intToDoubleFunction);
+        return new IntToDoubleFunctionChainer(intToDoubleFunction);
     }
 
-    public static IntToLongFunctionChain intToLongFunction(
+    public static IntToLongFunctionChainer intToLongFunction(
         final ThrowingIntToLongFunction intToLongFunction)
     {
-        return new IntToLongFunctionChain(intToLongFunction);
+        return new IntToLongFunctionChainer(intToLongFunction);
     }
 
-    public static <R> LongFunctionChain<R> longFunction(
+    public static <R> LongFunctionChainer<R> longFunction(
         final ThrowingLongFunction<R> longFunction)
     {
-        return new LongFunctionChain<>(longFunction);
+        return new LongFunctionChainer<>(longFunction);
     }
 
-    public static LongToDoubleFunctionChain longToDoubleFunction(
+    public static LongToDoubleFunctionChainer longToDoubleFunction(
         final ThrowingLongToDoubleFunction longToDoubleFunction)
     {
-        return new LongToDoubleFunctionChain(longToDoubleFunction);
+        return new LongToDoubleFunctionChainer(longToDoubleFunction);
     }
 
-    public static LongToIntFunctionChain longToIntFunction(
+    public static LongToIntFunctionChainer longToIntFunction(
         final ThrowingLongToIntFunction longToIntFunction)
     {
-        return new LongToIntFunctionChain(longToIntFunction);
+        return new LongToIntFunctionChainer(longToIntFunction);
     }
 
-    public static <T> BinaryOperatorChain<T> binaryOperator(
+    public static <T> BinaryOperatorChainer<T> binaryOperator(
         final ThrowingBinaryOperator<T> binaryOperator)
     {
-        return new BinaryOperatorChain<>(binaryOperator);
+        return new BinaryOperatorChainer<>(binaryOperator);
     }
 
-    public static DoubleBinaryOperatorChain doubleBinaryOperator(
+    public static DoubleBinaryOperatorChainer doubleBinaryOperator(
         final ThrowingDoubleBinaryOperator doubleBinaryOperator)
     {
-        return new DoubleBinaryOperatorChain(doubleBinaryOperator);
+        return new DoubleBinaryOperatorChainer(doubleBinaryOperator);
     }
 
-    public static DoubleUnaryOperatorChain doubleUnaryOperator(
+    public static DoubleUnaryOperatorChainer doubleUnaryOperator(
         final ThrowingDoubleUnaryOperator doubleUnaryOperator)
     {
-        return new DoubleUnaryOperatorChain(doubleUnaryOperator);
+        return new DoubleUnaryOperatorChainer(doubleUnaryOperator);
     }
 
-    public static IntBinaryOperatorChain intBinaryOperator(
+    public static IntBinaryOperatorChainer intBinaryOperator(
         final ThrowingIntBinaryOperator intBinaryOperator)
     {
-        return new IntBinaryOperatorChain(intBinaryOperator);
+        return new IntBinaryOperatorChainer(intBinaryOperator);
     }
 
-    public static IntUnaryOperatorChain intUnaryOperator(
+    public static IntUnaryOperatorChainer intUnaryOperator(
         final ThrowingIntUnaryOperator intUnaryOperator)
     {
-        return new IntUnaryOperatorChain(intUnaryOperator);
+        return new IntUnaryOperatorChainer(intUnaryOperator);
     }
 
-    public static LongBinaryOperatorChain longBinaryOperator(
+    public static LongBinaryOperatorChainer longBinaryOperator(
         final ThrowingLongBinaryOperator longBinaryOperator)
     {
-        return new LongBinaryOperatorChain(longBinaryOperator);
+        return new LongBinaryOperatorChainer(longBinaryOperator);
     }
 
-    public static LongUnaryOperatorChain longUnaryOperator(
+    public static LongUnaryOperatorChainer longUnaryOperator(
         final ThrowingLongUnaryOperator longUnaryOperator)
     {
-        return new LongUnaryOperatorChain(longUnaryOperator);
+        return new LongUnaryOperatorChainer(longUnaryOperator);
     }
 
-    public static <T> UnaryOperatorChain<T> unaryOperator(
+    public static <T> UnaryOperatorChainer<T> unaryOperator(
         final ThrowingUnaryOperator<T> unaryOperator)
     {
-        return new UnaryOperatorChain<>(unaryOperator);
+        return new UnaryOperatorChainer<>(unaryOperator);
     }
 
     /*
      * Predicates
      */
-    public static <T> PredicateChain<T> predicate(
+    public static <T> PredicateChainer<T> predicate(
         final ThrowingPredicate<T> predicate)
     {
-        return new PredicateChain<>(predicate);
+        return new PredicateChainer<>(predicate);
     }
 
-    public static IntPredicateChain intPredicate(
+    public static IntPredicateChainer intPredicate(
         final ThrowingIntPredicate intPredicate)
     {
-        return new IntPredicateChain(intPredicate);
+        return new IntPredicateChainer(intPredicate);
     }
 
-    public static DoublePredicateChain doublePredicate(
+    public static DoublePredicateChainer doublePredicate(
         final ThrowingDoublePredicate doublePredicate)
     {
-        return new DoublePredicateChain(doublePredicate);
+        return new DoublePredicateChainer(doublePredicate);
     }
 
-    public static LongPredicateChain longPredicate(
+    public static LongPredicateChainer longPredicate(
         final ThrowingLongPredicate longPredicate)
     {
-        return new LongPredicateChain(longPredicate);
+        return new LongPredicateChainer(longPredicate);
     }
 
     /*
      * Suppliers
      */
-    public static <T> SupplierChain<T> supplier(
+    public static <T> SupplierChainer<T> supplier(
         final ThrowingSupplier<T> supplier)
     {
-        return new SupplierChain<>(supplier);
+        return new SupplierChainer<>(supplier);
     }
 
-    public static DoubleSupplierChain doubleSupplier(
+    public static DoubleSupplierChainer doubleSupplier(
         final ThrowingDoubleSupplier doubleSupplier)
     {
-        return new DoubleSupplierChain(doubleSupplier);
+        return new DoubleSupplierChainer(doubleSupplier);
     }
 
-    public static IntSupplierChain intSupplier(
+    public static IntSupplierChainer intSupplier(
         final ThrowingIntSupplier intSupplier)
     {
-        return new IntSupplierChain(intSupplier);
+        return new IntSupplierChainer(intSupplier);
     }
 
-    public static LongSupplierChain longSupplier(
+    public static LongSupplierChainer longSupplier(
         final ThrowingLongSupplier longSupplier)
     {
-        return new LongSupplierChain(longSupplier);
+        return new LongSupplierChainer(longSupplier);
     }
 }
