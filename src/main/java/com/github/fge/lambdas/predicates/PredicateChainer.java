@@ -5,7 +5,7 @@ import com.github.fge.lambdas.Chainer;
 import java.util.function.Predicate;
 
 public class PredicateChainer<T>
-    extends Chainer<Predicate<T>, ThrowingPredicate<T>, PredicateChain<T>>
+    extends Chainer<Predicate<T>, ThrowingPredicate<T>, PredicateChainer<T>>
     implements ThrowingPredicate<T>
 {
     public PredicateChainer(

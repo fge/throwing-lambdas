@@ -5,7 +5,7 @@ import com.github.fge.lambdas.Chainer;
 import java.util.function.LongPredicate;
 
 public class LongPredicateChainer
-    extends Chainer<LongPredicate, ThrowingLongPredicate, LongPredicateChain>
+    extends Chainer<LongPredicate, ThrowingLongPredicate, LongPredicateChainer>
     implements ThrowingLongPredicate
 {
     public LongPredicateChainer(

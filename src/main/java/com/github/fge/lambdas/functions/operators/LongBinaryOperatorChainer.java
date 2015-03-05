@@ -5,7 +5,7 @@ import com.github.fge.lambdas.Chainer;
 import java.util.function.LongBinaryOperator;
 
 public class LongBinaryOperatorChainer
-    extends Chainer<LongBinaryOperator, ThrowingLongBinaryOperator, LongBinaryOperatorChain>
+    extends Chainer<LongBinaryOperator, ThrowingLongBinaryOperator, LongBinaryOperatorChainer>
     implements ThrowingLongBinaryOperator
 {
     public LongBinaryOperatorChainer(

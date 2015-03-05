@@ -5,7 +5,7 @@ import com.github.fge.lambdas.Chainer;
 import java.util.function.IntSupplier;
 
 public class IntSupplierChainer
-    extends Chainer<IntSupplier, ThrowingIntSupplier, IntSupplierChain>
+    extends Chainer<IntSupplier, ThrowingIntSupplier, IntSupplierChainer>
     implements ThrowingIntSupplier
 {
     public IntSupplierChainer(final ThrowingIntSupplier throwing)

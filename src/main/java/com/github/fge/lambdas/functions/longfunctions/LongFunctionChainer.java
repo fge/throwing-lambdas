@@ -5,7 +5,7 @@ import com.github.fge.lambdas.Chainer;
 import java.util.function.LongFunction;
 
 public class LongFunctionChainer<R>
-    extends Chainer<LongFunction<R>, ThrowingLongFunction<R>, LongFunctionChain<R>>
+    extends Chainer<LongFunction<R>, ThrowingLongFunction<R>, LongFunctionChainer<R>>
     implements ThrowingLongFunction<R>
 {
     public LongFunctionChainer(

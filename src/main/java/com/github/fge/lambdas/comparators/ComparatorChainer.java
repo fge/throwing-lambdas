@@ -5,7 +5,7 @@ import com.github.fge.lambdas.Chainer;
 import java.util.Comparator;
 
 public class ComparatorChainer<T>
-    extends Chainer<Comparator<T>, ThrowingComparator<T>, ComparatorChain<T>>
+    extends Chainer<Comparator<T>, ThrowingComparator<T>, ComparatorChainer<T>>
     implements ThrowingComparator<T>
 {
     public ComparatorChainer(final ThrowingComparator<T> throwing)

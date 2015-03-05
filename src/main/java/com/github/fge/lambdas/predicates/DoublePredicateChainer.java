@@ -5,7 +5,7 @@ import com.github.fge.lambdas.Chainer;
 import java.util.function.DoublePredicate;
 
 public class DoublePredicateChainer
-    extends Chainer<DoublePredicate, ThrowingDoublePredicate, DoublePredicateChain>
+    extends Chainer<DoublePredicate, ThrowingDoublePredicate, DoublePredicateChainer>
     implements ThrowingDoublePredicate
 {
     public DoublePredicateChainer(

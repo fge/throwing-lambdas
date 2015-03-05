@@ -5,7 +5,7 @@ import com.github.fge.lambdas.Chainer;
 import java.util.function.ToDoubleFunction;
 
 public class ToDoubleFunctionChainer<T>
-    extends Chainer<ToDoubleFunction<T>, ThrowingToDoubleFunction<T>, ToDoubleFunctionChain<T>>
+    extends Chainer<ToDoubleFunction<T>, ThrowingToDoubleFunction<T>, ToDoubleFunctionChainer<T>>
     implements ThrowingToDoubleFunction<T>
 {
     public ToDoubleFunctionChainer(

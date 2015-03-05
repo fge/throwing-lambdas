@@ -5,7 +5,7 @@ import com.github.fge.lambdas.Chainer;
 import java.util.function.IntUnaryOperator;
 
 public class IntUnaryOperatorChainer
-    extends Chainer<IntUnaryOperator, ThrowingIntUnaryOperator, IntUnaryOperatorChain>
+    extends Chainer<IntUnaryOperator, ThrowingIntUnaryOperator, IntUnaryOperatorChainer>
     implements ThrowingIntUnaryOperator
 {
     public IntUnaryOperatorChainer(

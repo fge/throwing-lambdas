@@ -5,7 +5,7 @@ import com.github.fge.lambdas.Chainer;
 import java.util.function.BiFunction;
 
 public class BiFunctionChainer<T, U, R>
-    extends Chainer<BiFunction<T, U, R>, ThrowingBiFunction<T, U, R>, BiFunctionChain<T, U, R>>
+    extends Chainer<BiFunction<T, U, R>, ThrowingBiFunction<T, U, R>, BiFunctionChainer<T, U, R>>
     implements ThrowingBiFunction<T, U, R>
 {
     public BiFunctionChainer(final ThrowingBiFunction<T, U, R> throwing)

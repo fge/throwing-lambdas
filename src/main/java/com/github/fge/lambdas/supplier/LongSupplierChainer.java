@@ -5,7 +5,7 @@ import com.github.fge.lambdas.Chainer;
 import java.util.function.LongSupplier;
 
 public class LongSupplierChainer
-    extends Chainer<LongSupplier, ThrowingLongSupplier, LongSupplierChain>
+    extends Chainer<LongSupplier, ThrowingLongSupplier, LongSupplierChainer>
     implements ThrowingLongSupplier
 {
     public LongSupplierChainer(final ThrowingLongSupplier throwing)

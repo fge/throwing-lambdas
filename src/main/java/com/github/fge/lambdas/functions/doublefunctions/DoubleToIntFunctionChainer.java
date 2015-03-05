@@ -5,7 +5,7 @@ import com.github.fge.lambdas.Chainer;
 import java.util.function.DoubleToIntFunction;
 
 public class DoubleToIntFunctionChainer
-    extends Chainer<DoubleToIntFunction, ThrowingDoubleToIntFunction, DoubleToIntFunctionChain>
+    extends Chainer<DoubleToIntFunction, ThrowingDoubleToIntFunction, DoubleToIntFunctionChainer>
     implements ThrowingDoubleToIntFunction
 {
     public DoubleToIntFunctionChainer(

@@ -5,7 +5,7 @@ import com.github.fge.lambdas.Chainer;
 import java.util.function.LongToIntFunction;
 
 public class LongToIntFunctionChainer
-    extends Chainer<LongToIntFunction, ThrowingLongToIntFunction, LongToIntFunctionChain>
+    extends Chainer<LongToIntFunction, ThrowingLongToIntFunction, LongToIntFunctionChainer>
     implements ThrowingLongToIntFunction
 {
     public LongToIntFunctionChainer(
