@@ -1,7 +1,6 @@
 package com.github.fge.lambdas.consumers;
 
 import com.github.fge.lambdas.Chain;
-import com.github.fge.lambdas.ThrowablesFactory;
 
 import java.util.function.Consumer;
 
@@ -47,7 +46,7 @@ public class ConsumerChain<T>
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable throwable) {
-                throw ThrowablesFactory.INSTANCE.get(exclass, throwable);
+                throw rethrow(exclass, throwable);
             }
         };
     }

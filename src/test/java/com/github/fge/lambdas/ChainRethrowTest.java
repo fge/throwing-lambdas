@@ -10,7 +10,7 @@ import java.util.List;
 import static com.github.fge.lambdas.helpers.CustomAssertions.shouldHaveThrown;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public final class ThrowablesFactoryTest
+public final class ChainRethrowTest
 {
     private static final Throwable THROWABLE = new Throwable();
 
@@ -68,9 +68,9 @@ public final class ThrowablesFactoryTest
         final Class<? extends RuntimeException> c)
     {
         try {
-            ThrowablesFactory.INSTANCE.get(c, THROWABLE);
-            shouldHaveThrown(ThrowablesFactory.InstantiationException.class);
-        } catch (ThrowablesFactory.InstantiationException e) {
+            Chain.rethrow(c, THROWABLE);
+            shouldHaveThrown(Chain.InstantiationException.class);
+        } catch (Chain.InstantiationException e) {
             final Throwable[] suppressed = e.getSuppressed();
             assertThat(suppressed).hasSize(1);
             assertThat(suppressed[0]).isSameAs(THROWABLE);

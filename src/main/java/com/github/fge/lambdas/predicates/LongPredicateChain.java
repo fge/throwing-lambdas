@@ -48,7 +48,7 @@ public class LongPredicateChain
             } catch (Error | RuntimeException e) {
                 throw e;
             } catch (Throwable throwable) {
-                throw ThrowablesFactory.INSTANCE.get(exclass, throwable);
+                throw rethrow(exclass, throwable);
             }
         };
     }
