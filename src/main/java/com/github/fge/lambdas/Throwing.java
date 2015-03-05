@@ -70,6 +70,14 @@ import com.github.fge.lambdas.predicates.ThrowingDoublePredicate;
 import com.github.fge.lambdas.predicates.ThrowingIntPredicate;
 import com.github.fge.lambdas.predicates.ThrowingLongPredicate;
 import com.github.fge.lambdas.predicates.ThrowingPredicate;
+import com.github.fge.lambdas.supplier.DoubleSupplierChain;
+import com.github.fge.lambdas.supplier.IntSupplierChain;
+import com.github.fge.lambdas.supplier.LongSupplierChain;
+import com.github.fge.lambdas.supplier.SupplierChain;
+import com.github.fge.lambdas.supplier.ThrowingDoubleSupplier;
+import com.github.fge.lambdas.supplier.ThrowingIntSupplier;
+import com.github.fge.lambdas.supplier.ThrowingLongSupplier;
+import com.github.fge.lambdas.supplier.ThrowingSupplier;
 
 public final class Throwing
 {
@@ -298,5 +306,32 @@ public final class Throwing
         final ThrowingLongPredicate longPredicate)
     {
         return new LongPredicateChain(longPredicate);
+    }
+
+    /*
+     * Suppliers
+     */
+    public static <T> SupplierChain<T> supplier(
+        final ThrowingSupplier<T> supplier)
+    {
+        return new SupplierChain<>(supplier);
+    }
+
+    public static DoubleSupplierChain doubleSupplier(
+        final ThrowingDoubleSupplier doubleSupplier)
+    {
+        return new DoubleSupplierChain(doubleSupplier);
+    }
+
+    public static IntSupplierChain intSupplier(
+        final ThrowingIntSupplier intSupplier)
+    {
+        return new IntSupplierChain(intSupplier);
+    }
+
+    public static LongSupplierChain longSupplier(
+        final ThrowingLongSupplier longSupplier)
+    {
+        return new LongSupplierChain(longSupplier);
     }
 }

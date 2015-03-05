@@ -12,12 +12,11 @@ import java.util.function.Function;
  * An "enum singleton" for building {@link RuntimeException} instances
  *
  * <p>This factory is used to build instances of runtime exception classes
- * which you specify using {@link ThrowingFunctionalInterface#orThrow(Class)} or
- * {@link ThrowingFunctionalInterface#as(Class)}, as in, for instance:</p>
+ * which you specify using {@link Chain#orThrow(Class)}, for instance:</p>
  *
  * <pre>
  *     final ThrowingFunction&lt;Foo, Bar&gt; f
- *         = Functions.rethrow(some::reference).as(MyException.class);
+ *         = Throwing.function(some::reference).orThrow(MyException.class);
  * </pre>
  *
  * <p>It is thread safe and uses a simple {@link ConcurrentHashMap} to collect
