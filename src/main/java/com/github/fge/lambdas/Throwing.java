@@ -62,6 +62,14 @@ import com.github.fge.lambdas.functions.operators.ThrowingLongBinaryOperator;
 import com.github.fge.lambdas.functions.operators.ThrowingLongUnaryOperator;
 import com.github.fge.lambdas.functions.operators.ThrowingUnaryOperator;
 import com.github.fge.lambdas.functions.operators.UnaryOperatorChain;
+import com.github.fge.lambdas.predicates.DoublePredicateChain;
+import com.github.fge.lambdas.predicates.IntPredicateChain;
+import com.github.fge.lambdas.predicates.LongPredicateChain;
+import com.github.fge.lambdas.predicates.PredicateChain;
+import com.github.fge.lambdas.predicates.ThrowingDoublePredicate;
+import com.github.fge.lambdas.predicates.ThrowingIntPredicate;
+import com.github.fge.lambdas.predicates.ThrowingLongPredicate;
+import com.github.fge.lambdas.predicates.ThrowingPredicate;
 
 public final class Throwing
 {
@@ -73,7 +81,6 @@ public final class Throwing
     /*
      * Comparators
      */
-
     public static <T> ComparatorChain<T> comparator(
         final ThrowingComparator<T> comparator)
     {
@@ -264,5 +271,32 @@ public final class Throwing
         final ThrowingUnaryOperator<T> unaryOperator)
     {
         return new UnaryOperatorChain<>(unaryOperator);
+    }
+
+    /*
+     * Predicates
+     */
+    public static <T> PredicateChain<T> predicate(
+        final ThrowingPredicate<T> predicate)
+    {
+        return new PredicateChain<>(predicate);
+    }
+
+    public static IntPredicateChain intPredicate(
+        final ThrowingIntPredicate intPredicate)
+    {
+        return new IntPredicateChain(intPredicate);
+    }
+
+    public static DoublePredicateChain doublePredicate(
+        final ThrowingDoublePredicate doublePredicate)
+    {
+        return new DoublePredicateChain(doublePredicate);
+    }
+
+    public static LongPredicateChain longPredicate(
+        final ThrowingLongPredicate longPredicate)
+    {
+        return new LongPredicateChain(longPredicate);
     }
 }
