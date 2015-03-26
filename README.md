@@ -6,6 +6,9 @@ Requires Java 8.
 
 No further dependencies than the JRE itself is required.
 
+You might also be interested in
+[ThrowingStream](https://github.com/JeffreyFalgout/ThrowingStream).
+
 ## What this is
 
 This package allows you to use lambdas, methods or interfaces whose only impediment to their usages
