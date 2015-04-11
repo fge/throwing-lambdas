@@ -7,4 +7,5 @@ com.github.fge.lambdas.functions.intfunctions
 com.github.fge.lambdas.functions.longfunctions
 com.github.fge.lambdas.functions.operators
 com.github.fge.lambdas.predicates
+com.github.fge.lambdas.runnable
 com.github.fge.lambdas.supplier
