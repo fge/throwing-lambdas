@@ -70,6 +70,8 @@ import com.github.fge.lambdas.predicates.ThrowingDoublePredicate;
 import com.github.fge.lambdas.predicates.ThrowingIntPredicate;
 import com.github.fge.lambdas.predicates.ThrowingLongPredicate;
 import com.github.fge.lambdas.predicates.ThrowingPredicate;
+import com.github.fge.lambdas.runnable.RunnableChainer;
+import com.github.fge.lambdas.runnable.ThrowingRunnable;
 import com.github.fge.lambdas.supplier.DoubleSupplierChainer;
 import com.github.fge.lambdas.supplier.IntSupplierChainer;
 import com.github.fge.lambdas.supplier.LongSupplierChainer;
@@ -346,5 +348,10 @@ public class Throwing
         final ThrowingLongSupplier longSupplier)
     {
         return new LongSupplierChainer(longSupplier);
+    }
+
+    public static RunnableChainer runnable(final ThrowingRunnable runnable)
+    {
+        return new RunnableChainer(runnable);
     }
 }

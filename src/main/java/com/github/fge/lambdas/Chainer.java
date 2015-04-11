@@ -20,10 +20,10 @@ import java.util.concurrent.ConcurrentHashMap;
  * this means you can use an instance of a chain as a non throwing instance; for
  * example:</p>
  *
- * <code>
+ * <pre>
  *     final ToLongFunction&lt;Path&gt;
  *         = Throwing.function(Files::size).orReturn(OL);
- * </code>
+ * </pre>
  *
  * @param <N> parameter type of the non throwing interface
  * @param <T> parameter type of the throwing interface
