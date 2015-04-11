@@ -17,7 +17,8 @@ interfaces](http://docs.oracle.com/javase/8/docs/api/java/lang/FunctionalInterfa
 that they throw one or more exception(s).
 
 All functional interfaces used in
-[`Stream`](http://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html)s are covered.
+[`Stream`](http://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html)s
+are covered, along with `Runnable`.
 
 The current version is **0.5.0**. It is available on Maven central:
 
