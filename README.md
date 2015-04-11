@@ -19,10 +19,10 @@ that they throw one or more exception(s).
 All functional interfaces used in
 [`Stream`](http://docs.oracle.com/javase/8/docs/api/java/util/stream/Stream.html)s are covered.
 
-The current version is **0.4.0**. It is available on Maven central:
+The current version is **0.5.0**. It is available on Maven central:
 
 ```groovy
-    compile(group: "com.github.fge", name: "throwing-lambdas", version: "0.4.0");
+    compile(group: "com.github.fge", name: "throwing-lambdas", version: "0.5.0");
 ```
 
 ## Sample usage
