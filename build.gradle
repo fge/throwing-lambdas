@@ -88,10 +88,6 @@ task wrapper(type: Wrapper) {
     distributionUrl = "http://services.gradle.org/distributions/gradle-${gradleVersion}-all.zip";
 }
 
-task pom << {
-    pom {}.writeTo("${projectDir}/pom.xml");
-}
-
 /*
  * SIGNING
  */
