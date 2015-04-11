@@ -1,3 +1,8 @@
+## 0.5.0
+
+* Implement sneaky throws.
+* Add ThrowingRunnable.
+
 ## 0.4.0
 
 * Refactor to use an abstract class as the base.
